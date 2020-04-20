@@ -1,0 +1,401 @@
+% !TeX root = mercatormap.tex
+% !TeX encoding=UTF-8
+% !TeX spellcheck=en_US
+% include file of mercatormap.tex (manual of the LaTeX package mercatormap)
+\clearpage
+\section{Scales and Sizes}%
+
+Inside a defined map several size values and scaling options are
+available. Please note that due to the nature of the Mercator projection and several
+simplifying assumptions all specifications for map scale, map width, map height,
+etc. are imprecise in the best case and even misleading in the worst case.
+They are suited for representative diagrams,
+but not for critical navigation purposes etc.
+
+\subsection{Map Sizes and Document Sizes}
+
+\begin{docCommand}{mrctexwidth}{}
+  \TeX\ length denoting the document width of the current map.
+\end{docCommand}
+
+\begin{docCommand}{mrctexheight}{}
+  \TeX\ length denoting the document width of the current map.
+\end{docCommand}
+
+\begin{docCommand}{mrcscale}{}
+  Scaling factor between map and real world.
+  A \TeX\ length given in |pt|, but stripped from that unit,
+  multiplied by \refCom{mrcscale} corresponds to a real world length
+  given in kilometers.
+  Note that this is \emph{not} the map scale.
+  Actually, it is reciprocal proportional to the map scale
+  and proportional to the map scale denominator, see \refCom{mrcmapscaledenominator}.
+\end{docCommand}
+
+\begin{docCommand}{mrctextokm}{\marg{length}}
+  Computes a given \TeX\ \meta{length} (with unit) into the corresponding
+  real world length in kilometers (without unit).
+  \begin{dispListing}
+  Map width: \mrctextokm{\mrctexwidth}\,km
+  \end{dispListing}
+\end{docCommand}
+
+\begin{docCommand}{mrctextomile}{\marg{length}}
+  Computes a given \TeX\ \meta{length} (with unit) into the corresponding
+  real world length in miles (without unit).
+  \begin{dispListing}
+  Map width: \mrctextomile{\mrctexwidth}\,mi
+  \end{dispListing}
+\end{docCommand}
+
+\begin{docCommand}{mrckmtotex}{\marg{number}}
+  Computes real world length \meta{number} in kilometers (without unit)
+  to a \TeX\ length (with unit).
+  \begin{dispListing}
+  % draw a circle with radius 20km
+  \draw (mrcpos) circle (\mrckmtotex{20});
+  \end{dispListing}
+\end{docCommand}
+
+\begin{docCommand}{mrcmiletotex}{\marg{number}}
+  Computes real world length \meta{number} in miles (without unit)
+  to a \TeX\ length (with unit).
+  \begin{dispListing}
+  % draw a circle with radius 20 miles
+  \draw (mrcpos) circle (\mrcmiletotex{20});
+  \end{dispListing}
+\end{docCommand}
+
+\begin{docCommand}{mrcmapscaledenominator}{}
+  Approximate map scale denominator.
+  \SI{1}{cm} on the map corresponds approximately to
+  \mbox{\refCom{mrcmapscaledenominator}$\cdot$\SI{1}{cm}} in the real world.
+  Do not confuse with \refCom{mrcscale}.
+  \begin{dispListing}
+  Map scale: 1:\mrcmapscaledenominator
+  \end{dispListing}
+\end{docCommand}
+
+
+\subsection{Pretty Size Output}
+
+
+\begin{docCommand}{mrcprettymapscale}{}
+  Approximate map scale given with three valid digits
+  with a representation like |1:1000|.
+  \begin{dispListing}
+  Map scale: \mrcprettymapscale
+  \end{dispListing}
+\end{docCommand}
+
+\begin{docCommand}{mrcprettymapwidth}{}
+  Approximate map width in kilometers (or meters) with three valid digits:
+  \begin{dispListing}
+  Map width: \mrcprettymapwidth
+  \end{dispListing}
+  To create a pretty printing to your own liking, you can do like the
+  following:
+  \begin{dispListing}
+  \newcommand{\myprettymapwidth}{\SI[round-mode=figures,round-precision=3]%
+    {\mrctextokm{\mrctexwidth}}{km}}
+  \end{dispListing}
+\end{docCommand}
+
+\begin{docCommand}{mrcprettymapheight}{}
+  Approximate map height in kilometers (or meters) with three valid digits:
+  \begin{dispListing}
+  Map height: \mrcprettymapheight
+  \end{dispListing}
+\end{docCommand}
+
+
+\begin{docCommand}{mrcprettymapresolution}{}
+  Approximate map resolution in dpi (dots per inch):
+  \begin{dispListing}
+  Map resolution: \mrcprettymapresolution
+  \end{dispListing}
+\end{docCommand}
+
+\begin{docCommand}{mrcprettytilesize}{}
+  Approximate tile size inside the document (\TeX\ size) in millimeters:
+  \begin{dispListing}
+  \TeX\ tile size: \mrcprettytilesize
+  \end{dispListing}
+\end{docCommand}
+
+
+\tikzsetnextfilename{scales_example}%
+\begin{dispExample}
+\begin{tikzpicture}
+  \mrcNPdef{rome}{41.89300}{12.48557}
+  \mermapset{named flex scale=2000000:rome}
+  \mrcmap[type=reference, named position=rome, source=topplusopen web,
+    tex width=\linewidth, tex height=10cm]{scales_example}
+  \mrcdrawmap
+  \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
+        {\mrcmapattribution};
+  \mrcclipmap
+  \path[draw] (\mrcNPcs{rome}) circle (\mrckmtotex{50});
+  \node[above] at ([yshift=\mrckmtotex{50}]\mrcNPcs{rome}) {\SI{50}{km}};
+  \node[above right,fill=white,fill opacity=0.5,text opacity=1,align=center,
+    line width=0pt, inner sep=2mm]
+    at (mrcmap.south west) { \begin{tabular}{rl}
+      scale:           & \mrcprettymapscale\\
+      map width:       & \mrcprettymapwidth\\
+      map height:      & \mrcprettymapheight\\
+      \TeX\ tile size: & \mrcprettytilesize\\
+      resolution:      & \mrcprettymapresolution
+      \end{tabular}\\
+      \begin{tikzpicture}
+      \mrcdrawscalebar[width-in-km=100]
+      \path[every node/.style={above,inner sep=0.5mm,font=\sffamily\tiny}]
+        (mrcscalebar.north west) -- (mrcscalebar.north east)
+        node[pos=0]{0} node[pos=0.2]{20} node[pos=0.4]{40} node[pos=0.6]{60}
+        node[pos=0.8]{80} node[pos=1]{100} node[pos=1,right,yshift=-1mm]{km};
+      \end{tikzpicture}
+    };
+\end{tikzpicture}
+\end{dispExample}
+
+
+\clearpage
+\subsection{Scale Bars}
+
+
+\begin{docCommand}{mrcdrawscalebar}{\oarg{options}}
+  Draws a scale bar according to the given \meta{options}.
+  All \meta{options} share the common prefix |/mermap/scalebar/|.
+  The most essential option is the \emph{width} of the scale bar.
+
+  \tikzsetnextfilename{scales_scalebar1}
+  \begin{dispExample}
+  \begin{tikzpicture}
+    \mrcNPdef{munich}{48.137222}{11.575556}
+    \mrcNPdef{vienna}{48.208333}{16.373056}
+    \mrcmap[tex width=\linewidth, tex height=4cm, target=none,
+      type=areafit, area={munich,vienna}, flex area fit=2cm]{}
+    \mrcdrawmap
+    \mrcmarker{named position=munich, contents={M\"unchen}}
+    \mrcmarker{named position=vienna, contents={Wien}}
+    \mrcdrawscalebar[width-in-km=100, solid,
+      at={([xshift=-10mm,yshift=5mm]mrcmap.south east)},
+      placement={above left},  ]
+  \end{tikzpicture}
+  \end{dispExample}
+
+  The size, position, and appearance of the scale bar can be customized by
+  setting the various \meta{options}. The shape of the scale bar
+  is denoted by a \tikzname\ node \docNode{mrcscalebar} which can be used
+  for lettering.
+
+  \enlargethispage*{1cm}
+  \tikzsetnextfilename{scales_scalebar2}
+  \begin{dispExample}
+  \begin{tikzpicture}
+    \mrcNPdef{munich}{48.137222}{11.575556}
+    \mrcNPdef{vienna}{48.208333}{16.373056}
+    \mrcmap[tex width=\linewidth, tex height=4cm, target=none,
+      type=areafit, area={munich,vienna}, flex area fit=2cm]{}
+    \mrcdrawmap
+    \mrcmarker{named position=munich, contents={M\"unchen}}
+    \mrcmarker{named position=vienna, contents={Wien}}
+    \mrcdrawscalebar[width-in-km=100,solid,south-west-inside=10mm;3mm ]
+    \path[every node/.style={above,inner sep=0.5mm,font=\sffamily\tiny}]
+      (mrcscalebar.north west) -- (mrcscalebar.north east)
+      node[pos=0]{0} node[pos=0.2]{20} node[pos=0.4]{40} node[pos=0.6]{60}
+      node[pos=0.8]{80} node[pos=1]{100} node[pos=1,right,yshift=-1mm]{km};
+  \end{tikzpicture}
+  \end{dispExample}
+
+\end{docCommand}
+
+
+\begin{docMrcKey}{scalebar/width-in-km}{=\meta{number}}{no default, initially |0|}
+  Sets the width of the scale bar to match the real word length \meta{number}
+  in kilometers.
+\end{docMrcKey}
+
+\begin{docMrcKey}{scalebar/width-in-kilometer}{=\meta{number}}{no default, initially |0|}
+  Alias for \refKey{/mermap/scalebar/width-in-km}
+\end{docMrcKey}
+
+\begin{docMrcKey}{scalebar/width-in-meter}{=\meta{number}}{no default, initially |0|}
+  Sets the width of the scale bar to match the real word length \meta{number}
+  in meters.
+\end{docMrcKey}
+
+\begin{docMrcKey}{scalebar/width-in-mile}{=\meta{number}}{no default, initially |0|}
+  Sets the width of the scale bar to match the real word length \meta{number}
+  in miles.
+\end{docMrcKey}
+
+\begin{docMrcKey}{scalebar/width-in-yard}{=\meta{number}}{no default, initially |0|}
+  Sets the width of the scale bar to match the real word length \meta{number}
+  in yards.
+\end{docMrcKey}
+
+\begin{docMrcKey}{scalebar/partitions}{=\meta{number}}{no default, initially |5|}
+  Determines the \meta{number} of partitions for the scale bar. If \meta{number}
+  is set to 1, there is no partitioning.
+\end{docMrcKey}
+
+\begin{docMrcKey}{scalebar/height}{=\meta{length}}{no default, initially |2mm|}
+  Sets the height of the scale bar to the given \TeX\ \meta{length}.
+\end{docMrcKey}
+
+
+\begin{docMrcKey}{scalebar/at}{=\marg{\tikzname\ coordinate}}{no default,
+    initially \texttt{\brackets{(0,0)}}}
+  The scale bar is positioned at the given \meta{\tikzname\ coordinate}.
+  The placement is done with the \refKey{/mermap/scalebar/placement} option.
+  Both option correspond to the \tikzname\ options for positioning nodes.
+  The scale bar can be positioned outside the map (e.g. below), but
+  remember to use \refCom{mrcclipmap} \emph{after} the scale bar
+  in this case, if needed.
+
+%  \begin{dispListing}
+%  \mrcdrawscalebar[
+%     at        = {([xshift=-10mm,yshift=5mm]mrcmap.south east)},
+%     placement = above left,
+%    ]
+%  \end{dispListing}
+
+  \tikzsetnextfilename{scales_scalebar3}
+  \begin{dispExample}
+  \begin{tikzpicture}
+    \mrcNPdef{munich}{48.137222}{11.575556}
+    \mrcNPdef{vienna}{48.208333}{16.373056}
+    \mrcmap[tex width=\linewidth, tex height=4cm, target=none,
+      type=areafit, area={munich,vienna}, flex area fit=2cm]{}
+    \mrcdrawmap
+    \mrcmarker{named position=munich, contents={M\"unchen}}
+    \mrcmarker{named position=vienna, contents={Wien}}
+    \mrcdrawscalebar[width-in-km=200, partitions=8,
+      at={([xshift=5mm,yshift=-2mm]mrcmap.south west)},
+      placement=below right   ]
+    \path[every node/.style={below,inner sep=0.5mm,font=\sffamily\tiny}]
+      (mrcscalebar.south west) -- (mrcscalebar.south east)
+      node[pos=0]{0} node[pos=0.25]{50} node[pos=0.5]{100} node[pos=0.75]{150}
+      node[pos=1]{200} node[pos=1,right,yshift=1mm]{km};
+  \end{tikzpicture}
+  \end{dispExample}
+\end{docMrcKey}
+
+\pagebreak
+
+\begin{docMrcKey}{scalebar/placement}{=\meta{\tikzname\ positioning}}{no default, initially empty}
+  \meta{\tikzname\ positioning} of a scale bar in combination with
+  \refKey{/mermap/scalebar/at}. All \tikzname\ placement options for nodes
+  can be used, e.g. \texttt{above left} or \texttt{anchor=mid west}, etc.
+  Actually, \emph{any} node option could be applied here, but the intended use
+  is for placement options only.
+\end{docMrcKey}
+
+
+\begin{docMrcKey}{scalebar/south-east-inside}{\colOpt{=\meta{x shift};\meta{y shift}}}{default |0pt;0pt|, initially unset}
+  Shortcut for placing the scale bar at the south east corner of the map.
+  The optional \mbox{\meta{x shift}} and \meta{y shift} denote the
+  absolute shift values in each direction, i.e. the algebraic sign is
+  automatically complemented.
+  If only \meta{x shift} is given, then \meta{y shift} is set
+  to the same value. \refKey{/mermap/scalebar/at} and \refKey{/mermap/scalebar/placement}
+  are set by this option.
+\end{docMrcKey}
+
+\begin{docMrcKey}{scalebar/south-east-outside}{\colOpt{=\meta{x shift};\meta{y shift}}}{default |0pt;0pt|, initially unset}
+  Shortcut for placing the scale bar below the south east corner of the map.
+\end{docMrcKey}
+
+\begin{docMrcKey}{scalebar/south-west-inside}{\colOpt{=\meta{x shift};\meta{y shift}}}{default |0pt;0pt|, initially unset}
+  Shortcut for placing the scale bar at the south west corner of the map.
+\end{docMrcKey}
+
+\begin{docMrcKey}{scalebar/south-west-outside}{\colOpt{=\meta{x shift};\meta{y shift}}}{default |0pt;0pt|, initially unset}
+  Shortcut for placing the scale bar below the south west corner of the map.
+\end{docMrcKey}
+
+\begin{docMrcKey}{scalebar/north-west-inside}{\colOpt{=\meta{x shift};\meta{y shift}}}{default |0pt;0pt|, initially unset}
+  Shortcut for placing the scale bar at the north west corner of the map.
+\end{docMrcKey}
+
+\begin{docMrcKey}{scalebar/north-west-outside}{\colOpt{=\meta{x shift};\meta{y shift}}}{default |0pt;0pt|, initially unset}
+  Shortcut for placing the scale bar above the north west corner of the map.
+\end{docMrcKey}
+
+\begin{docMrcKey}{scalebar/north-east-inside}{\colOpt{=\meta{x shift};\meta{y shift}}}{default |0pt;0pt|, initially unset}
+  Shortcut for placing the scale bar at the north east corner of the map.
+\end{docMrcKey}
+
+\begin{docMrcKey}{scalebar/north-east-outside}{\colOpt{=\meta{x shift};\meta{y shift}}}{default |0pt;0pt|, initially unset}
+  Shortcut for placing the scale bar above the north east corner of the map.
+\end{docMrcKey}
+
+
+\begin{docMrcKey}{scalebar/major style}{=\marg{\tikzname\ options}}{no default, initially empty}
+  The \emph{major} part of the scale bar is a single \tikzname\ path object
+  which can be customized by the given \meta{\tikzname\ options}.
+  The \emph{major} part consists of the black area in the default case.
+  \tikzsetnextfilename{scales_scalebar4}
+  \begin{dispExample}
+  \begin{tikzpicture}
+    \mrcdrawscalebar[scale=2000000, width-in-km=100,
+        major style={left color=red,right color=blue}   ]
+  \end{tikzpicture}
+  \end{dispExample}
+\end{docMrcKey}
+
+
+\begin{docMrcKey}{scalebar/minor style}{=\marg{\tikzname\ options}}{no default, initially empty}
+  The \emph{minor} part of the scale bar is a single \tikzname\ path object
+  which can be customized by the given \meta{\tikzname\ options}.
+  The \emph{minor} part is seen as holes in the default case.
+  \refKey{/mermap/scalebar/minor style} has only an effect, if
+  the minor part is drawn \refKey{/mermap/scalebar/solid}.
+  \tikzsetnextfilename{scales_scalebar5}
+  \begin{dispExample}
+  \begin{tikzpicture}
+    \mrcdrawscalebar[scale=2000000, width-in-km=100, solid,
+         minor style={yellow}  ]
+  \end{tikzpicture}
+  \end{dispExample}
+\end{docMrcKey}
+
+
+\pagebreak
+\begin{docMrcKey}{scalebar/double}{\colOpt{=true\textbar false}}{default |true|, initially |true|}
+  If set to |true|, the scale bar is drawn as a double ruler.
+\end{docMrcKey}
+
+
+\begin{docMrcKey}{scalebar/single}{\colOpt{=true\textbar false}}{default |true|, initially |false|}
+  If set to |true|, the scale bar is drawn as a single ruler.
+  \refKey{/mermap/scalebar/single} is inverse to \refKey{/mermap/scalebar/double}.
+  \tikzsetnextfilename{scales_scalebar6}
+  \begin{dispExample}
+  \begin{tikzpicture}
+    \mrcdrawscalebar[scale=2000000, width-in-km=100, single, height=1mm]
+  \end{tikzpicture}
+  \end{dispExample}
+\end{docMrcKey}
+
+
+\begin{docMrcKey}{scalebar/transparent}{\colOpt{=true\textbar false}}{default |true|, initially |true|}
+  If set to |true|, the \emph{minor} part of the scale bar is drawn transparent,
+  i.e. as holes inside the ruler.
+\end{docMrcKey}
+
+
+\begin{docMrcKey}{scalebar/solid}{\colOpt{=true\textbar false}}{default |true|, initially |false|}
+  If set to |true|, the \emph{minor} part of the scale bar is drawn opaque.
+  It is drawn white or according to \refKey{/mermap/scalebar/minor style}.
+  \refKey{/mermap/scalebar/solid} is inverse to \refKey{/mermap/scalebar/transparent}.
+\end{docMrcKey}
+
+
+\begin{docMrcKey}{scalebar/scale}{=\meta{scale denominator}}{no default, initially unset}
+  Sets or overwrites the \meta{scale denominator} setting.
+  \textbf{Using this key is not needed and may even lead to erroneous displays
+    inside a |tikzpicture| with a defined map setting.}
+  This key is helpful, if a scale bar is used without a defined map.
+\end{docMrcKey}
+

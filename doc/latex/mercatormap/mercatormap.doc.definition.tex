@@ -1,0 +1,529 @@
+% !TeX root = mercatormap.tex
+% !TeX encoding=UTF-8
+% !TeX spellcheck=en_US
+% include file of mercatormap.tex (manual of the LaTeX package mercatormap)
+\clearpage
+\section{Map Definition and Map Coordinates}\label{sec:map_definition}%
+
+\tikzsetnextfilename{def_mrcdefinemap}%
+\begin{dispExample}
+\begin{tikzpicture}
+\mrcdefinemap{west=11,east=13,north=49,south=48}
+\mrcdrawmap[draw=path]
+\mrcdrawnetwork
+\draw       (mrc cs:latitude=48.53475,longitude=12.15087)   circle (2mm);
+\draw[red]  (mrc cs:lat=48.53475,lon=12.15087)              circle (3mm);
+\draw[blue] (mrcq cs:48.53475:12.15087)                     circle (4mm);
+\ifmrcinmap{48.53475}{12.15087}{     \draw[yellow] (mrcpos) circle (5mm);}{}
+\ifmrcinvicinity{48.53475}{12.15087}{\draw[cyan]   (mrcpos) circle (6mm);}{}
+\end{tikzpicture}
+\end{dispExample}
+
+%-------------------------------------------------------------------------------
+\subsection{Option Setting}
+\begin{docCommand}{mermapset}{\marg{options}}
+  Sets \meta{options} for all following maps inside the current \TeX\ group.
+  All options share the common prefix |/mermap/|, e.g. for setting
+  \refKey{/mermap/vicinity} use
+  \begin{dispListing}
+    \mermapset{vicinity=3cm}
+  \end{dispListing}
+  Also see  \refCom{mrcdefinemap}, \refCom{mermapsetsupply},
+  and \refCom{mermapsetmarker}.\par
+  Note that the options by \refCom{mermapset} are |expl3| \cite{package:expl3}
+  keys while \tikzname\ \cite{package:tikz} uses its own key management.
+\end{docCommand}
+
+
+\clearpage
+%-------------------------------------------------------------------------------
+\subsection{Manual Map Definition}
+The following map definition is only relevant, if no script setup is used
+and maps are generated completely manually.
+See \Fullref{sec:automated_map} for script aided map definitions.
+
+\begin{docCommand}{mrcdefinemap}{\marg{options}}
+  Establishes a map inside a |tikzpicture| environment following
+  and applying the given \meta{options}.
+  All options share the common prefix |/mermap/mapdef/|.
+  After \refCom{mrcdefinemap} is applied, map drawing and map coordinates
+  can be used.
+  \begin{itemize}
+  \item\refCom{mrcdefinemap} can be used directly, if no tile download
+    and no script setup is intended.
+  \item\refCom{mrcdefinemap} is implicitly used with
+    \refCom{mrcapplymap} and \refCom{mrcmap}. In this case, all options are
+    also set implicitly.
+  \end{itemize}
+\end{docCommand}
+
+
+\begin{docMrcKey}{mapdef/north}{=\meta{map north latitude}}{no default, initially 50}
+  Northern latitude degree of the visible map, possibly negative for the southern hemisphere,
+  lower than $90$ but always larger than \refKey{/mermap/mapdef/south}.
+  It is accessible as \docAuxCommand{mrcmapnorth} (use read-only).
+\end{docMrcKey}
+
+\begin{docMrcKey}{mapdef/south}{=\meta{map south latitude}}{no default, initially 48}
+  Southern latitude degree of the visible map, possibly negative for the southern hemisphere,
+  larger than $-90$ but always lower than \refKey{/mermap/mapdef/north}.
+  It is accessible as \docAuxCommand{mrcmapsouth} (use read-only).
+\end{docMrcKey}
+
+\begin{docMrcKey}{mapdef/west}{=\meta{map west longitude}}{no default, initially 11}
+  Western longitude degree of the visible map, possibly negative for the western hemisphere,
+  possibly shifted periodically, but always lower than \refKey{/mermap/mapdef/east}.
+  It is accessible as \docAuxCommand{mrcmapwest} (use read-only).
+\end{docMrcKey}
+
+\begin{docMrcKey}{mapdef/east}{=\meta{map east longitude}}{no default, initially 13}
+  Eastern longitude degree of the visible map, possibly negative for the western hemisphere,
+  possibly shifted periodically, but always larger than \refKey{/mermap/mapdef/west}.
+  It is accessible as \docAuxCommand{mrcmapeast} (use read-only).
+\end{docMrcKey}
+
+
+%-------------------------------------------------------------------------------
+\subsection{Further Map Definition Options}
+
+
+The following options are typically implicitly set by \refCom{mrcapplymap}
+and not manually by \refCom{mrcdefinemap}. However, some values are
+computationally used in all cases. They can be ignored as pure technical
+information.
+
+\begin{docMrcKey}{mapdef/xmin}{=\meta{map tile x minimum}}{no default, initially 271}
+  Minimal $x$ coordinate of the map tiles.
+\end{docMrcKey}
+
+\begin{docMrcKey}{mapdef/xmax}{=\meta{map tile x maximum}}{no default, initially 275}
+  Maximal $x$ coordinate of the map tiles.
+\end{docMrcKey}
+
+\begin{docMrcKey}{mapdef/ymin}{=\meta{map tile y minimum}}{no default, initially 173}
+  Minimal $y$ coordinate of the map tiles.
+\end{docMrcKey}
+
+\begin{docMrcKey}{mapdef/ymax}{=\meta{map tile y maximum}}{no default, initially 177}
+  Maximal $y$ coordinate of the map tiles.
+\end{docMrcKey}
+
+\begin{docMrcKey}{mapdef/zoom}{=\meta{map zoom}}{no default, initially 9}
+  Map tile zoom factor alias $z$ coordinate of the map tiles.
+\end{docMrcKey}
+
+\begin{docMrcKey}{mapdef/pixelwidth}{=\meta{map width in pixels}}{no default, initially 100}
+  Width of the visible map expressed in pixels of the source file(s).
+  It is accessible as \docAuxCommand{mrcpixelwidth} (use read-only).
+\end{docMrcKey}
+
+\begin{docMrcKey}{mapdef/pixelheight}{=\meta{map height in tiles}}{no default, initially 100}
+  Height of the visible map expressed in pixels of the source file(s).
+  It is accessible as \docAuxCommand{mrcpixelheight} (use read-only).
+\end{docMrcKey}
+
+\begin{docMrcKey}{mapdef/westoffset}{=\meta{map tile offset (west)}}{no default, initially 0}
+  Distance of the visible map from the western edge of the most western tile
+  expressed in tiles (range from 0 to 1).
+\end{docMrcKey}
+
+\begin{docMrcKey}{mapdef/northoffset}{=\meta{map tile offset (north)}}{no default, initially 0}
+  Distance of the visible map from the northern edge of the most northern tile
+  expressed in tiles (range from 0 to 1).
+\end{docMrcKey}
+
+\begin{docMrcKey}{mapdef/southoffset}{=\meta{map tile offset (south)}}{no default, initially 0}
+  Distance of the visible map from the southern edge of the most southern tile
+  expressed in tiles (range from 0 to 1).
+\end{docMrcKey}
+
+\begin{docMrcKey}{mapdef/basename}{=\meta{map tile base name}}{no default, initially \texttt{tiles/tile}}
+  File base name for the tiles.
+\end{docMrcKey}
+
+\begin{docMrcKey}{mapdef/attribution}{=\meta{attribution text}}{no default, initially empty}
+  Attribution text for the map source. Typically, it acknowledges the copyright
+  of the map data provider. It may contain hyperlinks.
+  It is accessible as \docAuxCommand{mrcmapattribution} (use read-only).
+\end{docMrcKey}
+
+\begin{docMrcKey}{mapdef/attribution print}{=\meta{attribution text}}{no default, initially empty}
+  Attribution text for the map source.
+  In contrast to \refKey{/mermap/mapdef/attribution} it is intended for media
+  that does not support hyperlinks like printed posters, books, etc.
+  It is accessible as \docAuxCommand{mrcmapattributionprint} (use read-only).
+\end{docMrcKey}
+
+
+\begin{docMrcKey}{mapdef/resource}{=\meta{map resource}}{no default, initially |none|}
+  Available map resource with following feasible values:
+  \begin{itemize}
+  \item\docValue{none}: No tiles and no merged map.
+  \item\docValue{tiles}: Map tiles locally available.
+  \item\docValue{mergedmap}: Single map picture file merged from tiles locally available.
+  \item\docValue{wmsmap}: Single map picture file locally available.
+  \end{itemize}
+\end{docMrcKey}
+
+\begin{docMrcKey}{mapdef/tile size}{=\meta{length}}{no default, initially |32.512mm|}
+  Typically set computationally. It is identical to \refKey{/mermap/tile size}
+  which is the recommended user option for manual setup.
+\end{docMrcKey}
+
+
+
+\clearpage
+%-------------------------------------------------------------------------------
+\subsection{Map Coordinate System}
+After a map is defined inside a |tikzpicture| environment
+by \refCom{mrcdefinemap}, \refCom{mrcapplymap}, or \refCom{mrcmap},
+a Mercator map coordinate system can be used.
+The border of the visible map is denoted by a \tikzname\ node \docNode{mrcmap}.
+
+\tikzsetnextfilename{def_coordinate_system}%
+\begin{dispExample}
+\begin{tikzpicture}
+  \mrcNPdef{nuremberg}{49.45522}{11.07631}
+  \mermapset{tile size=2cm}
+  \mrcdefinemap{west=5,east=15,south=47,north=55,zoom=7}
+  \path[draw,fill=green!10] (mrcmap.south west) rectangle (mrcmap.north east);
+  \mrcdrawnetwork
+  \fill (mrc cs:latitude=48.137222,longitude=11.575556) circle (2pt)
+    node[below] {M\"unchen};
+  \fill (mrc cs:lat=53.550556,lon=9.993333) circle (2pt)
+    node[above] {Hamburg};
+  \fill (mrcq cs:52.518611:13.408333) circle (2pt)
+    node[left] {Berlin};
+  \fill (\mrcNPcs{nuremberg}) circle (2pt) node[above] {N\"urnberg};
+  \ifmrcinmap{50.938056}{6.956944}{
+    \fill (mrcpos) circle (2pt) node[right] {K\"oln};}{}
+  \ifmrcNPinmap{nuremberg}{\draw[red] (mrcpos) circle (1cm);}{}
+\end{tikzpicture}
+\end{dispExample}
+
+
+\medskip
+The |mrc cs| coordinate system defines a map point by
+\refKey{/mermap/cs/latitude} and \refKey{/mermap/cs/longitude}
+
+\begin{docMrcKey}{cs/latitude}{=\meta{latitude}}{no default}
+  Sets the \meta{latitude} of a map point.
+\end{docMrcKey}
+
+\begin{docMrcKey}{cs/longitude}{=\meta{longitude}}{no default}
+  Sets the \meta{longitude} of a map point.
+\end{docMrcKey}
+
+\begin{dispListing}
+  \fill (mrc cs:latitude=48.137222,longitude=11.575556) circle (2pt);
+\end{dispListing}
+
+\medskip
+A map point can also be defined by shorter variants
+\refKey{/mermap/cs/lat} and \refKey{/mermap/cs/lon}
+
+\begin{docMrcKey}{cs/lat}{=\meta{latitude}}{no default}
+  Sets the \meta{latitude} of a map point.
+\end{docMrcKey}
+
+\begin{docMrcKey}{cs/lon}{=\meta{longitude}}{no default}
+  Sets the \meta{longitude} of a map point.
+\end{docMrcKey}
+
+\begin{dispListing}
+  \fill (mrc cs:lat=48.137222,lon=11.575556) circle (2pt);
+\end{dispListing}
+
+\medskip
+A map point can be defined even quicker by
+|(mrcq cs:|\meta{latitude}|:|\meta{longitude}|)|.
+
+\begin{dispListing}
+  \fill (mrcq cs:48.137222:11.575556) circle (2pt);
+\end{dispListing}
+
+\medskip
+
+\begin{docCommand}{mrcpgfpoint}{\marg{latitude}\marg{longitude}}
+  Yields a low level |pgf| point location given by
+  \meta{latitude} and \meta{longitude}.
+  This can be used like |\pgfpoint|.
+  \begin{dispListing}
+    \pgfpathcircle{\mrcpgfpoint{49.45522}{11.07631}}{2pt}
+    \pgfusepath{fill}
+  \end{dispListing}
+\end{docCommand}
+
+
+
+
+\clearpage
+%-------------------------------------------------------------------------------
+\subsection{Named Positions}\label{sec:names_positions}
+
+
+\begin{docCommand}{mrcNPdef}{\marg{name}\marg{latitude}\marg{longitude}}
+  A coordinate pair of \meta{latitude} and \meta{longitude}
+  can be saved as \emph{named position} (NP) to a \meta{name} for later use.
+  The \emph{named position} just stores the given values as evaluated
+  floating points but without coordinate system processing.
+  Therefore, a named position can be used outside a map definition
+  or |tikzpicture| environment, even as a preset for the whole document.
+  Note that this saving is not global but only effective inside the
+  current \TeX\ group.
+  \begin{dispListing}
+    \mrcNPdef{nuremberg}{49.45522}{11.07631}
+  \end{dispListing}
+\end{docCommand}
+
+
+\begin{docCommand}{mrcNPfrompoint}{\marg{name}\marg{\tikzname\ point}}
+  \emph{Latitude} and \emph{longitude} of a given \meta{\tikzname\ point} are
+  calculated and saved as \emph{named position} (NP) with given \meta{name}.
+  \refCom{mrcNPfrompoint} can only be used after a valid a map definition
+  inside a |tikzpicture| environment.
+  \begin{dispListing}
+    \mrcNPfrompoint{mapcenter}{mrcmap.center}
+    \mrcNPfrompoint{mytest}{[xshift=1cm,yshift=1cm]mrcmap.south west}
+  \end{dispListing}
+\end{docCommand}
+
+
+\begin{docCommand}{mrcNPcs}{\marg{name}}
+  A map point definition from the \meta{name} of a previously saved
+  \emph{named position} (NP).
+  \begin{dispListing}
+    \fill (\mrcNPcs{nuremberg}) circle (2pt) node[above] {N\"urnberg};
+  \end{dispListing}
+\end{docCommand}
+
+
+\begin{docCommand}{mrcNPlat}{\marg{name}}
+  Inserts the \emph{latitude} of a \emph{named position} with given \meta{name}.
+  \refCom{mrcNPlat} is expandable and may be used in floating point expressions.
+  \begin{dispExample}
+    \mrcNPdef{nuremberg}{49.45522}{11.07631}
+    Latitude: \mrcNPlat{nuremberg}\\
+    Longitude: \mrcNPlon{nuremberg}
+  \end{dispExample}
+\end{docCommand}
+
+
+\begin{docCommand}{mrcNPlon}{\marg{name}}
+  Inserts the \emph{longitude} of a \emph{named position} with given \meta{name}.
+  \refCom{mrcNPlon} is expandable and may be used in floating point expressions.
+\end{docCommand}
+
+
+\clearpage
+%-------------------------------------------------------------------------------
+\subsection{Tests for Points to be inside or outside a Map}
+
+When a map is drawn, \refCom{mrcclipmap} can be used to set up a
+\tikzname\ clip environment which automatically removes all content which
+is not inside the defined map. However, the \tikzname\ position of a geographic
+point has to be computed first to decide, if this point is to be drawn.
+Since \TeX\ length registers do not allow large dimensions, compiler errors
+are possible to happen.
+
+The following tests check given geographic coordinates before they are
+transformed to \TeX\ dimensions and avoid such compiler errors.
+
+\begin{docCommand}{ifmrcinmap}{\marg{latitude}\marg{longitude}\marg{true}\marg{false}}
+  If the given \meta{latitude} and \meta{longitude} describes a point
+  inside the visible map, the \meta{true} code is executed, otherwise
+  the \meta{false} code.\par
+  Inside the \meta{true} code a \tikzname\ coordinate \docNode{mrcpos}
+  describes the given point. Also, \docNode{mrclastpos} denotes the
+  \emph{last} position before.
+  \begin{dispListing}
+    \ifmrcinmap{48.137222}{11.575556}{\fill (mrcpos) circle (2pt);}{}
+  \end{dispListing}
+\end{docCommand}
+
+\begin{docCommand}{ifmrcNPinmap}{\marg{name}\marg{true}\marg{false}}
+  If the given \emph{named position} (NP) \meta{name} describes a point
+  inside the visible map, the \meta{true} code is executed, otherwise
+  the \meta{false} code.
+  \begin{dispListing}
+    \mrcNPdef{munich}{48.137222}{11.575556}
+    \ifmrcNPinmap{munich}{\fill (mrcpos) circle (2pt);}{}
+  \end{dispListing}
+\end{docCommand}
+
+
+Very similar to \refCom{ifmrcinmap} is \refCom{ifmrcinvicinity}.
+
+\begin{docCommand}{ifmrcinvicinity}{\marg{latitude}\marg{longitude}\marg{true}\marg{false}}
+  If the given \meta{latitude} and \meta{longitude} describes a point
+  inside a vicinity of the visible map, i.e. the map \emph{plus} a margin of \refKey{/mermap/vicinity},
+  the \meta{true} code is executed, otherwise
+  the \meta{false} code.\par
+  Inside the \meta{true} code a \tikzname\ coordinate \docNode{mrcpos}
+  describes the given point. Also, \docNode{mrclastpos} denotes the
+  \emph{last} position before.\par
+  \refCom{ifmrcinvicinity} may be used for objects of a certain size like
+  markers which could be partly visible even when their reference point
+  is outside the visible map (but nearby).
+\begin{dispListing}
+  \ifmrcinvicinity{48.137222}{11.575556}{\fill (mrcpos) circle (2pt);}{}
+\end{dispListing}
+\end{docCommand}
+
+
+\begin{docCommand}{ifmrcNPinvicinity}{\marg{name}\marg{true}\marg{false}}
+  If the given \emph{named position} (NP) \meta{name} describes a point
+  inside a vicinity of the visible map, the \meta{true} code is executed, otherwise
+  the \meta{false} code, see \refCom{ifmrcinvicinity}.
+\begin{dispListing}
+  \mrcNPdef{munich}{48.137222}{11.575556}
+  \ifmrcNPinvicinity{munich}{\fill (mrcpos) circle (2pt);}{}
+\end{dispListing}
+\end{docCommand}
+
+
+\begin{docMrcKey}{vicinity}{=\meta{width}}{no default, initially |2cm|}
+  The vicinity of the map is the given map plus a border in all directions
+  with the given \meta{width}.
+\end{docMrcKey}
+
+
+\clearpage
+%-------------------------------------------------------------------------------
+\subsection{Formatted Coordinate Output}
+
+\begin{docCommand}{mrcformlat}{\oarg{options}\marg{latitude}}
+  Formatted output for a given \meta{latitude} following given \meta{options}.
+  Formatting \meta{options} are described in the following.
+  \begin{dispExample}
+    Latitude from \mrcformlat{-24.29} to \mrcformlat{12.3456789}.
+  \end{dispExample}
+\end{docCommand}
+
+\begin{docCommand}{mrcformlon}{\oarg{options}\marg{longitude}}
+  Formatted output for a given \meta{longitude} following given \meta{options}.
+  Formatting \meta{options} are described in the following.
+  \begin{dispExample}
+    Longitude from \mrcformlon{-24.29} to \mrcformlon{12.3456789}.
+  \end{dispExample}
+\end{docCommand}
+
+
+\begin{docMrcKey}{format angle}{=\meta{type}}{no default, initially |decimal-4|}
+  The \meta{type} defines some formatting settings for
+  \refCom{mrcformlat} and \refCom{mrcformlon}. Internally, the |\ang| macro
+  from package |siunitx| \cite{package:siunitx} is used which can be controlled by further settings
+  of |siunitx| like digit grouping or changing the decimal marker.\par
+  Feasible values for \meta{type} are
+  \begin{itemize}
+  \item\docValue{decimal}: decimal output without rounding.
+    \begin{dispExample}
+      \mermapset{format angle=decimal}
+      Longitude from \mrcformlon{-24.29} to \mrcformlon{12.3456789}.
+    \end{dispExample}
+  \item\docValue{decimal-0}: decimal output with rounding to full degrees.
+    \begin{dispExample}
+      \mermapset{format angle=decimal-0}
+      Longitude from \mrcformlon{-24.29} to \mrcformlon{12.3456789}.
+    \end{dispExample}
+  \item\docValue{decimal-1}: decimal output with rounding to one place.
+    \begin{dispExample}
+      \mermapset{format angle=decimal-1}
+      Longitude from \mrcformlon{-24.29} to \mrcformlon{12.3456789}.
+    \end{dispExample}
+  \item\docValue{decimal-2}: decimal output with rounding to two places.
+    \begin{dispExample}
+      \mermapset{format angle=decimal-2}
+      Longitude from \mrcformlon{-24.29} to \mrcformlon{12.3456789}.
+    \end{dispExample}
+  \pagebreak
+  \item\docValue{decimal-3}: decimal output with rounding to three places.
+    \begin{dispExample}
+      \mermapset{format angle=decimal-3}
+      Longitude from \mrcformlon{-24.29} to \mrcformlon{12.3456789}.
+    \end{dispExample}
+  \item\docValue{decimal-4}: decimal output with rounding to four places.
+    \begin{dispExample}
+      \mermapset{format angle=decimal-4}
+      Longitude from \mrcformlon{-24.29} to \mrcformlon{12.3456789}.
+    \end{dispExample}
+  \item\docValue{degree}: output with rounding to full degrees.
+      This is an alias for \docValue{decimal-0}.
+    \begin{dispExample}
+      \mermapset{format angle=degree}
+      Longitude from \mrcformlon{-24.29} to \mrcformlon{12.3456789}.
+    \end{dispExample}
+  \item\docValue{minute}: output with rounding to degrees and full minutes.
+    \begin{dispExample}
+      \mermapset{format angle=minute}
+      Longitude from \mrcformlon{-24.29} to \mrcformlon{12.3456789}.
+    \end{dispExample}
+  \item\docValue{second}: output with rounding to degrees, minutes, and full seconds.
+    \begin{dispExample}
+      \mermapset{format angle=second}
+      Longitude from \mrcformlon{-24.29} to \mrcformlon{12.3456789}.
+    \end{dispExample}
+  \end{itemize}
+\end{docMrcKey}
+
+
+\begin{docMrcKey}{format south}{=\meta{code}}{no default, initially \texttt{\#1\textbackslash,S}}
+  Defines the format \meta{code} for a negative latitude.
+  Use \texttt{\#1} to place the number (without sign).
+  \begin{dispExample}
+    \mermapset{format south={$-#1$}}
+    Latitude \mrcformlat{-24.29}.
+  \end{dispExample}
+\end{docMrcKey}
+
+\begin{docMrcKey}{format north}{=\meta{code}}{no default, initially \texttt{\#1\textbackslash,N}}
+  Defines the format \meta{code} for a non-negative latitude.
+  Use \texttt{\#1} to place the number.
+  \begin{dispExample}
+    \mermapset{format north={#1 North}}
+    Latitude \mrcformlat{12.3456789}.
+  \end{dispExample}
+\end{docMrcKey}
+
+\pagebreak
+\begin{docMrcKey}{format east}{=\meta{code}}{no default, initially \texttt{\#1\textbackslash,E}}
+  Defines the format \meta{code} for a positive longitude.
+  Use \texttt{\#1} to place the number (without sign).
+  \begin{dispExample}
+    \mermapset{format east={#1\,O}}
+    \sisetup{output-decimal-marker={,}}
+    L\"angengrad \mrcformlon{12.3456789}.
+  \end{dispExample}
+\end{docMrcKey}
+
+\begin{docMrcKey}{format west}{=\meta{code}}{no default, initially \texttt{\#1\textbackslash,W}}
+  Defines the format \meta{code} for a negative longitude.
+  Use \texttt{\#1} to place the number.
+  \begin{dispExample}
+    \mermapset{format west={West: #1}}
+    Longitude \mrcformlon{-24.29}.
+  \end{dispExample}
+\end{docMrcKey}
+
+
+\begin{docMrcKey}{format NEWS numeric}{}{no value}
+  Defines the format for north, east, west, and south as numeric value
+  without N, E, W, S.
+  \begin{dispExample}
+    \mermapset{format NEWS numeric}
+    Longitude \mrcformlon{-24.29} and \mrcformlon{12.3456789}.\\
+    Latitude  \mrcformlat{-24.29} and \mrcformlat{12.3456789}.
+  \end{dispExample}
+\end{docMrcKey}
+
+
+\begin{docMrcKey}{format NEWS absolute}{}{no value}
+  Defines the format for north, east, west, and south as absolute value
+  without N, E, W, S and without algebraic sign.
+  \begin{dispExample}
+    \mermapset{format NEWS absolute}
+    Longitude \mrcformlon{-24.29} and \mrcformlon{12.3456789}.\\
+    Latitude  \mrcformlat{-24.29} and \mrcformlat{12.3456789}.
+  \end{dispExample}
+\end{docMrcKey}
+

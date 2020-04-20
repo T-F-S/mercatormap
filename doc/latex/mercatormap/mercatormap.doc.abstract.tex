@@ -1,0 +1,106 @@
+% !TeX root = mercatormap.tex
+% !TeX encoding=UTF-8
+% !TeX spellcheck=en_US
+% include file of mercatormap.tex (manual of the LaTeX package mercatormap)
+
+\thispagestyle{empty}
+\begin{tcboutputlisting}
+\begin{tcolorbox}[spread,blankest]
+\mermapset{flex tile size=40mm}
+\begin{tikzpicture}
+\mrcmap[type=areafit,west=5,east=15,south=46,north=54,
+  source = opentopomap,
+  flex area scale=4 000 000,
+  tex width=\tcbtextwidth,
+  tex height=\tcbtextheight,
+  ]{title}
+\mrcclipmap
+\ExplSyntaxOn
+\sys_gset_rand_seed:n {15}
+\int_set:Nn \l_tmpa_int {1}
+\int_until_do:nNnn \l_tmpa_int > {77}
+  {
+    \fp_set:Nn \l_tmpa_fp {\tcbtextwidth/2
+      + \l_tmpa_int*2.5mm*cosd(18*\l_tmpa_int)}
+    \fp_set:Nn \l_tmpb_fp {\tcbtextheight/2
+      + \l_tmpa_int*2.5mm*sind(18*\l_tmpa_int)}
+    \node[inner~sep=0pt,draw=blue!50!gray,line~width=1mm,
+      at={(\fp_to_dim:N\l_tmpa_fp,\fp_to_dim:N\l_tmpb_fp)},
+      rotate=\fp_eval:n{18*\l_tmpa_int+10*rand()} ]
+        {\includegraphics[width=55mm,height=55mm]
+          {tiles/opentopomap_
+            \int_use:N \l__mermap_tile_zoom_int _
+            \fp_eval:n { randint(\l__mermap_tile_xmin_int,\l__mermap_tile_xmax_int) }_
+            \fp_eval:n { randint(\l__mermap_tile_ymin_int,\l__mermap_tile_ymax_int) }.png
+          }
+        };
+    \int_incr:N\l_tmpa_int
+  }
+\ExplSyntaxOff
+\node[font=\small\footnotesize,fill=white,opacity=0.75,text opacity=1]
+  at (\tcbtextwidth/2,1cm) {\mrcmapattribution};
+\node at (\tcbtextwidth/2,\tcbtextheight*0.667)
+  {\begin{tcolorbox}[
+    center upper, fontupper=\bfseries,boxsep=15mm, boxrule=4mm,
+    sharp corners, oversize=5mm,
+    colback=white, colframe=blue!50!gray,
+    enhanced jigsaw, opacityback=0.8, opacityframe=0.9 ]
+      {\Huge The mercatormap package\par}
+      \vspace{1cm}
+      Manual for version \version\ (\datum)\par
+      \vspace{5mm}
+      Thomas F.~Sturm
+  \end{tcolorbox}};
+\end{tikzpicture}
+\end{tcolorbox}
+\end{tcboutputlisting}
+\tcbuselistingtext
+\tcbinputlisting{docexample,
+  listing options={style=mydocumentation,basicstyle=\ttfamily\scriptsize},
+  listing only,
+  title=Cover code}
+
+
+\clearpage
+\begin{center}
+\begin{tcolorbox}[enhanced,hbox,tikznode,left=8mm,right=8mm,boxrule=0.4pt,
+  colback=white,colframe=Blue_Gray,
+  drop lifted shadow=Blue_Gray!50,arc is angular,
+  before=\par\vspace*{5mm},after=\par\bigskip]
+{\bfseries\LARGE The mercatormap package}\\[3mm]
+{\large Manual for version \version\ (\datum)}
+\end{tcolorbox}
+{\large Thomas F.~Sturm%
+  \footnote{Prof.~Dr.~Dr.~Thomas F.~Sturm, Institut f\"{u}r Mathematik und Informatik,
+    Universit\"{a}t der Bundeswehr M\"{u}nchen, D-85577 Neubiberg, Germany;
+     email: \href{mailto:thomas.sturm@unibw.de}{thomas.sturm@unibw.de}}\par\medskip
+\normalsize\url{http://www.ctan.org/pkg/mercatormap}\par
+\url{https://github.com/T-F-S/mercatormap}
+}
+\end{center}
+\bigskip
+\begin{absquote}
+  \begin{center}\bfseries Abstract\end{center}
+  The \texttt{mercatormap} package extends \tikzname\ with tools to
+  create map graphics. The provided coordinate system relies on the
+  Web Mercator projection used on the Web by OpenStreetMap and others.
+  The package supports the seamless integration of graphics
+  from public map tile servers by a Python script. Also, common map
+  elements like markers, geodetic networks, bar scales, routes, orthodrome
+  pieces, and more are part of the package.
+\end{absquote}
+
+\begin{tcolorbox}[breakable,enhanced jigsaw,before=\par\bigskip\noindent,
+  title={Contents},fonttitle=\bfseries\Large,center title,
+  colback=Blue_Gray!2!white,
+  colframe=Blue_Gray,
+  colbacktitle=Blue_Gray!5!white,
+  coltitle=black,
+  boxrule=0.4pt,arc is angular,
+  enlargepage flexible=\baselineskip,pad at break*=3mm,
+  %drop fuzzy shadow
+  ]
+\makeatletter
+\@starttoc{toc}
+\makeatother
+\end{tcolorbox}

@@ -1,0 +1,150 @@
+% !TeX root = mercatormap.tex
+% !TeX encoding=UTF-8
+% !TeX spellcheck=en_US
+% include file of mercatormap.tex (manual of the LaTeX package mercatormap)
+\clearpage
+\section{Introduction}%
+
+The \texttt{mercatormap} package enables map drawing with the
+Web Mercator projection. This is done as an extension to
+\tikzname\ \cite{package:tikz} with is complemented by a map
+coordinate system and many additional commands and options to add elements
+like markers, geodetic networks, bar scales, routes, orthodrome
+pieces, distance calculations, etc. Also, the seamless integration of graphics
+from public map tile servers is provided through a Python script.
+
+If you are interested in the mathematical background of the Web Mercator projection
+and the algorithms of this packages, you are invited to read
+\enquote{\fullcite{Sturm:2020}}.
+
+With very few exceptions, the package is programmed with the
+|expl3| \cite{package:expl3} programming interface for \LaTeX3
+and loads the packages
+|xparse| \cite{package:xparse} and |siunitx| \cite{package:siunitx}.
+
+\medskip
+
+
+\tikzsetnextfilename{intro_example}%
+\begin{tikzpicture}
+  \mrcmap[
+      type=reference,
+      position=48.1579577:11.4980376,
+      align=west,
+      flex reference scale=20000,
+      tex width=\linewidth,
+      tex height=5cm,
+      source=topplusopen web
+    ]{intro_example}
+  \mrcdrawmap
+  \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south) {\mrcmapattribution};
+  \node[above right, font=\sffamily\footnotesize] at (mrcmap.north west) {\mrcprettymapscale};
+  \mrcdrawscalebar[width-in-meter=800,partitions=8,north-east-outside=5mm;1.5mm,
+    major style={black!75}]
+  \path[every node/.style={above,inner sep=0.5mm,font=\sffamily\tiny}]
+    (mrcscalebar.north west) -- (mrcscalebar.north east)
+    node[pos=0]{0} node[pos=0.25]{200} node[pos=0.5]{400} node[pos=0.75]{600}
+    node[pos=1]{800} node[pos=1,right,yshift=-1mm]{m};
+  \mrcdrawnetwork
+  \mrcmarker{type=pin, draw=Blue_Gray, fill=Blue_Gray!10, font=\sffamily\footnotesize,
+    position=48.1582513:11.5032997, contents={Nymphenburg}}
+  \mrcclipmap
+  \draw (mrcmap.south west) rectangle (mrcmap.north east);
+\end{tikzpicture}
+
+
+
+%-------------------------------------------------------------------------------
+\subsection{Quick Start}
+
+The package is accompanied with a Python script. You should read
+\Fullref{sec:python} for the Python preparations.
+The package can be used in three ways:
+\begin{itemize}
+\item Completely without the Python script.
+  This is not recommended, because the usage will be quite restricted.
+\item With Python script, but without map tile download.
+  There is no usage restriction, but you have to create all content yourself.
+  To prevent map tile download, set
+  \begin{dispListing}
+  \mermapset{supply/target=none}
+  \end{dispListing}
+\item With Python script and map tile download.
+  You need permission and access to a map tile server.
+  \Fullref{sec:maptileserver} lists a selection of servers with free
+  access (some require registration of an API key).
+\end{itemize}
+
+After Python is prepared, you may try to compile
+|mercatormap-example.tex| (found in the documentation directory)
+which contains a map of Bavaria with map tile download.
+\Fullref{sec:examples} exhibits further examples which may serve as
+tutorials what can be done. After the examples you find the reference
+manual for the package.
+
+\clearpage
+%-------------------------------------------------------------------------------
+\subsection{Installation of Python and Packages}\label{sec:python}
+
+A Python~3 script is part of the |mercatormap| package.
+The main purpose of this script is to download selected map tiles for
+the maps of the document. Also, some coordinate system computation is
+done by this script.
+
+\subsubsection{Python 3}
+Python 3 is a required prerequisite and can be downloaded from\\
+\url{https://www.python.org/downloads/}\\
+On systems like Linux Python is typically already installed.\par
+To test your installation, type into a command or terminal window:
+\begin{dispListing}
+  python --version
+\end{dispListing}
+This should give a version number starting with 3. Otherwise, try
+\begin{dispListing}
+  python3 --version
+\end{dispListing}
+If this is successful, \refKey{/mermap/python} has to be adapted to |python3|
+
+\subsubsection{Python Packages}
+The Python packages |Pillow| (\url{https://pypi.org/project/Pillow/})
+and |requests| (\url{https://pypi.org/project/requests/}) have to be present.
+With some luck, they are already installed. With
+\begin{dispListing}
+  pip3 list
+\end{dispListing}
+and/or
+\begin{dispListing}
+  pip3 list --user
+\end{dispListing}
+the installed packages are listed. If |Pillow| and |requests| are not
+among these package, they have to be added by
+\begin{dispListing}
+  pip3 install --user Pillow
+  pip3 install --user requests
+\end{dispListing}
+or
+\begin{dispListing}
+  pip3 install Pillow
+  pip3 install requests
+\end{dispListing}
+The second choice needs administrative rights and may give conflicts
+with package managers. Pythonians know furthers installation methods.
+
+\subsubsection{Document Setup}
+For your map document you need the following:
+\begin{itemize}
+\item Add \refCom{mrcactivatescript} to the document preamble.
+  Without this command, the script is not active.
+\item Compile the map document with the |--shell-escape| compiler option.
+  This allows to execute external programs like the Python script.\\
+  \textbf{Be aware that |-||-shell-escape| should only be used
+    with trusted documents. Note that external programs can do anything!}
+\end{itemize}
+
+
+
+
+%\subsection{Tutorial: Map without external Graphics}
+
+
+%\subsection{Tutorial: Map with downloaded Map Tiles}

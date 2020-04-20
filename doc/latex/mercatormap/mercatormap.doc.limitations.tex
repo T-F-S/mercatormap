@@ -1,0 +1,300 @@
+% !TeX root = mercatormap.tex
+% !TeX encoding=UTF-8
+% !TeX spellcheck=en_US
+% include file of mercatormap.tex (manual of the LaTeX package mercatormap)
+\clearpage
+\section{Limitations and Caveats}%
+
+%-------------------------------------------------------------------------------
+\subsection{No Polar Regions}
+  The standard Mercator projection is not suited for north or south polar
+  regions.
+  The Web Mercator projections only covers
+  positions between \mrcformlat{-85.0511} and \mrcformlat{85.0511}
+  with map tiles. Equally, the |mercatormap| package does only provide support for
+  this area.
+
+  If your map overlaps to south of \mrcformlat{-85.0511} or to north of  \mrcformlat{85.0511},
+  compiler errors are possible because of internal computation limitations.
+  In any case, there are no map tiles.
+
+  \tikzsetnextfilename{limit_polar}%
+  \begin{dispExample}
+    \begin{tikzpicture}
+      \mrcmap[type=reference,latitude=-85.0511,longitude=0,zoom=3,
+        source=opentopomap,
+        tex width=\linewidth, tex height=8cm]{}
+      \mrcdrawmap
+      \node[above=4mm,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
+          {\mrcmapattribution};
+      \mrcclipmap
+      \mrcdrawnetwork[network pieces=10,network distance=10mm]
+      \path[draw] (mrcmap.south west) rectangle (mrcmap.north east);
+      \mrcmarker{type=pin,position=-85.0511:0,
+        contents={End of the mapped world}}
+    \end{tikzpicture}
+  \end{dispExample}
+
+%-------------------------------------------------------------------------------
+\clearpage
+\subsection{International Dateline (180th Meridian)}\label{sec:dateline}
+  If your map includes the 180th meridian (more or less the international dateline),
+  remember that the eastern hemisphere lies \emph{west} and
+  the western hemisphere lies \emph{east} for your map.
+  Consider the following example displaying Vladivostok and Anchorage.
+  Here, \refKey{/mermap/supply/west} is set to \ang{130}\,E (|130|)
+  and \refKey{/mermap/supply/east} is set to \ang{149}\,W (|211| instead of |-149|).
+
+  There is some automatic correction for positions to fit inside the
+  defined map (see Anchorage in the example below), but
+  \emph{west} should be lower than \emph{east}.
+
+  \tikzsetnextfilename{limit_dateline}%
+  \begin{dispExample}
+    % \mrcsetapikey{openrouteservice}{YOUR-API-KEY}  % registered key
+    \begin{tikzpicture}
+      \mrcmap[type=areafit,tex width=\linewidth,tex height=8cm,
+        source=openrouteservice mapsurfer,
+        south=42,north=62,west=130,east=-149+360]{}
+        \mrcdrawmap
+        \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
+          {\mrcmapattribution};
+        \mrcclipmap
+      \draw (mrcmap.south west) rectangle (mrcmap.north east);
+      \draw (mrc cs:lat=\mrcmapsouth,lon=180)
+        -- node[sloped,above] {180th meridian}
+           node[sloped,below,red] {add 360 to longitude for eastern border}
+      (mrc cs:lat=\mrcmapnorth,lon=180);
+      \mrcmarker{type=pin,position=61.22:-149.88,contents={Anchorage}}
+      \mrcmarker{type=pin,position=43.12:131.9,  contents={Vladivostok}}
+    \end{tikzpicture}
+  \end{dispExample}
+
+%-------------------------------------------------------------------------------
+\clearpage
+\subsection{Very small Scale Maps}
+  If a map has a very small scale, a coordinate point may appear more than once
+  on the map. But, the map coordinates of this package will only
+  pilot to a single point:
+
+  \tikzsetnextfilename{limit_small_scale_1}%
+  \begin{dispExample}
+    \begin{tikzpicture}
+      \mrcmap[type=reference,latitude=48.14,longitude=11.57,
+        source=opentopomap,
+        tex width=\linewidth,tex height=4cm,zoom=1]{}
+      \mrcdrawmap
+      \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
+        {\mrcmapattribution};   \mrcclipmap
+      \path[draw] (mrcmap.south west) rectangle (mrcmap.north east);
+      \mrcmarker{type=pin,position=61.22:-149.88,contents={Anchorage}}
+      \mrcmarker{type=pin,position=43.12:131.9,contents={Vladivostok}}
+    \end{tikzpicture}
+  \end{dispExample}
+
+  You cannot trust too much in figures from
+  \refCom{mrcprettymapscale},
+  \refCom{mrcprettymapwidth},
+  \refCom{mrcprettymapheight}, etc
+  for large and medium scale maps.
+  For small scale maps, these figures are worse and even misleading.
+  Better do not use them:
+
+  \tikzsetnextfilename{limit_small_scale_2}%
+  \begin{dispExample}
+    \mermapset{supply/source=opentopomap}
+    \begin{tikzpicture}
+      \mrcmap[type=reference,latitude=48.14,longitude=11.57,
+        tex width=\linewidth,tex height=6cm,zoom=2]{}
+      \mrcdrawmap
+      \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
+        {\mrcmapattribution};   \mrcclipmap  \mrcdrawinfo
+    \end{tikzpicture}
+  \end{dispExample}
+
+
+%-------------------------------------------------------------------------------
+\clearpage
+\subsection{Zoom is not Scale}
+
+  Using the same zoom value for different latitudes can give completely
+  different scales. The following example for Oslo and Rio de Janeiro
+  at zoom 12 scales to 1:151000 and otherwise 1:277000.
+  \tikzexternaldisable
+
+  \tikzsetnextfilename{limit_zoom_scale_1}
+  \begin{dispExample}
+    \mermapsetsupply{source=stamen terrain, type=reference, zoom=12,
+      tex width=7cm, tex height=5cm}
+    \begin{tikzpicture}
+      \mrcmap[latitude=59.91,longitude=10.75]{oslo1}   \mrcdrawmap
+    \end{tikzpicture}\hfill\begin{tikzpicture}
+      \mrcmap[latitude=-22.91,longitude=-43.20]{rio1}  \mrcdrawmap
+    \end{tikzpicture}
+    \begin{center}\fontsize{7pt}{7pt}\sffamily\mrcmapattribution\end{center}
+  \end{dispExample}
+
+  Same example again, but with \refKey{/mermap/flex scale} which gives
+  1:150000 for both cities and comparable maps.
+
+  \tikzsetnextfilename{limit_zoom_scale_2}
+  \begin{dispExample}
+    \mermapsetsupply{source=stamen terrain, type=reference}
+    \begin{tikzpicture}
+      \mrcmap[latitude=59.91,longitude=10.75, flex reference scale=150000,
+        tex width=7cm, tex height=5cm]{oslo2}    \mrcdrawmap
+    \end{tikzpicture}\hfill\begin{tikzpicture}
+      \mrcmap[latitude=-22.91,longitude=-43.20, flex reference scale=150000,
+        tex width=7cm, tex height=5cm]{rio2}     \mrcdrawmap
+    \end{tikzpicture}
+    \begin{center}\fontsize{7pt}{7pt}\sffamily\mrcmapattribution\end{center}
+  \end{dispExample}
+
+
+%-------------------------------------------------------------------------------
+\clearpage
+\subsection{Distances}
+
+There are at least three kinds of distance measures between two points
+on the map:
+\begin{itemize}
+\item Measure the distance with a ruler on the printed (or displayed) map
+  and multiply with the \refCom{mrcmapscaledenominator}.
+  Note that the map scale denominator is only (approximately) correct
+  for the map center.
+\item Compute the loxodromic distance, e.g. with \refCom{mrcstoreloxodistance}
+  which gives the (approximated) distance following a loxodrome.
+  On our Mercator map, this would be equal to the ruler method from above,
+  if the map scale would be constant.
+\item Compute the orthodromic distance, e.g. with \refCom{mrcstoreorthodistance}
+  which gives the (approximated) shortest distance following an orthodrome.
+\end{itemize}
+Apart from the approximate nature of the implementation, these distances
+are expected to be quite identical for large scale maps, but not for
+(very) small scale maps.
+
+\clearpage
+\tikzsetnextfilename{limit_distance1}%
+\begin{dispExample*}{}
+\begin{tikzpicture}
+  \mrcNPdef{munich}{48.137222}{11.575556}
+  \mrcNPdef{fraunberg}{48.3685075}{11.9894209}
+  \mrcmap[type=reference, named position=munich,
+    flex reference scale=1000000,
+    source=topplusopen web,
+    tex width=\linewidth, tex height=10cm]{}
+  \mrcdrawmap
+  \node[below left,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south east)
+        {\mrcmapattribution};
+  \node[below right,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south west)
+        {\mrcprettymapscale};
+  \mrcclipmap
+  \path[draw] (\mrcNPcs{munich}) circle (\mrckmtotex{40});
+  \node[above,fill=white,opacity=0.85,text opacity=1]
+    at ([yshift=\mrckmtotex{40}]\mrcNPcs{munich}) {\SI{40}{km}};
+  \draw[blue,very thick] (\mrcNPcs{munich}) -- (\mrcNPcs{fraunberg});
+  \mrcNPdraworthodrome[red,very thick] {munich}{fraunberg}
+  \path (\mrcNPcs{munich}) --
+    node[sloped,above=3mm,red,fill=white,opacity=0.85,text opacity=1]
+         { \mrcNPprettyorthodistance{munich}{fraunberg} }
+    node[sloped,below=3mm,blue,fill=white,opacity=0.85,text opacity=1]
+         { \mrcNPprettyloxodistance{munich}{fraunberg} }
+    (\mrcNPcs{fraunberg});
+  \mrcmarker{type=pin,named position=munich,contents={M\"unchen}}
+  \mrcmarker{type=pin,named position=fraunberg,contents={Fraunberg}}
+\end{tikzpicture}
+\end{dispExample*}
+
+\clearpage
+The next example gives notable different distances. The aberration is
+dependent from the center angle.
+
+\tikzsetnextfilename{limit_distance2}%
+\begin{dispExample*}{breakable}
+\begin{tikzpicture}
+  \mrcNPdef{munich}{48.137222}{11.575556}
+  \mrcNPdef{barcelona}{41.3947688}{2.0787285}
+  \mrcmap[type=reference, named position=munich,
+    flex reference scale=25000000,
+    source=topplusopen web,
+    tex width=\linewidth, tex height=10cm]{}
+  \mrcdrawmap
+  \node[below left,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south east)
+        {\mrcmapattribution};
+  \node[below right,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south west)
+        {\mrcprettymapscale};
+  \mrcclipmap
+  \path[draw] (\mrcNPcs{munich}) circle (\mrckmtotex{1000});
+  \node[above,fill=white,opacity=0.85,text opacity=1]
+    at ([yshift=\mrckmtotex{1000}]\mrcNPcs{munich}) {\SI{1000}{km}};
+  \draw[blue,very thick] (\mrcNPcs{munich}) -- (\mrcNPcs{barcelona});
+  \mrcNPdraworthodrome[red,very thick] {munich}{barcelona}
+  \path (\mrcNPcs{munich}) --
+    node[sloped,above=3mm,red,fill=white,opacity=0.85,text opacity=1]
+         { \mrcNPprettyorthodistance{munich}{barcelona} }
+    node[sloped,below=3mm,blue,fill=white,opacity=0.85,text opacity=1]
+         { \mrcNPprettyloxodistance{munich}{barcelona} }
+    (\mrcNPcs{barcelona});
+  \mrcmarker{type=pin,named position=munich,contents={M\"unchen}}
+  \mrcmarker{type=pinflip,named position=barcelona,contents={Barcelona}}
+\end{tikzpicture}
+\end{dispExample*}
+
+
+\clearpage
+The following small scale example contains unacceptable deviations from
+the displayed circle radius of \SI{3000}{\kilo\meter}. The aberration is
+highly dependent from the center angle. For such small scale maps,
+displaying a distance circle should be avoided.
+
+
+\tikzsetnextfilename{limit_distance3}%
+\begin{dispExample*}{breakable}
+\begin{tikzpicture}
+  \mrcNPdef{munich}{48.137222}{11.575556}
+  \mrcNPdef{neskaup}{65.1446431}{-13.7420082}
+  \mrcNPdef{atyrau}{47.0971204}{51.866263}
+  \mrcNPdef{dakhla}{24.2026691}{-15.4883971}
+  \mrcmap[type=reference, named position=munich,
+    flex reference scale=75000000,
+    source=topplusopen web,
+    tex width=\linewidth, tex height=10cm]{}
+  \mrcdrawmap
+  \node[below left,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south east)
+        {\mrcmapattribution};
+  \node[below right,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south west)
+        {\mrcprettymapscale};
+  \mrcclipmap
+  \path[draw] (\mrcNPcs{munich}) circle (\mrckmtotex{3000});
+  \node[above,fill=white,opacity=0.85,text opacity=1]
+    at ([yshift=\mrckmtotex{3000}]\mrcNPcs{munich}) {\SI{3000}{km}};
+  \draw[blue,very thick] (\mrcNPcs{munich}) -- (\mrcNPcs{neskaup});
+  \mrcNPdraworthodrome[red,very thick] {munich}{neskaup}
+  \path (\mrcNPcs{munich}) --
+    node[sloped,above=3mm,red,fill=white,opacity=0.85,text opacity=1]
+         { \mrcNPprettyorthodistance{munich}{neskaup} }
+    node[sloped,below=3mm,blue,fill=white,opacity=0.85,text opacity=1]
+         { \mrcNPprettyloxodistance{munich}{neskaup} }
+    (\mrcNPcs{neskaup});
+  \draw[blue,very thick] (\mrcNPcs{munich}) -- (\mrcNPcs{atyrau});
+  \mrcNPdraworthodrome[red,very thick] {munich}{atyrau}
+  \path (\mrcNPcs{munich}) --
+    node[sloped,above=3mm,red,fill=white,opacity=0.85,text opacity=1]
+         { \mrcNPprettyorthodistance{munich}{atyrau} }
+    node[sloped,below=3mm,blue,fill=white,opacity=0.85,text opacity=1]
+         { \mrcNPprettyloxodistance{munich}{atyrau} }
+    (\mrcNPcs{atyrau});
+  \draw[blue,very thick] (\mrcNPcs{munich}) -- (\mrcNPcs{dakhla});
+  \mrcNPdraworthodrome[red,very thick] {munich}{dakhla}
+  \path (\mrcNPcs{munich}) --
+    node[sloped,above=3mm,red,fill=white,opacity=0.85,text opacity=1]
+         { \mrcNPprettyorthodistance{munich}{dakhla} }
+    node[sloped,below=3mm,blue,fill=white,opacity=0.85,text opacity=1]
+         { \mrcNPprettyloxodistance{munich}{dakhla} }
+    (\mrcNPcs{dakhla});
+  \mrcmarker{type=pinflip,named position=munich,contents={M\"unchen}}
+  \mrcmarker{type=pin,named position=neskaup,contents={Neskaupsta\dh ur}}
+  \mrcmarker{type=pin,named position=atyrau,contents={Atyrau}}
+  \mrcmarker{type=pinflip,named position=dakhla,contents={Ad-Dakhla}}
+\end{tikzpicture}
+\end{dispExample*}

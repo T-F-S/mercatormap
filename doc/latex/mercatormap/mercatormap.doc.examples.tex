@@ -1,0 +1,373 @@
+% !TeX root = mercatormap.tex
+% !TeX encoding=UTF-8
+% !TeX spellcheck=en_US
+% include file of mercatormap.tex (manual of the LaTeX package mercatormap)
+\clearpage
+\section{Examples}\label{sec:examples}%
+
+The following map examples may be used as tutorials and
+starting point for own applications.
+Also see |mercatormap-example.tex| for a compilable full example.
+Note to do all preparations documented in \Fullref{sec:python}.
+
+
+%-------------------------------------------------------------------------------
+\subsection{Reference Position}
+
+With \refKey{/mermap/supply/type}|=|\docValue{reference} a map with a
+\emph{reference position} is constructed. Here, Munich is taken as
+reference position and center of the map. Since the position is used
+more than once, it is stored with \refCom{mrcNPdef} for further reference.
+With \refKey{/mermap/supply/flex reference scale} the scale
+is set to 1:6\,000\,000. For the background map tiles, a
+\refKey{/mermap/supply/source} is selected for download.
+This setup is done by \refCom{mrcmap} while \refCom{mrcdrawmap} draws
+the downloaded map tiles.
+
+\tikzsetnextfilename{examples_reference}%
+\begin{dispExample*}{center lower, breakable}
+\begin{tikzpicture}
+  \sffamily
+  \mrcNPdef{munich}{48.137222}{11.575556}
+  \mrcNPdef{vienna}{48.208333}{16.373056}
+  \mrcNPdef{cologne}{50.938056}{6.956944}
+  \mrcNPdef{milano}{45.4625}{9.186389}
+  \mrcmap[type=reference,
+    named position=munich,
+    flex reference scale=6 000 000,
+    source=topplusopen web,
+    tex width=14cm,
+    tex height=14cm]{examples_reference}
+  \path[draw=yellow!50!gray,fill=yellow!20]
+    ([xshift=-2mm,yshift=-5mm]mrcmap.south west) rectangle
+    ([xshift=2mm,yshift=15mm]mrcmap.north east);
+  \mrcdrawmap
+  \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
+    {\mrcmapattribution};
+  \path[draw=yellow!50!gray] (mrcmap.south west) rectangle (mrcmap.north east);
+
+  \mrcNPdraworthodrome[red,very thick]{munich}{milano}
+  \path[blue,very thick] (\mrcNPcs{munich}) --
+    node[red,fill=white,sloped,below] {\mrcNPprettyloxodistance{munich}{milano}}
+    (\mrcNPcs{milano});
+
+  \mermapsetmarker{type=pin, draw=red, fill=red!10, font=\sffamily\small}
+  \mrcmarker{named position=munich,  contents={M\"unchen}}
+  \mrcmarker{named position=vienna,  contents={Wien}}
+  \mrcmarker{named position=cologne, contents={K\"oln}}
+  \mrcmarker{named position=milano,  contents={Milano}}
+
+  \node[above left=5mm,font=\Large\bfseries] at (mrcmap.north east) {Munich};
+
+  \node[above right] at ([yshift=10mm]mrcmap.north west)
+    {Scale \mrcprettymapscale};
+
+  \mrcdrawscalebar[width-in-km=300,partitions=6,north-west-outside=0mm;5mm,
+    single, height=1mm, major style={yellow!50!gray!50!black}]
+  \path[every node/.style={above,inner sep=0.5mm,font=\sffamily\tiny}]
+    (mrcscalebar.north west) -- (mrcscalebar.north east)
+    node[pos=0]{0} node[pos=0.3333]{100} node[pos=0.6667]{200}
+    node[pos=1]{300\,km};
+
+  \mrcdrawscalebar[width-in-mile=200,partitions=8,
+    at={(mrcscalebar.south west)},placement=below right,
+    single, height=1mm, major style={yellow!50!gray!50!black}]
+  \path[every node/.style={below,inner sep=0.5mm,font=\sffamily\tiny}]
+    (mrcscalebar.south west) -- (mrcscalebar.south east)
+    node[pos=0]{0} node[pos=0.25]{50} node[pos=0.5]{100} node[pos=0.75]{150}
+    node[pos=1]{200\,miles};
+\end{tikzpicture}
+\end{dispExample*}
+
+
+\clearpage
+%-------------------------------------------------------------------------------
+\subsection{Fitting Area}
+
+With \refKey{/mermap/supply/type}|=|\docValue{areafit} a map is constructed
+where a given area is fitted in. The following example lists some
+US-American cities and constructs an \refKey{/mermap/supply/area} which
+contains all of them. With \refKey{/mermap/supply/flex area fit}|=15mm| a
+border region is added.
+
+
+\tikzsetnextfilename{examples_fitting_area}%
+\begin{dispExample*}{center lower}
+\begin{tikzpicture}
+  \mrcNPdef{honolulu}{21.305225}{-157.867}
+  \mrcNPdef{fairbanks}{64.8379435}{-147.7192214}
+  \mrcNPdef{sandiego}{32.7146781}{-117.1640995}
+  \mrcNPdef{miami}{25.7599333}{-80.1951257}
+  \mrcNPdef{boston}{42.359744}{-71.061322}
+  \mrcNPdef{denver}{39.7372435}{-104.997378}
+  \mrcmap[type=areafit,
+    area={honolulu,fairbanks,sandiego,miami,boston,denver},
+    source=stamen terrain,
+    tex width=15cm, tex height=11cm,
+    flex area fit=15mm,
+    ]{examples_fitting_area}
+  \mrcdrawmap \mrcdrawnetwork
+  \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
+    {\mrcmapattribution};
+  \node[below left,fill=white,opacity=0.8,text opacity=1] at (mrcmap.north east)
+    {Scale \mrcprettymapscale};
+  \path[draw] (mrcmap.south west) rectangle (mrcmap.north east);
+  \foreach \city in {honolulu,fairbanks,sandiego,miami,boston,denver}
+    {\mrcmarker{type=ringx, draw=red, fill=red!20, named position=\city}}
+\end{tikzpicture}
+\end{dispExample*}
+
+
+\clearpage
+%-------------------------------------------------------------------------------
+\subsection{Fixed Boundaries}
+
+With \refKey{/mermap/supply/type}|=|\docValue{boundaries} a map is constructed
+with fixed boundaries. In contrast to the other map types, the document
+map size cannot be given directly but derives from the map setup. This bears
+the risk of too large maps. The following example is a map with exact
+boundaries \mrcformlat{-45} to \mrcformlat{-10}
+and \mrcformlon{110} to \mrcformlon{155}. A decent \refKey{/mermap/supply/zoom}
+is 5 (every zoom step doubles the map size in each direction).
+
+\tikzsetnextfilename{examples_boundaries}%
+\begin{dispExample*}{center lower,breakable}
+% \mrcsetapikey{openrouteservice}{YOUR-API-KEY}  % registered key
+\begin{tikzpicture}
+  \mrcmap[type=boundaries,
+    west=110,east=155,south=-45,north=-10,
+    zoom=5,
+    source=openrouteservice mapsurfer,
+    ]{examples_boundaries}
+  \mrcdrawmap
+  \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
+    {\mrcmapattribution};
+  \mrcdrawnetwork
+  \mrcdrawscalebar[width-in-km=1000,partitions=4,south-west-inside=5mm,
+    major style={blue!50!gray!50!black}]
+  \path[every node/.style={below,inner sep=0.5mm,font=\sffamily\tiny}]
+    (mrcscalebar.south west) -- (mrcscalebar.south east)
+    node[pos=0]{0} node[pos=0.5]{500}
+    node[pos=1]{1000} node[pos=1,right,yshift=1mm]{km};
+  \mrcmarker{lat=-35.3,lon=149.116667,type=pictodropring,
+    draw=red,fill=red!10}
+\end{tikzpicture}
+\end{dispExample*}
+
+
+\clearpage
+%-------------------------------------------------------------------------------
+\subsection{Map Without Map Tiles}
+
+There is no coercion to use downloaded map tiles, if they are not needed or
+wanted. With \refKey{/mermap/supply/target}|=none| no map tiles are downloaded.
+The following example draws a rough polygon shape of Germany using
+\refEnv{mrcroute*}.
+
+\tikzsetnextfilename{examples_routemap}%
+\begin{dispExample*}{center lower,breakable}
+\begin{tikzpicture}
+  \mrcNPdef{munich}{48.137222}{11.575556}
+  \mrcNPdef{cologne}{50.938056}{6.956944}
+  \mrcNPdef{hamburg}{53.550556}{9.993333}
+  \mrcNPdef{berlin}{52.518611}{13.408333}
+  \mrcmap[type=areafit,
+    west=5,east=15,south=47,north=55,
+    target=none,
+    tex width=14cm, tex height=14cm,
+    flex area fit=5mm
+    ]{examples_routemap}
+  \mrcclipmap
+  \path[draw,fill=yellow!5] (mrcmap.south west) rectangle (mrcmap.north east);
+  \begin{mrcroute*}[
+      preaction={fill=black,opacity=.5,
+          transform canvas={xshift=1mm,yshift=-1mm}},
+      draw         = green!50!black,
+      top color    = green!50!gray!5,
+      bottom color = green!50!gray!15]
+    \mrcpoint{47.57268069220318}{8.07968771809688}
+    \mrcpoint{47.55206513030159}{8.458302263852103}
+    \mrcpoint{47.60652271644701}{8.58564576447632}
+    \mrcpoint{47.65002478441761}{8.475977737743394}
+    \mrcpoint{47.8129149100372}{8.621611270810012}
+    \mrcpoint{47.70405949548734}{8.824753417980977}
+    \mrcpoint{47.57118357939037}{9.373387060586875}
+    \mrcpoint{47.57763968687206}{9.783024034250792}
+    \mrcpoint{47.46598581489455}{10.09335967295321}
+    \mrcpoint{47.28014625489598}{10.22678291669482}
+    \mrcpoint{47.32098723021947}{10.40092026792467}
+    \mrcpoint{47.52413897927237}{10.53589647271817}
+    \mrcpoint{47.5130331145614}{10.94403341747166}
+    \mrcpoint{47.39097338968944}{11.04734763681045}
+    \mrcpoint{47.42252867275465}{11.44170163808758}
+    \mrcpoint{47.57832219946236}{11.64025530020549}
+    \mrcpoint{47.65203740659043}{12.2451260343467}
+    \mrcpoint{47.64005851006706}{12.78135708694006}
+    \mrcpoint{47.42189293170733}{13.06242166895717}
+    \mrcpoint{47.68727761120528}{13.13421507093485}
+    \mrcpoint{47.70570852317097}{12.97737528172392}
+    \mrcpoint{47.86836520373472}{12.94442906710615}
+    \mrcpoint{48.06063312315187}{12.76937524145701}
+    \mrcpoint{48.33220372303314}{13.38497370385176}
+    \mrcpoint{48.57060635511297}{13.55281830406328}
+    \mrcpoint{48.51465473490364}{13.78916086481733}
+    \mrcpoint{48.74889509826911}{13.84448153318651}
+    \mrcpoint{48.95974762545411}{13.50952525317658}
+    \mrcpoint{49.37838143356481}{12.77000417129028}
+    \mrcpoint{49.78495654813383}{12.44617209199484}
+    \mrcpoint{49.93155217044134}{12.49159565814237}
+    \mrcpoint{50.13144236663469}{12.24546848540114}
+    \mrcpoint{50.28771270517358}{12.30810150664619}
+    \mrcpoint{50.40989390494432}{12.94903619964524}
+    \mrcpoint{50.65841629251407}{13.3075062965852}
+    \mrcpoint{50.76329878585482}{13.97452403458363}
+    \mrcpoint{51.02604511746936}{14.41278607347103}
+    \mrcpoint{50.79185062876172}{14.80477069337384}
+    \mrcpoint{51.15202957355457}{14.99270251686064}
+    \mrcpoint{51.34128169635556}{15.02098384386006}
+    \mrcpoint{51.53750266315752}{14.74120138252564}
+    \mrcpoint{51.81924062442433}{14.62724686001225}
+    \mrcpoint{52.11180711219343}{14.70514397703483}
+    \mrcpoint{52.39266284958671}{14.60756306378661}
+    \mrcpoint{52.60597277515545}{14.58725108586684}
+    \mrcpoint{52.88134471470577}{14.16977248675916}
+    \mrcpoint{53.14560306739344}{14.4215985570986}
+    \mrcpoint{53.43447627332744}{14.39440456086107}
+    \mrcpoint{53.76080228279986}{14.26477636730856}
+    \mrcpoint{54.07894830697219}{13.84113247149844}
+    \mrcpoint{54.34144910466647}{13.71477685386829}
+    \mrcpoint{54.57879841452108}{13.41784866398943}
+    \mrcpoint{54.38430816973541}{12.55218424463898}
+    \mrcpoint{54.16285895583508}{12.11170524536321}
+    \mrcpoint{54.11909611435144}{11.78253136604545}
+    \mrcpoint{53.9629318241985}{11.23001765303107}
+    \mrcpoint{54.02548042559235}{10.82100535035693}
+    \mrcpoint{54.20942342601608}{11.17572026938692}
+    \mrcpoint{54.42622022041155}{11.04601054827628}
+    \mrcpoint{54.31534430886417}{10.73027571352005}
+    \mrcpoint{54.4430955768925}{10.19233706975044}
+    \mrcpoint{54.8317448735389}{10.00757468096804}
+    \mrcpoint{54.87986478845961}{9.659528688958062}
+    \mrcpoint{54.8308224503691}{9.271730840012292}
+    \mrcpoint{54.92302453288877}{8.571394535898566}
+    \mrcpoint{54.49119535498197}{8.900730234661252}
+    \mrcpoint{54.34335254823343}{8.645116397508792}
+    \mrcpoint{54.22420563732749}{8.880431477246834}
+    \mrcpoint{53.87404422621243}{8.679945700393079}
+    \mrcpoint{53.54658560722722}{8.286556227539295}
+    \mrcpoint{53.7066272365128}{8.034813408953866}
+    \mrcpoint{53.78031118673399}{7.387421106389351}
+    \mrcpoint{53.51218238635882}{6.930006752473437}
+    \mrcpoint{53.25894778199789}{7.171145313101468}
+    \mrcpoint{52.64374200661974}{6.997019504055286}
+    \mrcpoint{52.55662475372522}{6.719778263650637}
+    \mrcpoint{52.38988292317155}{6.970320972580792}
+    \mrcpoint{51.92299983362206}{6.742905287863996}
+    \mrcpoint{51.88316670940459}{6.156741607019097}
+    \mrcpoint{51.79567780329431}{5.98801954642294}
+    \mrcpoint{51.43928428452571}{6.159613225461791}
+    \mrcpoint{51.0215877919207}{5.887936542477828}
+    \mrcpoint{50.79077378475993}{5.983374968822379}
+    \mrcpoint{50.59470107381249}{6.228393825507839}
+    \mrcpoint{50.33147032961352}{6.304617231833176}
+    \mrcpoint{50.15747573005454}{6.092865298740861}
+    \mrcpoint{49.97845765993797}{6.16527138749146}
+    \mrcpoint{49.78369815200002}{6.535162836379246}
+    \mrcpoint{49.45067080157749}{6.378063336429978}
+    \mrcpoint{49.11701097547841}{6.794068795882435}
+    \mrcpoint{49.14800972775451}{7.494253217695865}
+    \mrcpoint{49.03198382192998}{7.640486837553122}
+    \mrcpoint{48.92859396692077}{8.238456398546767}
+    \mrcpoint{48.61606185482966}{7.832853167339047}
+    \mrcpoint{48.05389084062409}{7.510556381211842}
+    \mrcpoint{47.56795313962416}{7.588782160556193}
+    \mrcpoint{47.57268069220318}{8.07968771809688}
+  \end{mrcroute*}
+  \foreach \city / \name in {munich/M\"unchen, cologne/K\"oln,
+    hamburg/Hamburg, berlin/Berlin}
+    {
+      \mrcmarker{named position=\city,type=knob,fill=red!20,draw=red,
+        radius=2mm}
+      \mrcmarker{named position=\city,type=pin,fill=blue!10,draw=blue,
+        contents=\name}
+    }
+\end{tikzpicture}
+\end{dispExample*}
+
+
+\clearpage
+%-------------------------------------------------------------------------------
+\subsection{Alignment of the Reference Position}
+
+With \refKey{/mermap/supply/align} the reference position can be aligned
+at different map positions.
+
+\tikzsetnextfilename{examples_alignment}%
+\begin{dispExample*}{center lower}
+\mrcNPdef{munich}{48.137222}{11.575556}
+\foreach \a in {east,center,west,north} {
+\begin{tikzpicture}
+  \mrcmap[type=reference,
+    named position=munich,
+    flex reference scale=1 000 000,
+    source=opentopomap,
+    tex width=\linewidth,tex height=3cm,
+    align=\a]{examples_alignment_\a}
+  \mrcdrawmap
+  \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
+    {\mrcmapattribution};   \mrcclipmap
+  \tikzset{every node/.style={fill=white,fill opacity=0.8,text opacity=1}}
+  \path[draw] (mrcmap.south west) rectangle (mrcmap.north east);
+  \ifmrcNPinvicinity{munich}{
+    \fill[red] (mrcpos) circle (4pt) node[below] {M\"unchen};}{}
+  \node[text=red,above left] at (mrcmap.south east) {align=\a};
+\end{tikzpicture}
+\par}
+\end{dispExample*}
+
+
+
+\clearpage
+%-------------------------------------------------------------------------------
+\subsection{Flexible Zoom}
+
+Map tiles are only provided at fixed zoom levels with natural numbers,
+but the package allows a \refKey{/mermap/flex zoom} with rational numbers.
+The flexible zoom is realized by combining a suitable fixed zoom with
+an adapted document tile scaling, see \Fullref{sec:flexible_tile_size}.
+The following example shows a more or less smooth zoom increase.
+The same technique is used by all options starting with |flex|, e.g.
+\refKey{/mermap/supply/flex reference scale}
+or \refKey{/mermap/supply/flex area fit}
+as seen in the examples before.
+
+\tikzexternaldisable
+\tikzsetnextfilename{examples_flex_zoom}%
+\begin{dispExample*}{center lower,breakable}
+% \mrcsetapikey{thunderforest}{YOUR-API-KEY}  % registered key
+\mrcNPdef{munich}{48.137222}{11.575556}
+\foreach \zz in {7.0,7.2,...,9.0} {
+\edef\z{\fpeval{round(\zz,1)}}
+\begin{tikzpicture}
+  \mermapset{flex zoom=\z}
+  \mrcmap[type=reference,
+      named position=munich,
+      source=thunderforest outdoors,
+      tex width=\linewidth,
+      tex height=3cm
+    ]{examples_flex_zoom_\z}
+  \mrcdrawmap
+  \mrcclipmap
+  \tikzset{every node/.style={fill=white,fill opacity=0.5,text opacity=1}}
+  \node[above,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
+      {\mrcmapattribution};
+  \path[draw] (mrcmap.south west) rectangle (mrcmap.north east);
+  \node[below left=2mm,align=right] at (mrcmap.north east)
+    {flex zoom=\fpeval{round(\z,1)}\\ scale \mrcprettymapscale};
+  \ifmrcNPinvicinity{munich}{
+    \fill (mrcpos) circle (2pt) node[below] {M\"unchen};}{}
+\end{tikzpicture}\par}
+\end{dispExample*}
+
+
+

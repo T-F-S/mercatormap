@@ -1,0 +1,169 @@
+% !TeX root = mercatormap.tex
+% !TeX encoding=UTF-8
+% !TeX spellcheck=en_US
+% include file of mercatormap.tex (manual of the LaTeX package mercatormap)
+\clearpage
+\section{Orthodromes and Loxodromes}\label{sec:orthodromes}%
+
+A loxodrome is a curve which crosses all meridians with
+a constant angle. On Mercator maps, loxodromes are depicted as straight lines
+and can be drawn by simple \tikzname\ |path| elements.
+
+On a sphere, the shortest path
+from one point to another runs along an orthodrome where
+an orthodrome is a great-circle.
+
+The mathematical background and further information are found in \cite{Sturm:2020}.
+
+
+%-------------------------------------------------------------------------------
+\subsection{Orthodrome Drawing}
+
+\begin{docMrcKey}{samples}{=\meta{number}}{no default, initially |100|}
+  An orthodrome curve is approximated by a polygon trajectory with
+  \meta{number} pieces.
+\end{docMrcKey}
+
+
+\begin{docTikzKey}{mermap samples}{=\meta{number}}{style, no default}
+  \tikzname\ variant to set \refKey{/mermap/samples}.
+\end{docTikzKey}
+
+
+\begin{docCommand}{mrcdraworthodrome}{\oarg{options}\marg{lat1}\marg{lon1}\marg{lat2}\marg{lon2}}
+  Draws an orthodrome curve from a point with
+  latitude \meta{lat1} and longitude \meta{lon1}
+  to a point with
+  latitude \meta{lat2} and longitude \meta{lon2}.
+  This is a \tikzname\ path object where \meta{options} are
+  \tikzname\ settings for this path. There are two orthodrome pieces connecting
+  two positions (forming a great-circle). \refCom{mrcdraworthodrome} does
+  not necessarily choose the shorter one, see \cite{Sturm:2020}.
+  The drawn orthodrome is a spherical approximation instead of an ellipsoidal
+  one.
+  \tikzsetnextfilename{ortho_orthodrome1}%
+  \begin{dispExample}
+    \begin{tikzpicture}
+      \mrcmap[type=areafit,
+          south=40.7,north=48.2,west=-74.1,east=11.6,
+          source=topplusopen web,
+          tex width=\linewidth,tex height=6cm,
+        ]{ortho_orthodrome1}
+        \mrcdrawmap
+        \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
+          {\mrcmapattribution};
+        \mrcclipmap
+      \draw (mrcmap.south west) rectangle (mrcmap.north east);
+      \mrcdraworthodrome[red,very thick,mermap samples=100]
+        {48.14}{11.58}{40.71}{-74.01}
+      \node[red,fill=white] at ([above=1.3cm]mrcmap) {
+        \mrcprettyorthodistance{48.14}{11.58}{40.71}{-74.01} };
+    \end{tikzpicture}
+  \end{dispExample}
+\end{docCommand}
+
+
+\clearpage
+\begin{docCommand}{mrcNPdraworthodrome}{\oarg{options}\marg{name1}\marg{name2}}
+  Identical to \refCom{mrcdraworthodrome}, but the start and end point are
+  described by named positions \meta{name1} and \meta{name2}.
+
+  \tikzsetnextfilename{ortho_orthodrome2}%
+  \begin{dispExample}
+    \begin{tikzpicture}
+      \mrcNPdef{munich}{48.14}{11.58}
+      \mrcNPdef{newyork}{40.71}{-74.01}
+      \mrcmap[type=areafit, area={munich,newyork},
+          source=topplusopen web,
+          tex width=\linewidth,tex height=6cm,
+          ]{ortho_orthodrome2}
+        \mrcdrawmap
+        \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
+          {\mrcmapattribution};
+        \mrcclipmap
+      \draw (mrcmap.south west) rectangle (mrcmap.north east);
+      \mrcmarker{type=pin,named position=munich,contents={M\"unchen}}
+      \mrcmarker{type=pinflip,shift=5mm,named position=newyork,
+        contents={New York City}}
+      \mrcNPdraworthodrome[red,very thick] {munich}{newyork}
+      \draw[blue,very thick] (\mrcNPcs{munich}) -- (\mrcNPcs{newyork});
+      \node[red,fill=white] at ([above=1.3cm]mrcmap) {
+        \mrcNPprettyorthodistance{munich}{newyork} };
+      \node[blue,fill=white] at ([below=5mm]mrcmap) {
+        \mrcNPprettyloxodistance{munich}{newyork} };
+    \end{tikzpicture}
+  \end{dispExample}
+\end{docCommand}
+
+
+\clearpage
+%-------------------------------------------------------------------------------
+\subsection{Orthodromic and Loxodromic Distances}
+
+\begin{docCommand}{mrcprettyorthodistance}{\marg{lat1}\marg{lon1}\marg{lat2}\marg{lon2}}
+  Approximate orthodromic distance between two points
+  with latitude \meta{lat1}, longitude \meta{lon1}
+  and latitude \meta{lat2}, longitude \meta{lon2}
+  with three valid digits.
+  \begin{dispExample}
+  \mrcprettyorthodistance{48.14}{11.58}{40.71}{-74.01}
+  \end{dispExample}
+\end{docCommand}
+
+
+\begin{docCommand}{mrcNPprettyorthodistance}{\marg{name1}\marg{name2}}
+  Approximate orthodromic distance between two named positions
+  \meta{name1} and \meta{name2} with three valid digits.
+  \begin{dispExample}
+  \mrcNPdef{munich}{48.14}{11.58}
+  \mrcNPdef{newyork}{40.71}{-74.01}
+  \mrcNPprettyorthodistance{munich}{newyork}
+  \end{dispExample}
+\end{docCommand}
+
+
+\begin{docCommand}{mrcstoreorthodistance}{\marg{macro}\marg{lat1}\marg{lon1}\marg{lat2}\marg{lon2}}
+  Stores the approximate orthodromic distance (in kilometers) between two points
+  with latitude \meta{lat1}, longitude \meta{lon1}
+  and latitude \meta{lat2}, longitude \meta{lon2}
+  to a given \meta{macro}.
+  \begin{dispExample}
+  \mrcstoreorthodistance\mydist{48.14}{11.58}{40.71}{-74.01}
+  \mydist
+  \end{dispExample}
+\end{docCommand}
+
+
+\begin{docCommand}{mrcprettyloxodistance}{\marg{lat1}\marg{lon1}\marg{lat2}\marg{lon2}}
+  Approximate loxodromic distance between two points
+  with latitude \meta{lat1}, longitude \meta{lon1}
+  and latitude \meta{lat2}, longitude \meta{lon2}
+  with three valid digits.
+  \begin{dispExample}
+  \mrcprettyloxodistance{48.14}{11.58}{40.71}{-74.01}
+  \end{dispExample}
+\end{docCommand}
+
+
+\begin{docCommand}{mrcNPprettyloxodistance}{\marg{name1}\marg{name2}}
+  Approximate loxodromic distance between two named positions
+  \meta{name1} and \meta{name2} with three valid digits.
+  \begin{dispExample}
+  \mrcNPdef{munich}{48.14}{11.58}
+  \mrcNPdef{newyork}{40.71}{-74.01}
+  \mrcNPprettyloxodistance{munich}{newyork}
+  \end{dispExample}
+\end{docCommand}
+
+
+\begin{docCommand}{mrcstoreloxodistance}{\marg{macro}\marg{lat1}\marg{lon1}\marg{lat2}\marg{lon2}}
+  Stores the approximate loxodromic distance (in kilometers) between two points
+  with latitude \meta{lat1}, longitude \meta{lon1}
+  and latitude \meta{lat2}, longitude \meta{lon2}
+  to a given \meta{macro}.
+  \begin{dispExample}
+  \mrcstoreloxodistance\mydist{48.14}{11.58}{40.71}{-74.01}
+  \mydist
+  \end{dispExample}
+\end{docCommand}
+

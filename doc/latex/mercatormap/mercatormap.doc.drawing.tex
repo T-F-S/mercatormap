@@ -1,0 +1,253 @@
+% !TeX root = mercatormap.tex
+% !TeX encoding=UTF-8
+% !TeX spellcheck=en_US
+% include file of mercatormap.tex (manual of the LaTeX package mercatormap)
+\clearpage
+\section{Map Drawing}
+
+%-------------------------------------------------------------------------------
+\subsection{Principal Drawing}
+
+\begin{docCommand}{mrcdrawmap}{\oarg{options}}
+  Inside a |tikzpicture| environment, \refCom{mrcdrawmap} draws a map
+  prepared by \refCom{mrcdefinemap}, \refCom{mrcapplymap}, or \refCom{mrcmap}.
+  All \meta{options} share the common prefix |/mermap/|.
+  This is the principal macro to draw a prepared map respectively
+  the background of the map. The background consists of downloaded map tiles
+  or just a color rectangle.
+\end{docCommand}
+
+\begin{docMrcKey}{draw}{=\meta{tile draw}}{no default, initially |auto|}
+  \begin{itemize}
+  \item\docValue{auto}: Draws the map according to \refKey{/mermap/mapdef/resource},
+    i.e. downloaded maps or tiles are used, if available.
+  \item\docValue{path}: Draws the map according to the style given by
+    \refKey{/mermap/map path}. Existing map tiles or merged maps are ignored
+  \item\docValue{tiles}: Draws the map with downloaded map tiles, if
+    available.
+  \item\docValue{mergedmap}: Draws the map with a merged picture, if
+    available.
+  \item\docValue{wmsmap}: Draws the map with a downloaded WMS picture, if
+    available.
+  \end{itemize}
+\end{docMrcKey}
+
+\begin{docMrcKey}{map path}{=\meta{options}}{no default, initially |upper left=green!50,|\\|upper right=green!25, lower left=green!50!black!50, lower right=green!25|}
+  Defines a \tikzname\ style for drawing the map without tiles.
+  \meta{options} are feasible \tikzname\ path options.
+\end{docMrcKey}
+
+\begin{docMrcKey}{map clip}{=\meta{code}}{no default, initially \refCom{mrcclipmap}}
+  Clipping options for the map. By default, the defined map is
+  clipped with the full map rectangle. Use this option only, if you not want to clip
+  the map to its specified size. \meta{code} is some \tikzname\ clipping code.
+\end{docMrcKey}
+
+\begin{docMrcKey}{map scope}{=\meta{options}}{no default, initially empty}
+  \refCom{mrcdrawmap} uses a |scope| environment inside which takes
+  the given \tikzname\ \meta{options}.
+\end{docMrcKey}
+
+
+\begin{docCommand}{mrcclipmap}{}
+  Clips all subsequent drawings against the applied map.\\
+  This is a shortcut macro identical to
+  \begin{dispListing}
+  \path[clip] (mrcmap.south west) rectangle (mrcmap.north east);
+  \end{dispListing}
+\end{docCommand}
+
+
+\begin{docCommand}{mrcboundmap}{}
+  Sets the picture bounding box according to the applied map.\\
+  This is a shortcut macro identical to
+  \begin{dispListing}
+  \path[use as bounding box]
+    (mrcmap.south west) rectangle (mrcmap.north east);
+  \end{dispListing}
+\end{docCommand}
+
+
+\clearpage
+%-------------------------------------------------------------------------------
+\subsection{Flexible Tile Size}\label{sec:flexible_tile_size}
+
+Typically, the pixel size of a map tile is fixed and a map tile is a
+pixel graphics file. The actual size of such an included picture inside
+the document is freely selectable. Note that a very small
+\refKey{/mermap/tile size} results in very small map lettering,
+while a very large \refKey{/mermap/tile size} results results in
+very blurred images.
+
+The general idea of a \emph{flexible} tile size is to specify an aspired
+tile size called \refKey{/mermap/flex tile size} and to give \LaTeX\
+the freedom to select \refKey{/mermap/tile size} in \emph{about the same size}
+as \refKey{/mermap/flex tile size}.
+This freedom is used to achieve a \emph{pseudo zoom} called
+\refKey{/mermap/flex zoom} which is a nearly arbitrary rational number instead
+of \refKey{/mermap/supply/zoom} which is a natural number.
+
+This \emph{pseudo zoom} is applied by several options which share \emph{flex}
+in their names, e.g.
+\refKey{/mermap/flex scale}, \refKey{/mermap/named flex scale},
+\refKey{/mermap/supply/flex reference scale},
+\refKey{/mermap/supply/flex area scale},
+\refKey{/mermap/supply/flex area fit}.
+
+
+
+\begin{docMrcKey}{tile size}{=\meta{length}}{no default, initially |32.512mm|}
+  Width and height of a drawn tile picture are set to \meta{length}.
+  For standard tiles with 256 times 256 pixels a tile size of
+  \SI{32.512}{mm} = \SI{1.28}{in} results in an approximate
+  \SI{200}{dpi} output for the document.
+  For a |beamer| document, consider to use a \refKey{/mermap/tile size} of
+  \SI{21.333333}{mm} to get approximate 1:1 pixel input and output (depending on |beamer| settings
+  and used hardware). Also see \refKey{/mermap/mapdef/tile size}.
+\end{docMrcKey}
+
+\begin{docMrcKey}{flex tile size}{=\meta{length}}{no default, initially |32.512mm|}
+  Aspired width and height of a tile picture are set to \meta{length}.
+  This value is used while applying \refKey{/mermap/flex zoom}.
+\end{docMrcKey}
+
+
+\begin{docMrcKey}{flex zoom}{=\meta{pseudo zoom}}{style, no default}
+  This style sets \refKey{/mermap/supply/zoom} and \refKey{/mermap/tile size} in combination.
+  \begin{itemize}
+  \item
+    If \meta{pseudo zoom} is a natural number,
+    \refKey{/mermap/supply/zoom} is set to \meta{pseudo zoom} and
+    \refKey{/mermap/tile size} is set to \refKey{/mermap/flex tile size}.
+  \item Otherwise, \refKey{/mermap/supply/zoom} is set to the natural number
+    closest to \meta{pseudo zoom} and \refKey{/mermap/tile size} is such
+    enlarged or reduced that the \meta{pseudo zoom} value is simulated,
+    i.e. the \emph{impression} of a rational zoom factor is given.
+  \end{itemize}
+  Note that \refKey{/mermap/flex zoom} has to be used \emph{before}
+  \refCom{mrcsupplymap} or \refCom{mrcmap}, because the zoom setup is
+  adapted.
+\end{docMrcKey}
+
+
+\clearpage
+\begin{docMrcKey}{flex scale}{=\meta{scale denominator}:\meta{latitude}}{style, no default}
+  For different latitude scopes, an identical zoom factor produces maps of
+  different scale. With \refKey{/mermap/flex scale}, a \refKey{/mermap/flex zoom}
+  is computed to achieve the given \meta{scale denominator} at a given \meta{latitude}.
+  Note that this only applies to the center of a map. If the produced
+  map is not centered at \meta{latitude}, the produced scale may
+  differ from the intended one.
+  Also see \refKey{/mermap/supply/flex reference scale}.
+
+\tikzsetnextfilename{drawing_flex_scale}%
+\begin{dispExample}
+\begin{tikzpicture}
+  \mermapset{flex scale=250000:48.14}
+  \mrcmap[type=reference,latitude=48.14,longitude=11.57,
+    source=opentopomap,
+    tex width=\linewidth,tex height=5cm]{}
+  \mrcdrawmap
+  \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
+        {\mrcmapattribution};
+  \mrcclipmap
+  \path[draw] (mrcmap.south west) rectangle (mrcmap.north east);
+  \node[below left=2mm, align=right, fill=white, fill opacity=0.5,
+      text opacity=1]
+    at (mrcmap.north east) {scale \mrcprettymapscale};
+\end{tikzpicture}
+\end{dispExample}
+\end{docMrcKey}
+
+
+
+\begin{docMrcKey}{named flex scale}{=\meta{scale denominator}:\meta{name}}{style, no default}
+  Identical to \refKey{/mermap/flex scale}, but used the \emph{named position}
+  \meta{name} to provide a \emph{latitude}, see \Fullref{sec:names_positions}.
+  \begin{dispListing}
+  \mrcNPdef{munich}{48.137222}{11.575556}
+  \mermapset{named flex scale=250000:munich} % identical to the following
+  \mermapset{flex scale=250000:\mrcNPlat{munich}}
+  \end{dispListing}
+\end{docMrcKey}
+
+
+
+\clearpage
+%-------------------------------------------------------------------------------
+\subsection{Geodetic Network}
+
+\begin{docCommand}{mrcdrawnetwork}{\oarg{options}}
+  Draws a geodetic network with meridians and parallels.
+  All \meta{options} share the common prefix |/mermap/|.
+  The displayed lines are selected automatically according to some tuning
+  parameters.
+  The map is sliced in \emph{about} maximal \refKey{/mermap/network pieces} in each
+  direction. Meridians and parallels share a minimal distance of
+  \emph{about} \refKey{/mermap/network distance}. The algorithm is
+  allowed to violate these conditions \emph{somewhat}.
+
+  Note that oversized maps are not supported, i.e. maps which are wider
+  than \ang{360} in longitude. Here, meridians are expected to be missing
+  or misplaced.
+
+\tikzsetnextfilename{drawing_network}%
+\begin{dispExample*}{center lower}
+% \mrcsetapikey{openrouteservice}{YOUR-API-KEY}  % registered key
+\begin{tikzpicture}
+  \mrcmap[  type = boundaries,
+    west = -20, east = 40, south = 36, north = 65,
+    source=openrouteservice mapsurfer,
+    flex area scale=40 000 000 ]{}
+  \mrcdrawmap
+  \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
+        {\mrcmapattribution};
+  \mrcclipmap
+  \mrcdrawnetwork
+  \path[draw] (mrcmap.south west) rectangle (mrcmap.north east);
+\end{tikzpicture}
+\end{dispExample*}
+\end{docCommand}
+
+
+\begin{docMrcKey}{network pieces}{=\meta{number}}{no default, initially |8|}
+  The map is sliced in \emph{about} maximal \meta{number} pieces in each
+  direction. \meta{number} may be exceeded \emph{somewhat}.
+  It is underrun to comply with \refKey{/mermap/network distance}.
+\end{docMrcKey}
+
+
+\begin{docMrcKey}{network distance}{=\meta{mesh width}}{no default, initially |2cm|}
+  Meridians and parallels share a minimal distance of
+  \emph{about} \meta{mesh width}.
+  \meta{mesh width} may be underrun \emph{somewhat}.
+  It is exceeded to comply with \refKey{/mermap/network pieces}.
+  For parallels on small scale maps, it refers to an averaged mesh width.
+\end{docMrcKey}
+
+\begin{docMrcKey}{network font}{=\meta{text}}{no default, initially
+  |\textbackslash fontsize\brackets{4pt}\brackets{4pt}\textbackslash sffamily|}
+  \meta{text} is some font setting for the latitude and longitude display.
+\end{docMrcKey}
+
+
+
+\subsection{Graphical Debug Overlay}
+
+\begin{docCommand}{mrcdrawinfo}{}
+  Draws some map information overlay for debugging purposes only.
+  \tikzsetnextfilename{drawing_mrcdrawinfo}%
+  \begin{dispExample}
+  \begin{tikzpicture}
+    \mrcNPdef{munich}{48.137222}{11.575556}
+    \mrcmap[type=reference, named position=munich, source=opentopomap,
+      flex reference scale=50000,
+      tex width=\linewidth,tex height=10cm]{}
+    \mrcdrawmap
+    \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
+          {\mrcmapattribution};
+    \mrcclipmap
+    \mrcdrawinfo
+  \end{tikzpicture}
+  \end{dispExample}
+\end{docCommand}

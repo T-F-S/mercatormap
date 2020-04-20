@@ -1,0 +1,91 @@
+% \LaTeX-Main\
+% !TeX encoding=UTF-8
+%%
+%% The LaTeX package mercatormap - version 1.00 (2020/04/20)
+%% mercatormap-example.tex: Example document with a map
+%%
+%% -------------------------------------------------------------------------------------------
+%% Copyright (c) 2020 by Prof. Dr. Dr. Thomas F. Sturm <thomas dot sturm at unibw dot de>
+%% -------------------------------------------------------------------------------------------
+%%
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%   http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+%% This work has the LPPL maintenance status `author-maintained'.
+%%
+%% This work consists of all files listed in README
+%%
+% arara: pdflatex: { shell: yes }
+%
+\def\mrcpkgprefix{}
+\documentclass{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[bookmarks,raiselinks,pageanchor,colorlinks]{hyperref}
+\usepackage[a4paper,margin=15mm,noheadfoot]{geometry}
+\usepackage{mercatormap}
+
+\pagestyle{empty}
+
+\mrcactivatescript% activates Python script
+
+\begin{document}
+
+\vspace*{\fill}
+\noindent
+\begin{tikzpicture}
+  \mrcNPdef{bbox-SW}{47.270111}{8.976350}
+  \mrcNPdef{bbox-NE}{50.564714}{13.839637}
+  \mrcmap
+  [
+    area = {bbox-SW, bbox-NE},
+    area to reference,
+    type   = reference,
+    flex reference scale = 2000000,
+    tex width  = \linewidth,
+    tex height = 22cm,
+    source     = topplusopen web,
+  ]{mercatormap-example}
+  \mrcdrawmap
+  \mrcdrawnetwork
+  \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
+    {\mrcmapattribution};
+  \mrcclipmap
+
+  \draw[thick] (mrcmap.south west) rectangle (mrcmap.north east);
+
+  \mermapsetmarker{type=drop, draw=red, fill=red!20!white,
+    font=\sffamily\bfseries}
+  \mrcmarker{position=48.137222:11.575556, contents={M}}
+  \mrcmarker{position=48.537222:12.152222, contents={LA}}
+  \mrcmarker{position=49.017222:12.096944, contents={R}}
+  \mrcmarker{position=48.371667:10.898333, contents={A}}
+  \mrcmarker{position=49.300833:10.571667, contents={AN}}
+  \mrcmarker{position=49.948056:11.578333, contents={BT}}
+  \mrcmarker{position=49.948056:11.578333, contents={BT}}
+  \mrcmarker{position=49.794444:9.929444,  contents={W\"U}}
+
+  \node[below left=2mm,align=center,fill=white,draw=black,fill opacity=0.9,
+    text opacity=1,inner sep=2mm] at (mrcmap.north east)
+  {
+    \textbf{\Large Bayern}\\[1mm]
+    \mrcprettymapscale\\[1mm]
+    \begin{tikzpicture}
+    \mrcdrawscalebar[width-in-km=100]
+    \path[every node/.style={above,inner sep=0.5mm,font=\sffamily\tiny}]
+      (mrcscalebar.north west) -- (mrcscalebar.north east)
+      node[pos=0]{0} node[pos=0.2]{20} node[pos=0.4]{40} node[pos=0.6]{60}
+      node[pos=0.8]{80} node[pos=1]{100} node[pos=1,right,yshift=-1mm]{km};
+    \end{tikzpicture}
+  };
+
+\end{tikzpicture}
+\vspace*{\fill}
+
+\end{document}

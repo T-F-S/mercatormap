@@ -1,0 +1,130 @@
+% !TeX root = mercatormap.tex
+% !TeX encoding=UTF-8
+% !TeX spellcheck=en_US
+% include file of mercatormap.tex (manual of the LaTeX package mercatormap)
+\clearpage
+\section{Routes}\label{sec:routes}%
+
+Routes are \tikzname\ |path| objects which can be drawn with the appropriate
+\tikzname\ macros and the coordinate system documented in
+\Fullref{sec:map_definition}.
+Nevertheless, in the following some alternatives are described which allow
+to specify a path by a sequence of points (\refCom{mrcpoint}).
+The idea is that such a sequence of points is exported by a third-party
+application for inclusion in a \LaTeX\ map, see \Fullref{sec:routes_gpx}.
+
+
+%-------------------------------------------------------------------------------
+\subsection{Route Path Definition}
+
+\begin{docEnvironment}{mrcroute}{\oarg{options}}
+  This environment creates a \tikzname\ |path| with given \tikzname\ \meta{options}.
+  The \meta{environment content} is a sequence of points made by \refCom{mrcpoint}.
+  \begin{dispListing}
+  \begin{mrcroute}[red, very thick]
+     \mrcpoint{48.137222}{11.575556}
+     \mrcpoint{49.019479}{12.0976942}
+     ...
+  \end{mrcroute}
+  \end{dispListing}
+  Note that a map definition by \refCom{mrcdefinemap}, \refCom{mrcmap},
+  or \refCom{mrcapplymap} is needed before a route |path| can be drawn.\par
+  %A |path| can be closed by adding \docAuxCommand{pgfpathclose} as last entry
+  %after all \refCom{mrcpoint} macros. Further |pgf| commands may be added,
+  %but the sequence should start with a \refCom{mrcpoint}.
+\end{docEnvironment}
+
+
+\begin{docEnvironment}{mrcroute*}{\oarg{options}}
+  Identical to \refEnv{mrcroute}, but the created \tikzname\ |path| is
+  closed.
+\end{docEnvironment}
+
+
+\begin{docCommand}{mrcrouteinput}{\oarg{options}\marg{filename}}
+  Identical to \refEnv{mrcroute}, but the sequence of points is included
+  from a file with the given \meta{filename}.
+\end{docCommand}
+
+\begin{docCommand}{mrcrouteinput*}{\oarg{options}\marg{filename}}
+  Identical to \refCom{mrcrouteinput}, but the created \tikzname\ |path| is
+  closed.
+\end{docCommand}
+
+
+\begin{docCommand}{mrcpoint}{\marg{latitude}\marg{longitude}}
+  Specifies a single coordinate point with given \meta{latitude} and
+  \meta{longitude} as part of sequence inside \refEnv{mrcroute}.\par
+  This is a wrapper for |\pgfpathmoveto| respectively |\pgfpathlineto|.
+\end{docCommand}
+
+
+\begin{docMrcKey}{every route}{=\meta{options}}{no default, initially empty}
+  Sets \tikzname\ \meta{options} which are applied to every
+  \refEnv{mrcroute} and \refCom{mrcrouteinput}.
+\end{docMrcKey}
+
+
+\tikzsetnextfilename{routes_example}%
+\begin{dispExample*}{center lower}
+% \mrcsetapikey{thunderforest}{YOUR-API-KEY}  % registered key
+\begin{tikzpicture}
+  \mrcmap[type=areafit,
+    west=5,east=15,south=47,north=55,
+    source=thunderforest neighbourhood,
+    tex width=14cm, tex height=14cm,
+    flex area fit=5mm
+    ]{routes_example}
+  \mrcdrawmap
+  \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
+    {\mrcmapattribution};
+  \mrcclipmap
+  \path[draw] (mrcmap.south west) rectangle (mrcmap.north east);
+  \begin{mrcroute}[blue,line width=0.4mm,line cap=round,
+        line join=round,double=blue!5!white,double distance=0.4mm]
+     \mrcpoint{48.137222}{11.575556}
+     \mrcpoint{49.019479}{12.0976942}
+     \mrcpoint{49.45522}{11.07631}
+     \mrcpoint{50.978056}{11.029167}
+     \mrcpoint{52.518611}{13.408333}
+  \end{mrcroute}
+\end{tikzpicture}
+\end{dispExample*}
+
+
+\clearpage
+%-------------------------------------------------------------------------------
+\subsection{Example Python Conversion Scripts for gpx}\label{sec:routes_gpx}
+The following scripts are examples for conversions from a standard
+routes and tracks of |gpx| files to \LaTeX\ include files
+(assuming a single route/track per file).
+
+\begin{dispListing*}{title=Python 3 script to convert \texttt{route.gpx} to
+  a sequence of points file \texttt{route.inc},
+  documentation minted language=python}
+import xmltodict
+
+with open('route.gpx', encoding='utf-8') as gpx:
+    doc = xmltodict.parse(gpx.read())
+    with open('route.inc', "w", encoding="utf-8") as inc:
+        for rtept in doc['gpx']['rte']['rtept']:
+            lat = rtept['@lat']
+            lon = rtept['@lon']
+            inc.write(f'\\mrcpoint{{{lat}}}{{{lon}}}\n')
+\end{dispListing*}
+
+
+\begin{dispListing*}{title=Python 3 script to convert \texttt{track.gpx} to
+  a sequence of points file \texttt{track.inc},
+  documentation minted language=python}
+import xmltodict
+
+with open('track.gpx', encoding='utf-8') as gpx:
+    doc = xmltodict.parse(gpx.read())
+    with open('track.inc', "w", encoding="utf-8") as inc:
+        for trkpt in doc['gpx']['trk']['trkseg']['trkpt']:
+            lat = trkpt['@lat']
+            lon = trkpt['@lon']
+            inc.write(f'\\mrcpoint{{{lat}}}{{{lon}}}\n')
+\end{dispListing*}
+
