@@ -206,45 +206,45 @@ but not for critical navigation purposes etc.
       node[pos=0.8]{80} node[pos=1]{100} node[pos=1,right,yshift=-1mm]{km};
   \end{tikzpicture}
   \end{dispExample}
-
 \end{docCommand}
 
+\clearpage
 
-\begin{docMrcKey}{scalebar/width-in-km}{=\meta{number}}{no default, initially |0|}
+\begin{docMrcKey}[scalebar]{width-in-km}{=\meta{number}}{no default, initially |0|}
   Sets the width of the scale bar to match the real word length \meta{number}
   in kilometers.
 \end{docMrcKey}
 
-\begin{docMrcKey}{scalebar/width-in-kilometer}{=\meta{number}}{no default, initially |0|}
+\begin{docMrcKey}[scalebar]{width-in-kilometer}{=\meta{number}}{no default, initially |0|}
   Alias for \refKey{/mermap/scalebar/width-in-km}
 \end{docMrcKey}
 
-\begin{docMrcKey}{scalebar/width-in-meter}{=\meta{number}}{no default, initially |0|}
+\begin{docMrcKey}[scalebar]{width-in-meter}{=\meta{number}}{no default, initially |0|}
   Sets the width of the scale bar to match the real word length \meta{number}
   in meters.
 \end{docMrcKey}
 
-\begin{docMrcKey}{scalebar/width-in-mile}{=\meta{number}}{no default, initially |0|}
+\begin{docMrcKey}[scalebar]{width-in-mile}{=\meta{number}}{no default, initially |0|}
   Sets the width of the scale bar to match the real word length \meta{number}
   in miles.
 \end{docMrcKey}
 
-\begin{docMrcKey}{scalebar/width-in-yard}{=\meta{number}}{no default, initially |0|}
+\begin{docMrcKey}[scalebar]{width-in-yard}{=\meta{number}}{no default, initially |0|}
   Sets the width of the scale bar to match the real word length \meta{number}
   in yards.
 \end{docMrcKey}
 
-\begin{docMrcKey}{scalebar/partitions}{=\meta{number}}{no default, initially |5|}
+\begin{docMrcKey}[scalebar]{partitions}{=\meta{number}}{no default, initially |5|}
   Determines the \meta{number} of partitions for the scale bar. If \meta{number}
   is set to 1, there is no partitioning.
 \end{docMrcKey}
 
-\begin{docMrcKey}{scalebar/height}{=\meta{length}}{no default, initially |2mm|}
+\begin{docMrcKey}[scalebar]{height}{=\meta{length}}{no default, initially |2mm|}
   Sets the height of the scale bar to the given \TeX\ \meta{length}.
 \end{docMrcKey}
 
 
-\begin{docMrcKey}{scalebar/at}{=\marg{\tikzname\ coordinate}}{no default,
+\begin{docMrcKey}[scalebar]{at}{=\marg{\tikzname\ coordinate}}{no default,
     initially \texttt{\brackets{(0,0)}}}
   The scale bar is positioned at the given \meta{\tikzname\ coordinate}.
   The placement is done with the \refKey{/mermap/scalebar/placement} option.
@@ -283,7 +283,7 @@ but not for critical navigation purposes etc.
 
 \pagebreak
 
-\begin{docMrcKey}{scalebar/placement}{=\meta{\tikzname\ positioning}}{no default, initially empty}
+\begin{docMrcKey}[scalebar]{placement}{=\meta{\tikzname\ positioning}}{no default, initially empty}
   \meta{\tikzname\ positioning} of a scale bar in combination with
   \refKey{/mermap/scalebar/at}. All \tikzname\ placement options for nodes
   can be used, e.g. \texttt{above left} or \texttt{anchor=mid west}, etc.
@@ -292,7 +292,7 @@ but not for critical navigation purposes etc.
 \end{docMrcKey}
 
 
-\begin{docMrcKey}{scalebar/south-east-inside}{\colOpt{=\meta{x shift};\meta{y shift}}}{default |0pt;0pt|, initially unset}
+\begin{docMrcKey}[scalebar]{south-east-inside}{\colOpt{=\meta{x shift};\meta{y shift}}}{default |0pt;0pt|, initially unset}
   Shortcut for placing the scale bar at the south east corner of the map.
   The optional \mbox{\meta{x shift}} and \meta{y shift} denote the
   absolute shift values in each direction, i.e. the algebraic sign is
@@ -302,36 +302,36 @@ but not for critical navigation purposes etc.
   are set by this option.
 \end{docMrcKey}
 
-\begin{docMrcKey}{scalebar/south-east-outside}{\colOpt{=\meta{x shift};\meta{y shift}}}{default |0pt;0pt|, initially unset}
+\begin{docMrcKey}[scalebar]{south-east-outside}{\colOpt{=\meta{x shift};\meta{y shift}}}{default |0pt;0pt|, initially unset}
   Shortcut for placing the scale bar below the south east corner of the map.
 \end{docMrcKey}
 
-\begin{docMrcKey}{scalebar/south-west-inside}{\colOpt{=\meta{x shift};\meta{y shift}}}{default |0pt;0pt|, initially unset}
+\begin{docMrcKey}[scalebar]{south-west-inside}{\colOpt{=\meta{x shift};\meta{y shift}}}{default |0pt;0pt|, initially unset}
   Shortcut for placing the scale bar at the south west corner of the map.
 \end{docMrcKey}
 
-\begin{docMrcKey}{scalebar/south-west-outside}{\colOpt{=\meta{x shift};\meta{y shift}}}{default |0pt;0pt|, initially unset}
+\begin{docMrcKey}[scalebar]{south-west-outside}{\colOpt{=\meta{x shift};\meta{y shift}}}{default |0pt;0pt|, initially unset}
   Shortcut for placing the scale bar below the south west corner of the map.
 \end{docMrcKey}
 
-\begin{docMrcKey}{scalebar/north-west-inside}{\colOpt{=\meta{x shift};\meta{y shift}}}{default |0pt;0pt|, initially unset}
+\begin{docMrcKey}[scalebar]{north-west-inside}{\colOpt{=\meta{x shift};\meta{y shift}}}{default |0pt;0pt|, initially unset}
   Shortcut for placing the scale bar at the north west corner of the map.
 \end{docMrcKey}
 
-\begin{docMrcKey}{scalebar/north-west-outside}{\colOpt{=\meta{x shift};\meta{y shift}}}{default |0pt;0pt|, initially unset}
+\begin{docMrcKey}[scalebar]{north-west-outside}{\colOpt{=\meta{x shift};\meta{y shift}}}{default |0pt;0pt|, initially unset}
   Shortcut for placing the scale bar above the north west corner of the map.
 \end{docMrcKey}
 
-\begin{docMrcKey}{scalebar/north-east-inside}{\colOpt{=\meta{x shift};\meta{y shift}}}{default |0pt;0pt|, initially unset}
+\begin{docMrcKey}[scalebar]{north-east-inside}{\colOpt{=\meta{x shift};\meta{y shift}}}{default |0pt;0pt|, initially unset}
   Shortcut for placing the scale bar at the north east corner of the map.
 \end{docMrcKey}
 
-\begin{docMrcKey}{scalebar/north-east-outside}{\colOpt{=\meta{x shift};\meta{y shift}}}{default |0pt;0pt|, initially unset}
+\begin{docMrcKey}[scalebar]{north-east-outside}{\colOpt{=\meta{x shift};\meta{y shift}}}{default |0pt;0pt|, initially unset}
   Shortcut for placing the scale bar above the north east corner of the map.
 \end{docMrcKey}
 
 
-\begin{docMrcKey}{scalebar/major style}{=\marg{\tikzname\ options}}{no default, initially empty}
+\begin{docMrcKey}[scalebar]{major style}{=\marg{\tikzname\ options}}{no default, initially empty}
   The \emph{major} part of the scale bar is a single \tikzname\ path object
   which can be customized by the given \meta{\tikzname\ options}.
   The \emph{major} part consists of the black area in the default case.
@@ -345,7 +345,7 @@ but not for critical navigation purposes etc.
 \end{docMrcKey}
 
 
-\begin{docMrcKey}{scalebar/minor style}{=\marg{\tikzname\ options}}{no default, initially empty}
+\begin{docMrcKey}[scalebar]{minor style}{=\marg{\tikzname\ options}}{no default, initially empty}
   The \emph{minor} part of the scale bar is a single \tikzname\ path object
   which can be customized by the given \meta{\tikzname\ options}.
   The \emph{minor} part is seen as holes in the default case.
@@ -362,12 +362,12 @@ but not for critical navigation purposes etc.
 
 
 \pagebreak
-\begin{docMrcKey}{scalebar/double}{\colOpt{=true\textbar false}}{default |true|, initially |true|}
+\begin{docMrcKey}[scalebar]{double}{\colOpt{=true\textbar false}}{default |true|, initially |true|}
   If set to |true|, the scale bar is drawn as a double ruler.
 \end{docMrcKey}
 
 
-\begin{docMrcKey}{scalebar/single}{\colOpt{=true\textbar false}}{default |true|, initially |false|}
+\begin{docMrcKey}[scalebar]{single}{\colOpt{=true\textbar false}}{default |true|, initially |false|}
   If set to |true|, the scale bar is drawn as a single ruler.
   \refKey{/mermap/scalebar/single} is inverse to \refKey{/mermap/scalebar/double}.
   \tikzsetnextfilename{scales_scalebar6}
@@ -379,20 +379,20 @@ but not for critical navigation purposes etc.
 \end{docMrcKey}
 
 
-\begin{docMrcKey}{scalebar/transparent}{\colOpt{=true\textbar false}}{default |true|, initially |true|}
+\begin{docMrcKey}[scalebar]{transparent}{\colOpt{=true\textbar false}}{default |true|, initially |true|}
   If set to |true|, the \emph{minor} part of the scale bar is drawn transparent,
   i.e. as holes inside the ruler.
 \end{docMrcKey}
 
 
-\begin{docMrcKey}{scalebar/solid}{\colOpt{=true\textbar false}}{default |true|, initially |false|}
+\begin{docMrcKey}[scalebar]{solid}{\colOpt{=true\textbar false}}{default |true|, initially |false|}
   If set to |true|, the \emph{minor} part of the scale bar is drawn opaque.
   It is drawn white or according to \refKey{/mermap/scalebar/minor style}.
   \refKey{/mermap/scalebar/solid} is inverse to \refKey{/mermap/scalebar/transparent}.
 \end{docMrcKey}
 
 
-\begin{docMrcKey}{scalebar/scale}{=\meta{scale denominator}}{no default, initially unset}
+\begin{docMrcKey}[scalebar]{scale}{=\meta{scale denominator}}{no default, initially unset}
   Sets or overwrites the \meta{scale denominator} setting.
   \textbf{Using this key is not needed and may even lead to erroneous displays
     inside a |tikzpicture| with a defined map setting.}

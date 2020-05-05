@@ -188,7 +188,7 @@ accompanying Python script. The technical background is documented in
   the option list for \refCom{mrcsupplymap}.
 \end{docMrcKey}
 
-\begin{docMrcKey}{supply/type}{=\meta{type}}{no default, initially |reference|}
+\begin{docMrcKey}[supply]{type}{=\meta{type}}{no default, initially |reference|}
   The \meta{type} defines the basic computation for the map. Feasible values are
   \begin{itemize}
   \item\docValue{reference}: \flqq map with reference position\frqq\\
@@ -220,37 +220,37 @@ accompanying Python script. The technical background is documented in
   \end{itemize}
 \end{docMrcKey}
 
-\begin{docMrcKey}{supply/zoom}{=\meta{setup zoom}}{no default, initially |9|}
+\begin{docMrcKey}[supply]{zoom}{=\meta{setup zoom}}{no default, initially |9|}
   Map tile zoom factor alias $z$ coordinate of the map tiles.
   Used for map types \docValue{boundaries} and \docValue{reference}.
 \end{docMrcKey}
 
-\begin{docMrcKey}{supply/north}{=\meta{setup north latitude}}{no default, initially |50|}
+\begin{docMrcKey}[supply]{north}{=\meta{setup north latitude}}{no default, initially |50|}
   Northern latitude degree, possibly negative for the southern hemisphere,
   lower than $90$ but always larger than \refKey{/mermap/supply/south}.
   Used for map types \docValue{boundaries} and \docValue{areafit}.
 \end{docMrcKey}
 
-\begin{docMrcKey}{supply/south}{=\meta{setup south latitude}}{no default, initially |48|}
+\begin{docMrcKey}[supply]{south}{=\meta{setup south latitude}}{no default, initially |48|}
   Southern latitude degree, possibly negative for the southern hemisphere,
   larger than $-90$ but always lower than \refKey{/mermap/supply/north}.
   Used for map types \docValue{boundaries} and \docValue{areafit}.
 \end{docMrcKey}
 
-\begin{docMrcKey}{supply/west}{=\meta{setup west longitude}}{no default, initially |11|}
+\begin{docMrcKey}[supply]{west}{=\meta{setup west longitude}}{no default, initially |11|}
   Western longitude degree, possibly negative for the western hemisphere,
   possibly shifted periodically, but always lower than \refKey{/mermap/supply/east}.
   Used for map types \docValue{boundaries} and \docValue{areafit}.
 \end{docMrcKey}
 
-\begin{docMrcKey}{supply/east}{=\meta{setup east longitude}}{no default, initially |13|}
+\begin{docMrcKey}[supply]{east}{=\meta{setup east longitude}}{no default, initially |13|}
   Eastern longitude degree, possibly negative for the western hemisphere,
   possibly shifted periodically, but always larger than \refKey{/mermap/supply/west}.
   Used for map types \docValue{boundaries} and \docValue{areafit}.
 \end{docMrcKey}
 
 
-\begin{docMrcKey}{supply/area}{=\marg{comma separated list of named positions}}{no default}
+\begin{docMrcKey}[supply]{area}{=\marg{comma separated list of named positions}}{no default}
   Sets
   \refKey{/mermap/supply/north}, \refKey{/mermap/supply/south},
   \refKey{/mermap/supply/west}, \refKey{/mermap/supply/east}
@@ -263,7 +263,7 @@ accompanying Python script. The technical background is documented in
 \end{docMrcKey}
 
 
-\begin{docMrcKey}{supply/add area}{=\marg{comma separated list of named positions}}{no default}
+\begin{docMrcKey}[supply]{add area}{=\marg{comma separated list of named positions}}{no default}
   Nearly identical to \refKey{/mermap/supply/area}, but
   the given \meta{comma separated list of named positions}
   does not reset the current area, i.e. the positions are added to the
@@ -272,7 +272,7 @@ accompanying Python script. The technical background is documented in
 \end{docMrcKey}
 
 
-\begin{docMrcKey}{supply/area to reference}{}{no value, initially unset}
+\begin{docMrcKey}[supply]{area to reference}{}{no value, initially unset}
   The map settings
   \refKey{/mermap/supply/north}, \refKey{/mermap/supply/south},
   \refKey{/mermap/supply/west}, \refKey{/mermap/supply/east}
@@ -283,24 +283,24 @@ accompanying Python script. The technical background is documented in
 
 
 
-\begin{docMrcKey}{supply/latitude}{=\meta{setup latitude}}{no default, initially |49|}
+\begin{docMrcKey}[supply]{latitude}{=\meta{setup latitude}}{no default, initially |49|}
   Latitude degree of a reference point, possibly negative for the southern hemisphere.
   Used for map type \docValue{reference}.
 \end{docMrcKey}
 
-\begin{docMrcKey}{supply/longitude}{=\meta{setup longitude}}{no default, initially |12|}
+\begin{docMrcKey}[supply]{longitude}{=\meta{setup longitude}}{no default, initially |12|}
   Longitude degree of a reference point, possibly negative for the western hemisphere.
   Used for map type \docValue{reference}.
 \end{docMrcKey}
 
 
-\begin{docMrcKey}{supply/position}{=\meta{setup latitude}:\meta{setup longitude}}{no default, initially |49:12|}
+\begin{docMrcKey}[supply]{position}{=\meta{setup latitude}:\meta{setup longitude}}{no default, initially |49:12|}
   Latitude degree and longitude of a reference point.
   Used for map type \docValue{reference}.
 \end{docMrcKey}
 
 
-\begin{docMrcKey}{supply/named position}{=\meta{name}}{style, no default}
+\begin{docMrcKey}[supply]{named position}{=\meta{name}}{style, no default}
   The \emph{named position} given by \meta{name} describes
   a reference point, see \Fullref{sec:names_positions}.
   Used for map type \docValue{reference}.
@@ -308,36 +308,36 @@ accompanying Python script. The technical background is documented in
 
 
 \pagebreak
-\begin{docMrcKey}{supply/width}{=\meta{setup width in tiles}}{no default, initially |4|}
+\begin{docMrcKey}[supply]{width}{=\meta{setup width in tiles}}{no default, initially |4|}
   Width of the map as multiplicity of map tiles.
   Used for map types \docValue{reference} and \docValue{areafit}.
 \end{docMrcKey}
 
-\begin{docMrcKey}{supply/tex width}{=\meta{width}}{style, no default}
+\begin{docMrcKey}[supply]{tex width}{=\meta{width}}{style, no default}
   Width of the map as \TeX\ dimension.
   This is a style to compute \refKey{/mermap/supply/width} according to
   the current \refKey{/mermap/tile size}.
 \end{docMrcKey}
 
-\begin{docMrcKey}{supply/height}{=\meta{setup height in tiles}}{no default, initially |4|}
+\begin{docMrcKey}[supply]{height}{=\meta{setup height in tiles}}{no default, initially |4|}
   Height of the map as multiplicity of map tiles.
   Used for map types \docValue{reference} and \docValue{areafit}.
 \end{docMrcKey}
 
-\begin{docMrcKey}{supply/tex height}{=\meta{width}}{style, no default}
+\begin{docMrcKey}[supply]{tex height}{=\meta{width}}{style, no default}
   Height of the map as \TeX\ dimension.
   This is a style to compute \refKey{/mermap/supply/height} according to
   the current \refKey{/mermap/tile size}.
 \end{docMrcKey}
 
-\begin{docMrcKey}{supply/align}{=\meta{setup alignment}}{no default, initially |center|}
+\begin{docMrcKey}[supply]{align}{=\meta{setup alignment}}{no default, initially |center|}
   Alignment of reference point or area for map types \docValue{reference} and \docValue{areafit}.
   Feasible values are
   \docValue{northwest}, \docValue{north}, \docValue{northeast}, \docValue{west},
   \docValue{center}, \docValue{east}, \docValue{southwest},\docValue{south}, \docValue{southeast}.
 \end{docMrcKey}
 
-\begin{docMrcKey}{supply/target}{=\meta{setup target}}{no default, initially |tiles|}
+\begin{docMrcKey}[supply]{target}{=\meta{setup target}}{no default, initially |tiles|}
   Defines the type of output for the Python~3 script. Feasible values are:
   \begin{itemize}
   \item\docValue{none}: No tiles are downloaded and no merged map is generated, just map computation.
@@ -365,7 +365,7 @@ accompanying Python script. The technical background is documented in
 
 
 \clearpage
-\begin{docMrcKey}{supply/url}{=\meta{setup URL}}{no default, initially empty}
+\begin{docMrcKey}[supply]{url}{=\meta{setup URL}}{no default, initially empty}
   Here, the url format with placeholder |{z}{x}{y}| for map tile download is defined.
   \textbf{Be sure that you have the permission to download, save, and use
   the map tiles from that URL. Illegal downloads are not endorsed in any
@@ -377,7 +377,7 @@ accompanying Python script. The technical background is documented in
 \end{docMrcKey}
 
 
-\begin{docMrcKey}{supply/url with api key}{=\marg{prefix}\marg{name}\marg{postfix}}{no default}
+\begin{docMrcKey}[supply]{url with api key}{=\marg{prefix}\marg{name}\marg{postfix}}{no default}
   This is an alternative version of \refKey{/mermap/supply/url}.
   The URL is constructed from some fixed \meta{prefix} and \meta{postfix} with
   an API key in between. The API key is retrieved by \meta{name} from a
@@ -402,7 +402,7 @@ accompanying Python script. The technical background is documented in
 
 
 
-\begin{docMrcKey}{supply/attribution}{=\meta{attribution text}}{no default, initially empty}
+\begin{docMrcKey}[supply]{attribution}{=\meta{attribution text}}{no default, initially empty}
   Attribution text for the map source. Typically, it acknowledges the copyright
   of the map data provider. It may contain hyperlinks.
   It is used to set up \refKey{/mermap/mapdef/attribution} afterwards
@@ -412,7 +412,7 @@ accompanying Python script. The technical background is documented in
   \verb+\"{u}+, but umlauts can also be used directly, e.g. as UTF-8 coded characters.
 \end{docMrcKey}
 
-\begin{docMrcKey}{supply/attribution print}{=\meta{attribution text}}{no default, initially empty}
+\begin{docMrcKey}[supply]{attribution print}{=\meta{attribution text}}{no default, initially empty}
   Attribution text for the map source.
   In contrast to \refKey{/mermap/supply/attribution} it is intended for media
   that does not support hyperlinks like printed posters, books, etc.
@@ -421,13 +421,13 @@ accompanying Python script. The technical background is documented in
 \end{docMrcKey}
 
 
-\begin{docMrcKey}{supply/basename}{=\meta{setup tile base name}}{no default, initially \texttt{tiles/tile}}
+\begin{docMrcKey}[supply]{basename}{=\meta{setup tile base name}}{no default, initially \texttt{tiles/tile}}
   Prefix for local tile files, e.g. '|tiles/map|' for '|tiles/map_10_10_10.png|'.
 \end{docMrcKey}
 
 
 \clearpage
-\begin{docMrcKey}{supply/flex reference scale}{=\meta{scale denominator}}{no default}
+\begin{docMrcKey}[supply]{flex reference scale}{=\meta{scale denominator}}{no default}
   With the given \meta{scale denominator}, an appropriate \refKey{/mermap/supply/zoom}
   and \refKey{/mermap/tile size} is computed. Note that
   the \meta{scale denominator}
@@ -469,7 +469,7 @@ accompanying Python script. The technical background is documented in
 \end{docMrcKey}
 
 
-\begin{docMrcKey}{supply/flex area scale}{=\meta{scale denominator}}{no default}
+\begin{docMrcKey}[supply]{flex area scale}{=\meta{scale denominator}}{no default}
   This is a shortcut for setting \refKey{/mermap/supply/area to reference}
   and \refKey{/mermap/supply/flex reference scale}=\meta{scale denominator}.
   Used for map type \docValue{boundaries} and \docValue{reference}.
@@ -486,7 +486,7 @@ accompanying Python script. The technical background is documented in
 
 
 \clearpage
-\begin{docMrcKey}{supply/flex area fit}{\colOpt{=\meta{size}}}{default |0pt|}
+\begin{docMrcKey}[supply]{flex area fit}{\colOpt{=\meta{size}}}{default |0pt|}
   This key can be used for map type \docValue{areafit} as \emph{final}
   option \emph{after} all other options.
   It applies a fine tuning to \refKey{/mermap/tile size},
@@ -522,7 +522,7 @@ accompanying Python script. The technical background is documented in
 
 
 \clearpage
-\begin{docMrcKey}{supply/pixel}{=\meta{setup pixel size}}{no default, initially |256|}
+\begin{docMrcKey}[supply]{pixel}{=\meta{setup pixel size}}{no default, initially |256|}
   Pixel width (and height) of a tile. It is especially needed for
   target \docValue{mergedmap} and also \docValue{wmsmap}.
   For \docValue{wmsmap}, it is multiplied with a pseudo tile calculation
@@ -530,7 +530,7 @@ accompanying Python script. The technical background is documented in
 \end{docMrcKey}
 
 
-\begin{docMrcKey}{supply/dpi}{=\meta{dpi value}}{style, no default}
+\begin{docMrcKey}[supply]{dpi}{=\meta{dpi value}}{style, no default}
   This style sets \refKey{/mermap/supply/pixel} such that the given \meta{dpi value}
   is resulting (approximately).
   \begin{itemize}
@@ -631,7 +631,7 @@ want to add more to avoid any legal uncertainties.
 \end{itemize}
 
 \medskip
-\begin{docMrcKey}{supply/source}{=\meta{source}}{style, no default}
+\begin{docMrcKey}[supply]{source}{=\meta{source}}{style, no default}
   This style sets \refKey{/mermap/supply/url}, \refKey{/mermap/supply/attribution},\\
   \refKey{/mermap/supply/attribution print} and \refKey{/mermap/supply/basename}.\\
   Feasible values for \meta{source} are:

@@ -58,25 +58,25 @@ See \Fullref{sec:automated_map} for script aided map definitions.
 \end{docCommand}
 
 
-\begin{docMrcKey}{mapdef/north}{=\meta{map north latitude}}{no default, initially 50}
+\begin{docMrcKey}[mapdef]{north}{=\meta{map north latitude}}{no default, initially 50}
   Northern latitude degree of the visible map, possibly negative for the southern hemisphere,
   lower than $90$ but always larger than \refKey{/mermap/mapdef/south}.
   It is accessible as \docAuxCommand{mrcmapnorth} (use read-only).
 \end{docMrcKey}
 
-\begin{docMrcKey}{mapdef/south}{=\meta{map south latitude}}{no default, initially 48}
+\begin{docMrcKey}[mapdef]{south}{=\meta{map south latitude}}{no default, initially 48}
   Southern latitude degree of the visible map, possibly negative for the southern hemisphere,
   larger than $-90$ but always lower than \refKey{/mermap/mapdef/north}.
   It is accessible as \docAuxCommand{mrcmapsouth} (use read-only).
 \end{docMrcKey}
 
-\begin{docMrcKey}{mapdef/west}{=\meta{map west longitude}}{no default, initially 11}
+\begin{docMrcKey}[mapdef]{west}{=\meta{map west longitude}}{no default, initially 11}
   Western longitude degree of the visible map, possibly negative for the western hemisphere,
   possibly shifted periodically, but always lower than \refKey{/mermap/mapdef/east}.
   It is accessible as \docAuxCommand{mrcmapwest} (use read-only).
 \end{docMrcKey}
 
-\begin{docMrcKey}{mapdef/east}{=\meta{map east longitude}}{no default, initially 13}
+\begin{docMrcKey}[mapdef]{east}{=\meta{map east longitude}}{no default, initially 13}
   Eastern longitude degree of the visible map, possibly negative for the western hemisphere,
   possibly shifted periodically, but always larger than \refKey{/mermap/mapdef/west}.
   It is accessible as \docAuxCommand{mrcmapeast} (use read-only).
@@ -92,62 +92,62 @@ and not manually by \refCom{mrcdefinemap}. However, some values are
 computationally used in all cases. They can be ignored as pure technical
 information.
 
-\begin{docMrcKey}{mapdef/xmin}{=\meta{map tile x minimum}}{no default, initially 271}
+\begin{docMrcKey}[mapdef]{xmin}{=\meta{map tile x minimum}}{no default, initially 271}
   Minimal $x$ coordinate of the map tiles.
 \end{docMrcKey}
 
-\begin{docMrcKey}{mapdef/xmax}{=\meta{map tile x maximum}}{no default, initially 275}
+\begin{docMrcKey}[mapdef]{xmax}{=\meta{map tile x maximum}}{no default, initially 275}
   Maximal $x$ coordinate of the map tiles.
 \end{docMrcKey}
 
-\begin{docMrcKey}{mapdef/ymin}{=\meta{map tile y minimum}}{no default, initially 173}
+\begin{docMrcKey}[mapdef]{ymin}{=\meta{map tile y minimum}}{no default, initially 173}
   Minimal $y$ coordinate of the map tiles.
 \end{docMrcKey}
 
-\begin{docMrcKey}{mapdef/ymax}{=\meta{map tile y maximum}}{no default, initially 177}
+\begin{docMrcKey}[mapdef]{ymax}{=\meta{map tile y maximum}}{no default, initially 177}
   Maximal $y$ coordinate of the map tiles.
 \end{docMrcKey}
 
-\begin{docMrcKey}{mapdef/zoom}{=\meta{map zoom}}{no default, initially 9}
+\begin{docMrcKey}[mapdef]{zoom}{=\meta{map zoom}}{no default, initially 9}
   Map tile zoom factor alias $z$ coordinate of the map tiles.
 \end{docMrcKey}
 
-\begin{docMrcKey}{mapdef/pixelwidth}{=\meta{map width in pixels}}{no default, initially 100}
+\begin{docMrcKey}[mapdef]{pixelwidth}{=\meta{map width in pixels}}{no default, initially 100}
   Width of the visible map expressed in pixels of the source file(s).
   It is accessible as \docAuxCommand{mrcpixelwidth} (use read-only).
 \end{docMrcKey}
 
-\begin{docMrcKey}{mapdef/pixelheight}{=\meta{map height in tiles}}{no default, initially 100}
+\begin{docMrcKey}[mapdef]{pixelheight}{=\meta{map height in tiles}}{no default, initially 100}
   Height of the visible map expressed in pixels of the source file(s).
   It is accessible as \docAuxCommand{mrcpixelheight} (use read-only).
 \end{docMrcKey}
 
-\begin{docMrcKey}{mapdef/westoffset}{=\meta{map tile offset (west)}}{no default, initially 0}
+\begin{docMrcKey}[mapdef]{westoffset}{=\meta{map tile offset (west)}}{no default, initially 0}
   Distance of the visible map from the western edge of the most western tile
   expressed in tiles (range from 0 to 1).
 \end{docMrcKey}
 
-\begin{docMrcKey}{mapdef/northoffset}{=\meta{map tile offset (north)}}{no default, initially 0}
+\begin{docMrcKey}[mapdef]{northoffset}{=\meta{map tile offset (north)}}{no default, initially 0}
   Distance of the visible map from the northern edge of the most northern tile
   expressed in tiles (range from 0 to 1).
 \end{docMrcKey}
 
-\begin{docMrcKey}{mapdef/southoffset}{=\meta{map tile offset (south)}}{no default, initially 0}
+\begin{docMrcKey}[mapdef]{southoffset}{=\meta{map tile offset (south)}}{no default, initially 0}
   Distance of the visible map from the southern edge of the most southern tile
   expressed in tiles (range from 0 to 1).
 \end{docMrcKey}
 
-\begin{docMrcKey}{mapdef/basename}{=\meta{map tile base name}}{no default, initially \texttt{tiles/tile}}
+\begin{docMrcKey}[mapdef]{basename}{=\meta{map tile base name}}{no default, initially \texttt{tiles/tile}}
   File base name for the tiles.
 \end{docMrcKey}
 
-\begin{docMrcKey}{mapdef/attribution}{=\meta{attribution text}}{no default, initially empty}
+\begin{docMrcKey}[mapdef]{attribution}{=\meta{attribution text}}{no default, initially empty}
   Attribution text for the map source. Typically, it acknowledges the copyright
   of the map data provider. It may contain hyperlinks.
   It is accessible as \docAuxCommand{mrcmapattribution} (use read-only).
 \end{docMrcKey}
 
-\begin{docMrcKey}{mapdef/attribution print}{=\meta{attribution text}}{no default, initially empty}
+\begin{docMrcKey}[mapdef]{attribution print}{=\meta{attribution text}}{no default, initially empty}
   Attribution text for the map source.
   In contrast to \refKey{/mermap/mapdef/attribution} it is intended for media
   that does not support hyperlinks like printed posters, books, etc.
@@ -155,7 +155,7 @@ information.
 \end{docMrcKey}
 
 
-\begin{docMrcKey}{mapdef/resource}{=\meta{map resource}}{no default, initially |none|}
+\begin{docMrcKey}[mapdef]{resource}{=\meta{map resource}}{no default, initially |none|}
   Available map resource with following feasible values:
   \begin{itemize}
   \item\docValue{none}: No tiles and no merged map.
@@ -165,7 +165,7 @@ information.
   \end{itemize}
 \end{docMrcKey}
 
-\begin{docMrcKey}{mapdef/tile size}{=\meta{length}}{no default, initially |32.512mm|}
+\begin{docMrcKey}[mapdef]{tile size}{=\meta{length}}{no default, initially |32.512mm|}
   Typically set computationally. It is identical to \refKey{/mermap/tile size}
   which is the recommended user option for manual setup.
 \end{docMrcKey}
@@ -206,11 +206,11 @@ The border of the visible map is denoted by a \tikzname\ node \docNode{mrcmap}.
 The |mrc cs| coordinate system defines a map point by
 \refKey{/mermap/cs/latitude} and \refKey{/mermap/cs/longitude}
 
-\begin{docMrcKey}{cs/latitude}{=\meta{latitude}}{no default}
+\begin{docMrcKey}[cs]{latitude}{=\meta{latitude}}{no default}
   Sets the \meta{latitude} of a map point.
 \end{docMrcKey}
 
-\begin{docMrcKey}{cs/longitude}{=\meta{longitude}}{no default}
+\begin{docMrcKey}[cs]{longitude}{=\meta{longitude}}{no default}
   Sets the \meta{longitude} of a map point.
 \end{docMrcKey}
 
@@ -222,11 +222,11 @@ The |mrc cs| coordinate system defines a map point by
 A map point can also be defined by shorter variants
 \refKey{/mermap/cs/lat} and \refKey{/mermap/cs/lon}
 
-\begin{docMrcKey}{cs/lat}{=\meta{latitude}}{no default}
+\begin{docMrcKey}[cs]{lat}{=\meta{latitude}}{no default}
   Sets the \meta{latitude} of a map point.
 \end{docMrcKey}
 
-\begin{docMrcKey}{cs/lon}{=\meta{longitude}}{no default}
+\begin{docMrcKey}[cs]{lon}{=\meta{longitude}}{no default}
   Sets the \meta{longitude} of a map point.
 \end{docMrcKey}
 

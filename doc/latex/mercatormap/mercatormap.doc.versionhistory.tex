@@ -9,3 +9,23 @@
 \begin{itemize}
 \item Initial public release.
 \end{itemize}
+
+\section*{v1.01 (2020/05/05)}
+\begin{itemize}
+\item Sorting of index key entries fixed for the documentation.
+\item User messages for failed Python script calls are changed from warnings to
+  errors to fail fast and to provide more information and hints about
+  possible reasons.
+\item New general marker option
+  \refKey{/mermap/marker/generic} with corresponding macros
+  \docAuxCommand*{mrcmarkergeneric}
+  and \docAuxCommand*{l_mermap_marker_generic_tl}. Also, the marker uuid is
+  made |expl3| accessible as \docAuxCommand*{l_mermap_marker_uuid_tl}.
+\item New hyper marker options
+  \refKey{/mermap/marker/url},
+  \refKey{/mermap/marker/link},
+  \refKey{/mermap/marker/use urls},
+  \refKey{/mermap/marker/ignore urls},
+  \refKey{/mermap/marker/use links},
+  \refKey{/mermap/marker/ignore links}.
+\end{itemize}

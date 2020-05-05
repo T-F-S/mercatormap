@@ -1,4 +1,4 @@
-%% The LaTeX package mercatormap - version 1.00 (2020/04/20)
+%% The LaTeX package mercatormap - version 1.01 (2020/05/05)
 %% mercatormap.sty: geographic coordinates (Mercator projection) and map tiles for TikZ pictures
 %%
 %% -------------------------------------------------------------------------------------------
@@ -19,7 +19,7 @@
 %%
 \RequirePackage{expl3}[2020/02/25]
 \RequirePackage{xparse}
-\ProvidesExplPackage{mercatormap}{2020/04/20}{1.00}
+\ProvidesExplPackage{mercatormap}{2020/05/05}{1.01}
   {A Web Mercator projection package with map tile support}
 \@ifpackagelater { expl3 } { 2020/02/25 }
   { }
@@ -486,7 +486,7 @@
 
 \tl_const:Nn \c__mermap_supply_call_boundaries_tl
   {%
-    \l__mermap_python\c_space_tl boundaries
+    \l__mermap_python_tl\c_space_tl boundaries
       -u   "\str_use:N\l__mermap_supply_url_str"
       -at  "\str_use:N\l__mermap_supply_attribution_str"
       -atp "\str_use:N\l__mermap_supply_attribution_print_str"
@@ -504,7 +504,7 @@
 
 \tl_const:Nn \c__mermap_supply_call_reference_tl
   {%
-    \l__mermap_python\c_space_tl reference
+    \l__mermap_python_tl\c_space_tl reference
       -u   "\str_use:N\l__mermap_supply_url_str"
       -at  "\str_use:N\l__mermap_supply_attribution_str"
       -atp "\str_use:N\l__mermap_supply_attribution_print_str"
@@ -524,7 +524,7 @@
 
 \tl_const:Nn \c__mermap_supply_call_areafit_tl
   {%
-    \l__mermap_python\c_space_tl areafit
+    \l__mermap_python_tl\c_space_tl areafit
       -u   "\str_use:N\l__mermap_supply_url_str"
       -at  "\str_use:N\l__mermap_supply_attribution_str"
       -atp "\str_use:N\l__mermap_supply_attribution_print_str"
@@ -573,7 +573,7 @@
 
 \tl_new:N \l__mermap_last_mdfivesum_tl
 \tl_new:N \l__mermap_mdfivesum_tl
-\tl_new:N \l__mermap_python
+\tl_new:N \l__mermap_python_tl
 \tl_new:N \l__mermap_supply_align_tl
 \tl_new:N \l__mermap_supply_basename_tl
 \tl_new:N \l__mermap_supply_call_tl
@@ -748,7 +748,7 @@
   {
     definition~prefix .code:n = {\str_set:Nn\l__mermap_definition_prefix_str{#1}},
     python              .code:n = {
-      \tl_set:Nx \l__mermap_python {#1~maptiles.texpy}
+      \tl_set:Nx \l__mermap_python_tl {#1~maptiles.texpy}
       },
   }
 
@@ -841,9 +841,7 @@
     {
       \__mermap_supplymap_call:
     }
-    %\dim_gset_eq:NN \g_tmpa_dim \l__mermap_tile_size_dim
     \group_end:
-    %\dim_set_eq:NN \l__mermap_tile_size_dim \g_tmpa_dim
   }
 
 \NewDocumentCommand \mrcsupplymap { O{} m }
@@ -853,14 +851,24 @@
   }
 
 
-\msg_new:nnn { mercatormap }{ shell-escape }
+\msg_new:nnnn { mercatormap }{ shell-escape }
   { You~must~invoke~LaTeX~with~the~--shell-escape~flag~to~produce~map~'#1'. }
+  { The~--shell-escape~flag~is~needed,~because~a~Python~sript~has~to~be~called;~see~package~documentation. }
 
-\msg_new:nnn { mercatormap }{ target-resource }
+\msg_new:nnnn { mercatormap }{ target-resource }
   { Target~and~produced~resource~are~different~for~map~'#1'. }
+  { Your~target~was~'\l__mermap_supply_target_tl'.\\
+    The~produced~resource~is~'\l__mermap_tile_resource_tl'.\\
+    Check,~if~'\l__mermap_supply_target_tl'~is~available~via~'\str_use:N\l__mermap_supply_url_str'\\
+    or~if~the~zoom~value~is~too~large.
+  }
 
-\msg_new:nnn { mercatormap }{ definition-production }
+\msg_new:nnnn { mercatormap }{ definition-production }
   { Map~definition~file~not~produced~for~map~'#1'. }
+  { **~The~failed~shell~command~was:\\
+    \l__mermap_supply_call_tl\\
+    **~Python~setup~correct?
+  }
 
 \cs_new:Npn \__mermap_supplymap_call:
   {
@@ -868,11 +876,11 @@
       c__mermap_supply_call_\l__mermap_supply_type_tl _tl }
     \tl_set:Nx \l__mermap_supply_call_tl \l_tmpa_tl
     \tl_set:Nx \l__mermap_mdfivesum_tl { \pdf@mdfivesum{\l__mermap_supply_call_tl} }
-    \tl_clear:N \l__mermap_last_mdfivesum_tl
-    \file_if_exist_input:n {\l__mermap_definition_id_str.md5}
-    \str_if_eq:VVTF \l__mermap_mdfivesum_tl \l__mermap_last_mdfivesum_tl
+    \file_if_exist:nTF {\l__mermap_definition_id_str.def}
       {
-        \file_if_exist:nF {\l__mermap_definition_id_str.def}
+        \tl_clear:N \l__mermap_last_mdfivesum_tl
+        \file_if_exist_input:n {\l__mermap_definition_id_str.md5}
+        \str_if_eq:VVF \l__mermap_mdfivesum_tl \l__mermap_last_mdfivesum_tl
           {
             \__mermap_supplymap_call_shell:
           }
@@ -904,17 +912,15 @@
               }
               {
                 \__mermap_write_mdfive:n {false}
-                \msg_warning:nnx { mercatormap }{ target-resource }{ \l__mermap_definition_id_str }
+                \msg_error:nnx { mercatormap }{ target-resource }{ \l__mermap_definition_id_str }
               }
           }
           {
-            \__mermap_write_mdfive:n {false}
-            \msg_warning:nnx { mercatormap }{ definition-production }{ \l__mermap_definition_id_str }
+            \msg_error:nnx { mercatormap }{ definition-production }{ \l__mermap_definition_id_str }
           }
       }
       {
-        \__mermap_write_mdfive:n {false}
-        \msg_warning:nnx { mercatormap }{ shell-escape }{ \l__mermap_definition_id_str }
+        \msg_error:nnx { mercatormap }{ shell-escape }{ \l__mermap_definition_id_str }
       }
   }
 
@@ -1604,8 +1610,6 @@
     double      = true,
     transparent = true,
     height      = 2mm,
-    %at          = {([xshift=-10mm,yshift=5mm]mrcmap.south~east)},
-    %placement   = above~left,
     at           = {(0,0)},
     placement    =,
     major~style  =,
@@ -1719,6 +1723,8 @@
 %---- markers ------------------------------------------------------------------
 
 \bool_new:N \l__mermap_marker_show_bool
+\bool_new:N \l__mermap_marker_use_links
+\bool_new:N \l__mermap_marker_use_urls
 
 \fp_new:N \l__mermap_marker_angle_fp
 \fp_new:N \l__mermap_marker_inner_radius_fp
@@ -1733,9 +1739,14 @@
 \tl_new:N \l__mermap_marker_category_tl
 \tl_new:N \l__mermap_marker_contents_tl
 \tl_new:N \l__mermap_marker_font_tl
+\tl_new:N \l_mermap_marker_generic_tl
+\tl_new:N \l__mermap_marker_link_tl
 \tl_new:N \l__mermap_marker_pictocontents_tl
 \tl_new:N \l__mermap_marker_type_tl
-\tl_new:N \l__mermap_marker_uuid_tl
+\tl_new:N \l__mermap_marker_url_tl
+\tl_new:N \l_mermap_marker_uuid_tl
+
+
 
 
 \use:x
@@ -1763,8 +1774,10 @@
     alias           .tl_set:N   = \l__mermap_marker_alias_tl,
     contents        .tl_set:N   = \l__mermap_marker_contents_tl,
     pictocontents   .tl_set:N   = \l__mermap_marker_pictocontents_tl,
-    % name            .meta:nn    = {mermap/marker}{contents={#1},alias={#1}},
-    uuid            .tl_set:N   = \l__mermap_marker_uuid_tl,
+    uuid            .tl_set:N   = \l_mermap_marker_uuid_tl,
+    generic         .tl_set:N   = \l_mermap_marker_generic_tl,
+    url             .tl_set:N   = \l__mermap_marker_url_tl,
+    link            .tl_set:N   = \l__mermap_marker_link_tl,
     category        .tl_set:N   = \l__mermap_marker_category_tl,
     type            .tl_set:N   = \l__mermap_marker_type_tl,
     angle           .fp_set:N   = \l__mermap_marker_angle_fp,
@@ -1787,6 +1800,10 @@
       { \str_if_eq:VnT \l__mermap_marker_category_tl {#1} {\bool_set_false:N \l__mermap_marker_show_bool} },
     hide~all~but~category  .code:n =
       { \str_if_eq:VnF \l__mermap_marker_category_tl {#1} {\bool_set_false:N \l__mermap_marker_show_bool} },
+    use~links    .bool_set:N         = \l__mermap_marker_use_links,
+    ignore~links .bool_set_inverse:N = \l__mermap_marker_use_links,
+    use~urls     .bool_set:N         = \l__mermap_marker_use_urls,
+    ignore~urls  .bool_set_inverse:N = \l__mermap_marker_use_urls,
     first~options  .tl_set:N = \l__mermap_every_marker_first_tl,
     last~options   .tl_set:N = \l__mermap_every_marker_last_tl,
     style        .choice:    =,
@@ -1799,7 +1816,6 @@
     latitude   = 12,
     longitude  = 49,
     use~inside = map,
-    % name       = noname,
     contents   =,
     alias      = noname,
     pictocontents =,
@@ -1815,8 +1831,13 @@
     font       = \sffamily\small,
     type       = classic,
     uuid       =,
+    generic    =,
+    url        =,
+    link       =,
     category   =,
     show       = true,
+    use~links  = true,
+    use~urls   = true,
   }
 
 
@@ -1824,7 +1845,8 @@
 \NewExpandableDocumentCommand\mrcmarkerlongitude{}{\fp_to_decimal:N \l__mermap_marker_longitude_fp}
 \NewDocumentCommand\mrcmarkercontents{}{\tl_use:N \l__mermap_marker_contents_tl}
 \NewDocumentCommand\mrcmarkerpictocontents{}{\tl_use:N \l__mermap_marker_pictocontents_tl}
-\NewExpandableDocumentCommand\mrcmarkeruuid{}{\tl_use:N \l__mermap_marker_uuid_tl}
+\NewExpandableDocumentCommand\mrcmarkeruuid{}{\tl_use:N \l_mermap_marker_uuid_tl}
+\NewDocumentCommand\mrcmarkergeneric{}{\tl_use:N \l_mermap_marker_generic_tl}
 \NewExpandableDocumentCommand\mrcmarkercategory{}{\tl_use:N \l__mermap_marker_category_tl}
 \NewDocumentCommand\mrcmarkerfont{}{\tl_use:N \l__mermap_marker_font_tl}
 \NewExpandableDocumentCommand\mrcmarkerangle{}{\fp_to_decimal:N \l__mermap_marker_angle_fp}
@@ -1848,6 +1870,56 @@
     I~guess~'type=#1'~for~setting~a~marker~type~contains~a~spelling~error.
   }
 
+
+\cs_new_nopar:Npn \__mermap_hyper_path:n #1
+  {
+    \pgfpointanchor{path~picture~bounding~box}{south~west}
+    \pgf@xb-\pgf@x
+    \pgf@yb-\pgf@y
+    \pgfpointanchor{path~picture~bounding~box}{north~east}
+    \advance\pgf@xb\pgf@x
+    \advance\pgf@yb\pgf@y
+    \advance\pgf@x-1bp
+    \advance\pgf@y-1bp
+    \advance\pgf@xb-2bp
+    \advance\pgf@yb-2bp
+    \pgftext[at={\pgfqpoint{\pgf@x}{\pgf@y}},right,top]
+    {
+      \hypersetup{pdfborder=0~0~0}
+      #1{\vrule height\pgf@yb depth0ptwidth0pt\vrule height0ptdepth0ptwidth\pgf@xb}
+    }
+  }
+
+
+\cs_new_nopar:Npn \__mermap_hyper_path_insert:
+  {
+    \cs_if_exist:NT \hypersetup
+      {
+        \bool_if:NT \l__mermap_marker_use_urls
+        {
+          \tl_if_empty:NF \l__mermap_marker_url_tl
+            {
+              \__mermap_hyper_path:n {\href{\l__mermap_marker_url_tl}}
+            }
+        }
+        \bool_if:NT \l__mermap_marker_use_links
+        {
+          \tl_if_empty:NF \l__mermap_marker_link_tl
+            {
+              \__mermap_hyper_path:n {\hyperlink{\l__mermap_marker_link_tl}}
+            }
+        }
+      }
+  }
+
+
+\tikzset
+  {
+    mrchyperpath/.style =
+      {
+        path~picture = {\__mermap_hyper_path_insert:}
+      }
+  }
 
 \NewDocumentCommand \mrcmarker { m }
   {
@@ -1890,7 +1962,7 @@
     \node[circle,fill=black,inner~sep=0pt,minimum~width=4pt,
       pin={[text=mrcmarkertext,font=\mrcmarkerfont,
         pin~distance=\mrcmarkerradius,
-        pin~position=\mrcmarkerangle,mrcnodestyle]\mrcmarkercontents}] {};
+        pin~position=\mrcmarkerangle,mrcnodestyle,mrchyperpath]\mrcmarkercontents}] {};
   }
 
 \__mermap_new_marker_type:nn {pin}
@@ -1900,7 +1972,7 @@
     \node[fill=white,draw=none,text=mrcmarkertext,
       above,font=\mrcmarkerfont,inner~sep=0.5mm,align=center,
       line~width=0mm,xshift=\mrcmarkershift,
-      fill~opacity=0.7,text~opacity=1,xshift=0mm,mrcnodestyle]
+      fill~opacity=0.7,text~opacity=1,xshift=0mm,mrcnodestyle,mrchyperpath]
       (pin_node) at (0,0.5) {\mrcmarkercontents};
     \path[draw=mrcmarkerdraw,fill=none,line~join=round,mrcpathstyle]
       (0,0) -- (0.1,0.5) -- (pin_node.south~east) -- (pin_node.north~east)
@@ -1915,7 +1987,7 @@
     \node[fill=white,draw=none,text=mrcmarkertext,
       below,font=\mrcmarkerfont,inner~sep=0.5mm,align=center,
       line~width=0mm,xshift=\mrcmarkershift,
-      fill~opacity=0.7,text~opacity=1,xshift=0mm,mrcnodestyle]
+      fill~opacity=0.7,text~opacity=1,xshift=0mm,mrcnodestyle,mrchyperpath]
       (pin_node) at (0,-0.5) {\mrcmarkercontents};
     \path[draw=mrcmarkerdraw,fill=none,line~join=round,mrcpathstyle]
       (0,0) -- (-0.1,-0.5) -- (pin_node.north~west) -- (pin_node.south~west)
@@ -1930,7 +2002,7 @@
     \tl_set:Nn \l_tmpb_tl {\fp_to_dim:n{\l__mermap_marker_radius_fp*0.552}}
     \__mermap_tikz_path_begin:n
     {
-      line~join=bevel,draw=mrcmarkerdraw,fill=mrcmarkerfill,mrcpathstyle
+      line~join=bevel,draw=mrcmarkerdraw,fill=mrcmarkerfill,mrcpathstyle,mrchyperpath
     }
     \pgfpathmoveto{\pgfpoint{0pt}{\fp_to_dim:n{-2*\l__mermap_marker_radius_fp-\l__mermap_marker_shift_fp}}}
     \pgfpathcurveto{\pgfpoint{\l_tmpb_tl}{-\l_tmpa_tl}}{\pgfpoint{\l_tmpa_tl}{-\l_tmpb_tl}}
@@ -1992,21 +2064,21 @@
 
 \__mermap_new_marker_type:nn {knob}
   {
-    \path[draw=mrcmarkerdraw,fill=mrcmarkerfill,mrcpathstyle]
+    \path[draw=mrcmarkerdraw,fill=mrcmarkerfill,mrcpathstyle,mrchyperpath]
       circle (\fp_to_dim:N\l__mermap_marker_radius_fp);
     \__mermap_tikz_circle_node:
   }
 
 \__mermap_new_marker_type:nn {pictoknob}
   {
-    \path[draw=mrcmarkerdraw,fill=mrcmarkerfill,mrcpathstyle]
+    \path[draw=mrcmarkerdraw,fill=mrcmarkerfill,mrcpathstyle,mrchyperpath]
       circle (\fp_to_dim:N\l__mermap_marker_radius_fp);
     \tl_use:N \l__mermap_marker_pictocontents_tl
   }
 
 \__mermap_new_marker_type:nn {pictoknobring}
   {
-    \path[draw=mrcmarkerdraw,fill=mrcmarkerfill,mrcpathstyle,even~odd~rule]
+    \path[draw=mrcmarkerdraw,fill=mrcmarkerfill,mrcpathstyle,mrchyperpath,even~odd~rule]
       circle (\fp_to_dim:N\l__mermap_marker_radius_fp)
       circle (\fp_to_dim:N\l__mermap_marker_inner_radius_fp);
     \tl_use:N \l__mermap_marker_pictocontents_tl
@@ -2018,14 +2090,14 @@
     \path[draw=mrcmarkerdraw,very~thin]
        (45 \c_colon_str \l_tmpa_tl)--(225\c_colon_str \l_tmpa_tl)
        (135\c_colon_str \l_tmpa_tl)--(315\c_colon_str \l_tmpa_tl);
-    \path[draw=mrcmarkerdraw,fill=mrcmarkerfill,mrcpathstyle,even~odd~rule]
+    \path[draw=mrcmarkerdraw,fill=mrcmarkerfill,mrcpathstyle,mrchyperpath,even~odd~rule]
       circle (\l_tmpa_tl) circle (\fp_to_dim:N\l__mermap_marker_inner_radius_fp);
   }
 
 \__mermap_new_marker_type:nn {markx}
   {
     \tl_set:Nn \l_tmpa_tl {\fp_to_dim:N\l__mermap_marker_radius_fp}
-    \path[line~join=bevel,draw=mrcmarkerdraw,fill=mrcmarkerfill,mrcpathstyle]
+    \path[line~join=bevel,draw=mrcmarkerdraw,fill=mrcmarkerfill,mrcpathstyle,mrchyperpath]
        (0,0) -- (35 \c_colon_str \l_tmpa_tl) -- (55 \c_colon_str \l_tmpa_tl) -- cycle
        (0,0) -- (125 \c_colon_str \l_tmpa_tl) -- (145 \c_colon_str \l_tmpa_tl) -- cycle
        (0,0) -- (215 \c_colon_str \l_tmpa_tl) -- (235 \c_colon_str \l_tmpa_tl) -- cycle

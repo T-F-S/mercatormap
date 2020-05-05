@@ -58,44 +58,44 @@ may be helpful which provides some predefined marker types.
 
 \pagebreak
 
-\begin{docMrcKey}{marker/first options}{=\meta{options}}{no default, initially unset}
+\begin{docMrcKey}[marker]{first options}{=\meta{options}}{no default, initially unset}
   The given list of \meta{options} is used inside every \refCom{mrcmarker}
   \emph{before} the options of \refCom{mrcmarker}.
 \end{docMrcKey}
 
-\begin{docMrcKey}{marker/last options}{=\meta{options}}{no default, initially unset}
+\begin{docMrcKey}[marker]{last options}{=\meta{options}}{no default, initially unset}
   The given list of \meta{options} is used inside every \refCom{mrcmarker}
   \emph{after} the options of \refCom{mrcmarker}.
 \end{docMrcKey}
 
-\begin{docMrcKey}{marker/latitude}{=\meta{latitude}}{no default, initially |12|}
+\begin{docMrcKey}[marker]{latitude}{=\meta{latitude}}{no default, initially |12|}
   Latitude degree of the place marker.
   It is accessible as \docAuxCommand{mrcmarkerlatitude} (use read-only).
 \end{docMrcKey}
 
-\begin{docMrcKey}{marker/lat}{=\meta{latitude}}{no default, initially |12|}
+\begin{docMrcKey}[marker]{lat}{=\meta{latitude}}{no default, initially |12|}
   Alias for \refKey{/mermap/marker/latitude}.
 \end{docMrcKey}
 
-\begin{docMrcKey}{marker/longitude}{=\meta{longitude}}{no default, initially |49|}
+\begin{docMrcKey}[marker]{longitude}{=\meta{longitude}}{no default, initially |49|}
   Longitude degree of the place marker.
   It is accessible as \docAuxCommand{mrcmarkerlongitude} (use read-only).
 \end{docMrcKey}
 
-\begin{docMrcKey}{marker/lon}{=\meta{longitude}}{no default, initially |49|}
+\begin{docMrcKey}[marker]{lon}{=\meta{longitude}}{no default, initially |49|}
   Alias for \refKey{/mermap/marker/longitude}.
 \end{docMrcKey}
 
-\begin{docMrcKey}{marker/position}{=\meta{place latitude}:\meta{place longitude}}{no default, initially |12:49|}
+\begin{docMrcKey}[marker]{position}{=\meta{place latitude}:\meta{place longitude}}{no default, initially |12:49|}
   Sets the latitude degree and the longitude degree of the place marker.
 \end{docMrcKey}
 
-\begin{docMrcKey}{marker/named position}{=\meta{name}}{style, no default}
+\begin{docMrcKey}[marker]{named position}{=\meta{name}}{style, no default}
   Sets the latitude degree and the longitude degree of the place marker
   to the \emph{named position} denoted by \meta{name}, see \Fullref{sec:names_positions}.
 \end{docMrcKey}
 
-\begin{docMrcKey}{marker/use inside}{=\meta{area}}{no default, initially |map|}
+\begin{docMrcKey}[marker]{use inside}{=\meta{area}}{no default, initially |map|}
   The place marker is used or ignored according to its belonging inside the
   given \meta{area}. Feasible values for \meta{area} are:
   \begin{itemize}
@@ -105,72 +105,85 @@ may be helpful which provides some predefined marker types.
 \end{docMrcKey}
 
 
-\begin{docMrcKey}{marker/contents}{=\meta{text}}{no default, initially empty}
+\begin{docMrcKey}[marker]{contents}{=\meta{text}}{no default, initially empty}
   Sets \meta{text} for displaying inside the marker, if
   the marker type supports such a thing.
   It is accessible as \docAuxCommand{mrcmarkercontents} (use read-only).
 \end{docMrcKey}
 
-\begin{docMrcKey}{marker/pictocontents}{=\meta{code}}{no default, initially empty}
+\begin{docMrcKey}[marker]{pictocontents}{=\meta{code}}{no default, initially empty}
   Sets \tikzname\ \meta{code} for displaying inside the marker, if
   the marker type supports such a thing.
   It is accessible as \docAuxCommand{mrcmarkerpictocontents} (use read-only).
 \end{docMrcKey}
 
-\begin{docMrcKey}{marker/alias}{=\meta{text}}{no default, initially |noname|}
+\begin{docMrcKey}[marker]{alias}{=\meta{text}}{no default, initially |noname|}
   The position of the marker is available as \tikzname\ coordinate by
   the given \meta{text}, e.g. to draw to or from the marker.
 \end{docMrcKey}
 
-\begin{docMrcKey}{marker/uuid}{=\meta{uuid}}{no default, initially empty}
+\begin{docMrcKey}[marker][doc updated=2020-05-04]{uuid}{=\meta{uuid}}{no default, initially empty}
   Sets a \meta{uuid} for unique identification of markers.
-  It is accessible as \docAuxCommand{mrcmarkeruuid} (use read-only).
+  It is accessible as \docAuxCommand{mrcmarkeruuid} (use read-only)
+  and \docAuxCommand[doc sort index=mermap_marker_uuid_tl]{l_mermap_marker_uuid_tl} (use read-only).
   The \meta{uuid} is provided for user applications.
 \end{docMrcKey}
 
+\begin{docMrcKeys}[
+  doc keypath     = marker,
+  doc name        = generic,
+  doc parameter   = {=\meta{text}},
+  doc description = {no default, initially empty},
+  doc new         = 2020-05-04,
+]{}
+  Sets \meta{text} as generic content for user applications.
+  It is accessible as \docAuxCommand{mrcmarkergeneric} (use read-only)
+  and \docAuxCommand[doc sort index=mermap_marker_generic_tl]{l_mermap_marker_generic_tl} (use read-only).
+\end{docMrcKeys}
 
-\begin{docMrcKey}{marker/category}{=\meta{category}}{no default, initially empty}
+
+\begin{docMrcKey}[marker]{category}{=\meta{category}}{no default, initially empty}
   Sets a \meta{category} to group markers.
   It is accessible as \docAuxCommand{mrcmarkercategory} (use read-only).
 \end{docMrcKey}
 
 \clearpage
 
-\begin{docMrcKey}{marker/show}{\colOpt{=true\textbar false}}{default |true|, initially |true|}
+\begin{docMrcKey}[marker]{show}{\colOpt{=true\textbar false}}{default |true|, initially |true|}
   If set to |true|, the marker is shown, if it lies inside the map (or vicinity).
   Otherwise, the place marker is not used.
 \end{docMrcKey}
 
 
-\begin{docMrcKey}{marker/hide}{\colOpt{=true\textbar false}}{default |true|, initially |false|}
+\begin{docMrcKey}[marker]{hide}{\colOpt{=true\textbar false}}{default |true|, initially |false|}
   If set to |true|, the marker is not used.
   \refKey{/mermap/marker/hide} is inverse to \refKey{/mermap/marker/show}.
 \end{docMrcKey}
 
 
 
-\begin{docMrcKey}{marker/show category}{=\meta{category}}{style, no default}
+\begin{docMrcKey}[marker]{show category}{=\meta{category}}{style, no default}
   Sets \refKey{/mermap/marker/show} to |true|, if \refKey{/mermap/marker/category} equals \meta{category}.
   Otherwise, nothing happens.
   \refKey{/mermap/marker/category} has to be set \emph{before}.
 \end{docMrcKey}
 
 
-\begin{docMrcKey}{marker/show all but category}{=\meta{category}}{style, no default}
+\begin{docMrcKey}[marker]{show all but category}{=\meta{category}}{style, no default}
   Sets \refKey{/mermap/marker/show} to |true|, if \refKey{/mermap/marker/category} does not equal \meta{category}.
   Otherwise, nothing happens.
   \refKey{/mermap/marker/category} has to be set \emph{before}.
 \end{docMrcKey}
 
 
-\begin{docMrcKey}{marker/hide category}{=\meta{category}}{style, no default}
+\begin{docMrcKey}[marker]{hide category}{=\meta{category}}{style, no default}
   Sets \refKey{/mermap/marker/show} to |false|, if \refKey{/mermap/marker/category} equals \meta{category}.
   Otherwise, nothing happens.
   \refKey{/mermap/marker/category} has to be set \emph{before}.
 \end{docMrcKey}
 
 
-\begin{docMrcKey}{marker/hide all but category}{=\meta{category}}{style, no default}
+\begin{docMrcKey}[marker]{hide all but category}{=\meta{category}}{style, no default}
   Sets \refKey{/mermap/marker/show} to |false|, if \refKey{/mermap/marker/category} does not equal \meta{category}.
   Otherwise, nothing happens.
   \refKey{/mermap/marker/category} has to be set \emph{before}.
@@ -191,10 +204,113 @@ may be helpful which provides some predefined marker types.
 
 
 \clearpage
+
+The following options require the package |hyperref| to be loaded.
+If |hyperref| is not loaded, \refKey{/mermap/marker/url} and
+\refKey{/mermap/marker/link} are ignored.\\
+Note that if \refKey{/mermap/marker/url} and \refKey{/mermap/marker/link}
+are applied concurrently, then \refKey{/mermap/marker/link} will win.
+
+
+\begin{docMrcKeys}[
+  doc keypath     = marker,
+  doc name        = url,
+  doc parameter   = {=\meta{URL}},
+  doc description = {no default, initially empty},
+  doc new         = 2020-05-04,
+]{}
+  Sets \meta{URL} as external link of the marker.
+  The package is required for this option.
+  For an own marker type, it is applied as \tikzname\ option \docValue{mrchyperpath}.
+
+\tikzsetnextfilename{marker_url}%
+\begin{dispExample}
+\begin{tikzpicture}
+  \mrcNPdef{unibwm}{48.0802826}{11.6381048}
+  \mrcmap[type=reference, named position=unibwm,
+    flex reference scale=100000,
+    source=topplusopen web grau,
+    tex width=\linewidth,tex height=4cm]{}
+  \mrcdrawmap
+  \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
+    {\mrcmapattribution};
+  \mrcdrawnetwork
+  \mrcclipmap
+  \mrcmarker{ named position = unibwm,
+    type     = pin,
+    draw     = red,
+    fill     = red!20!white,
+    url      = {https://www.unibw.de},
+    contents = {Universit\"at der Bundeswehr M\"unchen},
+  }
+\end{tikzpicture}
+\end{dispExample}
+
+
+\end{docMrcKeys}
+
+
+\begin{docMrcKeys}[
+  doc keypath     = marker,
+  doc name        = link,
+  doc parameter   = {=\meta{name}},
+  doc description = {no default, initially empty},
+  doc new         = 2020-05-04,
+]{}
+  Sets an internal link of the marker to a document target with
+  the given \meta{name}.
+  The package |hyperref| is required for this option.
+  For an own marker type, it is applied as \tikzname\ option \docValue{mrchyperpath}.
+\end{docMrcKeys}
+
+
+
+\begin{docMrcKeys}[
+  doc keypath     = marker,
+  doc parameter   = {\colOpt{=true\textbar false}},
+  doc new         = 2020-05-04,
+]{
+  {
+    doc name        = use urls,
+    doc description = {default |true|, initially |true|},
+  },
+  {
+    doc name        = ignore urls,
+    doc description = {default |true|, initially |false|},
+  },
+}
+  If \refKey{/mermap/marker/use urls} is set to |false|, external links
+  with \refKey{/mermap/marker/url} are ignored.\\
+  \refKey{/mermap/marker/ignore urls} is inverse to \refKey{/mermap/marker/use urls}.
+\end{docMrcKeys}
+
+
+\begin{docMrcKeys}[
+  doc keypath     = marker,
+  doc parameter   = {\colOpt{=true\textbar false}},
+  doc new         = 2020-05-04,
+]{
+  {
+    doc name        = use links,
+    doc description = {default |true|, initially |true|},
+  },
+  {
+    doc name        = ignore links,
+    doc description = {default |true|, initially |false|},
+  },
+}
+  If \refKey{/mermap/marker/use links} is set to |false|, internal links
+  with \refKey{/mermap/marker/link} are ignored.\\
+  \refKey{/mermap/marker/ignore links} is inverse to \refKey{/mermap/marker/use links}.
+\end{docMrcKeys}
+
+
+
+\clearpage
 %-------------------------------------------------------------------------------
 \subsection{Marker Types}
 
-\begin{docMrcKey}{marker/type}{=\meta{type}}{no default, initially |classic|}
+\begin{docMrcKey}[marker]{type}{=\meta{type}}{no default, initially |classic|}
   Decides about the basic shape and style of the marker.
   Feasible values for \meta{type} are listed in the following.
   More values can be defined by \refCom{mrcnewmarkertype}.
@@ -396,19 +512,19 @@ may be helpful which provides some predefined marker types.
 \medskip
 The different marker types can be customized by some additional options:
 
-\begin{docMrcKey}{marker/font}{=\meta{font}}{no default, initially \texttt{\textbackslash sffamily\textbackslash small}}
+\begin{docMrcKey}[marker]{font}{=\meta{font}}{no default, initially \texttt{\textbackslash sffamily\textbackslash small}}
   Font of the marker text
   (\docValue{classic}, \docValue{pin}, \docValue{pinflip}, \docValue{drop}, \docValue{knob}).
   It is accessible as \docAuxCommand{mrcmarkerfont} (use read-only).
 \end{docMrcKey}
 
-\begin{docMrcKey}{marker/text}{=\meta{color}}{no default, initially |black|}
+\begin{docMrcKey}[marker]{text}{=\meta{color}}{no default, initially |black|}
   Color of the marker text
   (\docValue{classic}, \docValue{pin}, \docValue{pinflip}, \docValue{drop}, \docValue{knob}).
   It is accessible as \docColor{mrcmarkertext} (use read-only).
 \end{docMrcKey}
 
-\begin{docMrcKey}{marker/draw}{=\meta{color}}{no default, initially |gray|}
+\begin{docMrcKey}[marker]{draw}{=\meta{color}}{no default, initially |gray|}
   Color of the marker frame
   (\docValue{pin}, \docValue{pinflip}, \docValue{drop}, \docValue{pictodrop},
     \docValue{pictodropring}, \docValue{knob}, \docValue{pictoknob}, \docValue{pictoknobring},
@@ -416,7 +532,7 @@ The different marker types can be customized by some additional options:
   It is accessible as \docColor{mrcmarkerdraw} (use read-only).
 \end{docMrcKey}
 
-\begin{docMrcKey}{marker/fill}{=\meta{color}}{no default, initially |gray!20|}
+\begin{docMrcKey}[marker]{fill}{=\meta{color}}{no default, initially |gray!20|}
   Color of the marker interior
   (\docValue{pin}, \docValue{pinflip}, \docValue{drop}, \docValue{pictodrop},
     \docValue{pictodropring}, \docValue{knob}, \docValue{pictoknob}, \docValue{pictoknobring},
@@ -424,12 +540,12 @@ The different marker types can be customized by some additional options:
   It is accessible as \docColor{mrcmarkerfill} (use read-only).
 \end{docMrcKey}
 
-\begin{docMrcKey}{marker/angle}{=\meta{angle}}{no default, initially |90|}
+\begin{docMrcKey}[marker]{angle}{=\meta{angle}}{no default, initially |90|}
   Angle of the marker (\docValue{classic}).
   It is accessible as \docAuxCommand{mrcmarkerangle} (use read-only).
 \end{docMrcKey}
 
-\begin{docMrcKey}{marker/shift}{=\meta{length}}{no default, initially |0pt|}
+\begin{docMrcKey}[marker]{shift}{=\meta{length}}{no default, initially |0pt|}
   Shift of the marker text
   (\docValue{pin}, \docValue{pinflip}).
   It also shifts the drop center
@@ -437,7 +553,9 @@ The different marker types can be customized by some additional options:
   It is accessible as \docAuxCommand{mrcmarkershift} (use read-only).
 \end{docMrcKey}
 
-\begin{docMrcKey}{marker/radius}{=\meta{length}}{no default, initially |3mm|}
+\clearpage
+
+\begin{docMrcKey}[marker]{radius}{=\meta{length}}{no default, initially |3mm|}
   Radius of the marker
   (\docValue{classic}, \docValue{drop}, \docValue{pictodrop},
     \docValue{pictodropring}, \docValue{knob}, \docValue{pictoknob}, \docValue{pictoknobring},
@@ -445,13 +563,13 @@ The different marker types can be customized by some additional options:
   It is accessible as \docAuxCommand{mrcmarkerradius} (use read-only).
 \end{docMrcKey}
 
-\begin{docMrcKey}{marker/inner radius}{=\meta{length}}{no default, initially |2.25mm|}
+\begin{docMrcKey}[marker]{inner radius}{=\meta{length}}{no default, initially |2.25mm|}
   Inner radius of the marker
   (\docValue{pictodropring}, \docValue{pictoknobring}, \docValue{ringx}).
   It is accessible as \docAuxCommand{mrcmarkerinnerradius} (use read-only).
 \end{docMrcKey}
 
-\begin{docMrcKey}{marker/path style}{=\marg{options}}{no default, initially empty}
+\begin{docMrcKey}[marker]{path style}{=\marg{options}}{no default, initially empty}
   \tikzname\ \meta{options} which are added to (some) path elements of
   of the marker
   (\docValue{pin}, \docValue{pinflip}, \docValue{drop}, \docValue{pictodrop},
@@ -460,7 +578,7 @@ The different marker types can be customized by some additional options:
   It is accessible as \tikzname\ option \docValue{mrcpathstyle} (use read-only).
 \end{docMrcKey}
 
-\begin{docMrcKey}{marker/node style}{=\marg{options}}{no default, initially empty}
+\begin{docMrcKey}[marker]{node style}{=\marg{options}}{no default, initially empty}
   \tikzname\ \meta{options} which are added to the node element of
   of the marker
   (\docValue{classic}, \docValue{pin}, \docValue{pinflip}, \docValue{drop}, \docValue{knob}).
@@ -545,7 +663,7 @@ The different marker types can be customized by some additional options:
 \end{docCommand}
 
 
-\begin{docMrcKey}{marker/style}{=\meta{style name}}{no default, initially unset}
+\begin{docMrcKey}[marker]{style}{=\meta{style name}}{no default, initially unset}
   Applies a given \meta{style name}, i.e. all options which were stored
   by \refCom{mrcnewmarkerstyle} under this name.
 \end{docMrcKey}
