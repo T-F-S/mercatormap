@@ -107,3 +107,15 @@
 \renewcommand*{\tcbdocnew}[1]{\textcolor{green!50!black}{\sffamily\bfseries N} #1}
 \renewcommand*{\tcbdocupdated}[1]{\textcolor{blue!75!black}{\sffamily\bfseries U} #1}
 
+\NewTotalTCBox{\issuetracker}{m}{enhanced,nobeforeafter,tcbox raise base,boxrule=0.4pt,top=0mm,bottom=0mm,
+  right=0mm,left=0mm,arc=1pt,boxsep=2pt,%before upper={\vphantom{dlg}},
+  fontupper=\bfseries,
+  colframe=green!50!gray,
+  coltext=green!20!black,
+  colback=green!75!gray!20,
+  hyperurl=https://github.com/T-F-S/genealogytree/issues/#1
+  }{\##1}
+
+\robustify{\issuetracker}
+
+

@@ -1,4 +1,4 @@
-%% The LaTeX package mercatormap - version 1.01 (2020/05/05)
+%% The LaTeX package mercatormap - version 1.02 (2020/08/06)
 %% mercatormap.sty: geographic coordinates (Mercator projection) and map tiles for TikZ pictures
 %%
 %% -------------------------------------------------------------------------------------------
@@ -19,7 +19,7 @@
 %%
 \RequirePackage{expl3}[2020/02/25]
 \RequirePackage{xparse}
-\ProvidesExplPackage{mercatormap}{2020/05/05}{1.01}
+\ProvidesExplPackage{mercatormap}{2020/08/06}{1.02}
   {A Web Mercator projection package with map tile support}
 \@ifpackagelater { expl3 } { 2020/02/25 }
   { }
@@ -546,6 +546,7 @@
 
 
 \bool_new:N \l__mermap_script_activated_bool
+\bool_new:N \l__mermap_fail_on_missing_resource_bool
 
 \fp_new:N \l__mermap_supply_east_fp
 \fp_new:N \l__mermap_supply_height_fp
@@ -634,6 +635,45 @@
   }
 
 
+\msg_new:nnn { mercatormap }{ input-area-marker }
+  { The~marker~input~file~'#1'~does~not~exist. }
+
+\cs_new:Npn \__mermap_supply_add_area_marker_position:
+  {
+    \fp_compare:nNnT \l__mermap_marker_latitude_fp < \l__mermap_supply_south_fp
+      { \fp_set_eq:NN \l__mermap_supply_south_fp \l__mermap_marker_latitude_fp }
+    \fp_compare:nNnT \l__mermap_marker_latitude_fp > \l__mermap_supply_north_fp
+      { \fp_set_eq:NN \l__mermap_supply_north_fp \l__mermap_marker_latitude_fp }
+    \fp_compare:nNnT \l__mermap_marker_longitude_fp < \l__mermap_supply_west_fp
+      { \fp_set_eq:NN \l__mermap_supply_west_fp \l__mermap_marker_longitude_fp }
+    \fp_compare:nNnT \l__mermap_marker_longitude_fp > \l__mermap_supply_east_fp
+      { \fp_set_eq:NN \l__mermap_supply_east_fp \l__mermap_marker_longitude_fp }
+  }
+
+\cs_new:Npn \__mermap_supply_add_area_marker:n #1
+  {
+    \group_begin:
+      \RenewDocumentCommand \mrcmarker { m }
+        {
+          \keys_set:nn { mermap/marker } { ##1 }
+          \__mermap_supply_add_area_marker_position:
+        }
+      \file_if_exist_input:nF {#1}
+        {
+          \msg_error:nnn { mercatormap }{ input-area-marker }{ #1 }
+        }
+      \tl_gset:Nx \g_tmpa_tl
+        {
+          \exp_not:N\fp_set:Nn \exp_not:N\l__mermap_supply_west_fp  { \fp_to_decimal:N\l__mermap_supply_west_fp }
+          \exp_not:N\fp_set:Nn \exp_not:N\l__mermap_supply_east_fp  { \fp_to_decimal:N\l__mermap_supply_east_fp }
+          \exp_not:N\fp_set:Nn \exp_not:N\l__mermap_supply_south_fp { \fp_to_decimal:N\l__mermap_supply_south_fp }
+          \exp_not:N\fp_set:Nn \exp_not:N\l__mermap_supply_north_fp { \fp_to_decimal:N\l__mermap_supply_north_fp }
+        }
+      \group_insert_after:N \g_tmpa_tl
+    \group_end:
+  }
+
+
 \keys_define:nn { mermap/supply }
   {
     zoom            .int_set:N = \l__mermap_supply_zoom_int,
@@ -687,6 +727,19 @@
     {
       \clist_set:Nn \l_tmpa_clist { #1 }
       \__mermap_supply_add_area_clist:N \l_tmpa_clist
+    },
+    area~from~marker~input .code:n =
+    {
+      \fp_set:Nn \l__mermap_supply_west_fp { inf }
+      \fp_set:Nn \l__mermap_supply_east_fp { -inf }
+      \fp_set:Nn \l__mermap_supply_south_fp { 89 }
+      \fp_set:Nn \l__mermap_supply_north_fp { -89 }
+      \__mermap_supply_add_area_marker:n { #1 }
+    },
+    area~from~marker~input .value_required:n = true,
+    add~area~from~marker~input .code:n =
+    {
+      \__mermap_supply_add_area_marker:n { #1 }
     },
     flex~reference~scale .code:n = {
       \__mermap_set_flex_scale:nn {#1} {\l__mermap_supply_latitude_fp}
@@ -746,7 +799,8 @@
 
 \keys_define:nn { mermap }
   {
-    definition~prefix .code:n = {\str_set:Nn\l__mermap_definition_prefix_str{#1}},
+    definition~prefix .code:n            = {\str_set:Nn\l__mermap_definition_prefix_str{#1}},
+    fail~on~missing~resource .bool_set:N = \l__mermap_fail_on_missing_resource_bool,
     python              .code:n = {
       \tl_set:Nx \l__mermap_python_tl {#1~maptiles.texpy}
       },
@@ -755,6 +809,7 @@
 \keys_set:nn { mermap }
   {
     definition~prefix = maps/,
+    fail~on~missing~resource = true,
     python = python,
   }
 
@@ -912,7 +967,13 @@
               }
               {
                 \__mermap_write_mdfive:n {false}
-                \msg_error:nnx { mercatormap }{ target-resource }{ \l__mermap_definition_id_str }
+                \bool_if:NTF \l__mermap_fail_on_missing_resource_bool
+                  {
+                    \msg_error:nnx { mercatormap }{ target-resource }{ \l__mermap_definition_id_str }
+                  }
+                  {
+                    \msg_warning:nnx { mercatormap }{ target-resource }{ \l__mermap_definition_id_str }
+                  }
               }
           }
           {
@@ -1727,6 +1788,7 @@
 \bool_new:N \l__mermap_marker_use_urls
 
 \fp_new:N \l__mermap_marker_angle_fp
+\fp_new:N \l__mermap_marker_distance_fp
 \fp_new:N \l__mermap_marker_inner_radius_fp
 \fp_new:N \l__mermap_marker_latitude_fp
 \fp_new:N \l__mermap_marker_longitude_fp
@@ -1782,6 +1844,7 @@
     type            .tl_set:N   = \l__mermap_marker_type_tl,
     angle           .fp_set:N   = \l__mermap_marker_angle_fp,
     shift           .fp_set:N   = \l__mermap_marker_shift_fp,
+    distance        .fp_set:N   = \l__mermap_marker_distance_fp,
     draw            .code:n     = \colorlet{mrcmarkerdraw}{#1},
     fill            .code:n     = \colorlet{mrcmarkerfill}{#1},
     text            .code:n     = \colorlet{mrcmarkertext}{#1},
@@ -1821,6 +1884,7 @@
     pictocontents =,
     angle      = 90,
     shift      = 0pt,
+    distance   = 5mm,
     fill       = gray!20,
     draw       = gray,
     text       = black,
@@ -1851,6 +1915,7 @@
 \NewDocumentCommand\mrcmarkerfont{}{\tl_use:N \l__mermap_marker_font_tl}
 \NewExpandableDocumentCommand\mrcmarkerangle{}{\fp_to_decimal:N \l__mermap_marker_angle_fp}
 \NewExpandableDocumentCommand\mrcmarkershift{}{\fp_to_dim:N \l__mermap_marker_shift_fp}
+\NewExpandableDocumentCommand\mrcmarkerdistance{}{\fp_to_dim:N \l__mermap_marker_distance_fp}
 \NewExpandableDocumentCommand\mrcmarkerradius{}{\fp_to_dim:N \l__mermap_marker_radius_fp}
 \NewExpandableDocumentCommand\mrcmarkerinnerradius{}{\fp_to_dim:N \l__mermap_marker_inner_radius_fp}
 
@@ -1967,32 +2032,34 @@
 
 \__mermap_new_marker_type:nn {pin}
   {
+    \tl_set:Nx \l_tmpa_tl {\fp_to_dim:N \l__mermap_marker_distance_fp}
     \path[fill=mrcmarkerfill,draw=none,fill~opacity=0.7]
-      (0,0) -- (0.1,0.5) -- (-0.1,0.5) -- cycle;
+      (0,0) -- (0.1,\l_tmpa_tl) -- (-0.1,\l_tmpa_tl) -- cycle;
     \node[fill=white,draw=none,text=mrcmarkertext,
       above,font=\mrcmarkerfont,inner~sep=0.5mm,align=center,
       line~width=0mm,xshift=\mrcmarkershift,
       fill~opacity=0.7,text~opacity=1,xshift=0mm,mrcnodestyle,mrchyperpath]
-      (pin_node) at (0,0.5) {\mrcmarkercontents};
+      (pin_node) at (0,\l_tmpa_tl) {\mrcmarkercontents};
     \path[draw=mrcmarkerdraw,fill=none,line~join=round,mrcpathstyle]
-      (0,0) -- (0.1,0.5) -- (pin_node.south~east) -- (pin_node.north~east)
+      (0,0) -- (0.1,\l_tmpa_tl) -- (pin_node.south~east) -- (pin_node.north~east)
       -- (pin_node.north~west) -- (pin_node.south~west)
-      -- (-0.1,0.5) [line~join=bevel] --  cycle;
+      -- (-0.1,\l_tmpa_tl) [line~join=bevel] --  cycle;
   }
 
 \__mermap_new_marker_type:nn {pinflip}
   {
+    \tl_set:Nx \l_tmpa_tl {\fp_to_dim:N \l__mermap_marker_distance_fp}
     \path[fill=mrcmarkerfill,draw=none,fill~opacity=0.7]
-      (0,0) -- (-0.1,-0.5) -- (0.1,-0.5) -- cycle;
+      (0,0) -- (-0.1,-\l_tmpa_tl) -- (0.1,-\l_tmpa_tl) -- cycle;
     \node[fill=white,draw=none,text=mrcmarkertext,
       below,font=\mrcmarkerfont,inner~sep=0.5mm,align=center,
       line~width=0mm,xshift=\mrcmarkershift,
       fill~opacity=0.7,text~opacity=1,xshift=0mm,mrcnodestyle,mrchyperpath]
-      (pin_node) at (0,-0.5) {\mrcmarkercontents};
+      (pin_node) at (0,-\l_tmpa_tl) {\mrcmarkercontents};
     \path[draw=mrcmarkerdraw,fill=none,line~join=round,mrcpathstyle]
-      (0,0) -- (-0.1,-0.5) -- (pin_node.north~west) -- (pin_node.south~west)
+      (0,0) -- (-0.1,-\l_tmpa_tl) -- (pin_node.north~west) -- (pin_node.south~west)
       -- (pin_node.south~east) -- (pin_node.north~east)
-      -- (0.1,-0.5)  [line~join=bevel] -- cycle;
+      -- (0.1,-\l_tmpa_tl)  [line~join=bevel] -- cycle;
   }
 
 

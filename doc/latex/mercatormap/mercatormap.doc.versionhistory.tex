@@ -29,3 +29,22 @@
   \refKey{/mermap/marker/use links},
   \refKey{/mermap/marker/ignore links}.
 \end{itemize}
+
+
+\section*{v1.02 (2020/08/06)}
+\begin{itemize}
+\item New options
+  \refKey{/mermap/supply/area from marker input} and
+  \refKey{/mermap/supply/add area from marker input}
+  which allow to fit a map to a given external list of marker positions.
+\item New option \refKey{/mermap/fail on missing resource} to control
+  compilation behavior for missing resource files.
+\item Openrouteservice has discontinued mapsurfer tiles since June 2020.\\
+  Therefore, \refKey{/mermap/supply/source}=\docValue{openrouteservice mapsurfer}
+  is deprecated now. It is not documented any more, but
+  for some time it is still available for old documents with
+  cached map tiles.
+\item\issuetracker{2}
+  New marker option \refKey{/mermap/marker/distance} with corresponding
+  macro \docAuxCommand{mrcmarkerdistance}.
+\end{itemize}

@@ -220,6 +220,8 @@ accompanying Python script. The technical background is documented in
   \end{itemize}
 \end{docMrcKey}
 
+\pagebreak
+
 \begin{docMrcKey}[supply]{zoom}{=\meta{setup zoom}}{no default, initially |9|}
   Map tile zoom factor alias $z$ coordinate of the map tiles.
   Used for map types \docValue{boundaries} and \docValue{reference}.
@@ -250,26 +252,60 @@ accompanying Python script. The technical background is documented in
 \end{docMrcKey}
 
 
-\begin{docMrcKey}[supply]{area}{=\marg{comma separated list of named positions}}{no default}
+\begin{docMrcKeys}[
+  doc keypath     = supply,
+  doc parameter   = {=\marg{comma separated list of named positions}},
+  doc description = {no default},
+  %doc new         = 2020-05-04,
+]{
+  { doc name = area },
+  { doc name = add area },
+}
   Sets
   \refKey{/mermap/supply/north}, \refKey{/mermap/supply/south},
   \refKey{/mermap/supply/west}, \refKey{/mermap/supply/east}
   according to the given \meta{comma separated list of named positions}, i.e.
-  the described area contains all these positions.
-  Note that you need at least two points inside the list.
+  the described area contains all these positions.\\
+  \refKey{/mermap/supply/area} resets the current area which requires
+  at least two points inside the list.\\
+  \refKey{/mermap/supply/add area} does not reset the current area,
+  i.e. the positions are added to the
+  current area which possibly grows to fit all positions.\\
   Also note to take special care, if the international dateline is on your
   resulting map, see \Fullref{sec:dateline}.
-  Used for map types \docValue{boundaries} and \docValue{areafit}.
-\end{docMrcKey}
+  Used for map types \docValue{boundaries} and \docValue{areafit}
+  or in combination with \refKey{/mermap/supply/area to reference} also
+  for for map type \docValue{reference}.
+\end{docMrcKeys}
 
 
-\begin{docMrcKey}[supply]{add area}{=\marg{comma separated list of named positions}}{no default}
-  Nearly identical to \refKey{/mermap/supply/area}, but
-  the given \meta{comma separated list of named positions}
-  does not reset the current area, i.e. the positions are added to the
-  current area which possibly grows to fit all positions.
-  Used for map types \docValue{boundaries} and \docValue{areafit}.
-\end{docMrcKey}
+
+\begin{docMrcKeys}[
+  doc keypath     = supply,
+  doc parameter   = {=\marg{file name}},
+  doc description = {no default},
+  doc new         = 2020-05-08,
+]{
+  { doc name = area from marker input },
+  { doc name = add area from marker input },
+}
+  Sets
+  \refKey{/mermap/supply/north}, \refKey{/mermap/supply/south},
+  \refKey{/mermap/supply/west}, \refKey{/mermap/supply/east}
+  according to the given \refCom{mrcmarker} positions contained in a
+  file with the given \meta{file name}.\\
+  \refKey{/mermap/supply/area from marker input} resets the current area which requires
+  at least two marker positions inside the file.\\
+  \refKey{/mermap/supply/add area from marker input} does not reset the current area,
+  i.e. the positions are added to the
+  current area which possibly grows to fit all positions.\\
+  Also note to take special care, if the international dateline is on your
+  resulting map, see \Fullref{sec:dateline}.
+  Used for map types \docValue{boundaries} and \docValue{areafit}
+  or in combination with \refKey{/mermap/supply/area to reference} also
+  for for map type \docValue{reference}.
+\end{docMrcKeys}
+
 
 
 \begin{docMrcKey}[supply]{area to reference}{}{no value, initially unset}
@@ -282,6 +318,7 @@ accompanying Python script. The technical background is documented in
 \end{docMrcKey}
 
 
+\clearpage
 
 \begin{docMrcKey}[supply]{latitude}{=\meta{setup latitude}}{no default, initially |49|}
   Latitude degree of a reference point, possibly negative for the southern hemisphere.
@@ -307,7 +344,7 @@ accompanying Python script. The technical background is documented in
 \end{docMrcKey}
 
 
-\pagebreak
+
 \begin{docMrcKey}[supply]{width}{=\meta{setup width in tiles}}{no default, initially |4|}
   Width of the map as multiplicity of map tiles.
   Used for map types \docValue{reference} and \docValue{areafit}.
@@ -362,6 +399,18 @@ accompanying Python script. The technical background is documented in
     file is downloaded.
   \end{itemize}
 \end{docMrcKey}
+
+\enlargethispage*{1cm}
+
+\begin{docMrcKey}[][doc new=2020-08-06]{fail on missing resource}{\colOpt{=true\textbar false}}{default |true|, initially |true|}
+  If set to |true|, compilation stops with an error, if
+  \refKey{/mermap/supply/target} and \refKey{/mermap/mapdef/resource} are different.
+  Typically, this means that something went wrong while trying to download
+  map tiles. Set this option temporarily to |false|,
+  if the map tile service or the internet
+  connection is expected to be unavailable only temporarily.
+\end{docMrcKey}
+
 
 
 \clearpage
@@ -671,15 +720,6 @@ want to add more to avoid any legal uncertainties.
     \mapexample{opentopomap}{opentopomap}
 
 \clearpage
-  \item\docValue{openrouteservice mapsurfer}:\\
-    Tile server of \href{https://openrouteservice.org/}{OpenRouteService}.\\
-    A registered \meta{api-key} is needed (free plan available)
-    which is applied by\\
-    \refCom{mrcsetapikey}\brackets{\docValue{openrouteservice}}\marg{api-key}.\\
-    Usage: \url{https://openrouteservice.org/terms-of-service/}\\
-    API documentation: \url{https://openrouteservice.org/dev/#/api-docs}
-    \mapexample{openrouteservice mapsurfer}{openrouteservice_mapsurfer}
-
   \item\docValue{stamen terrain}:\\
     Tile server of \href{http://stamen.com}{Stamen Design}.\\
     Usage: \url{http://maps.stamen.com/#terrain}
@@ -690,12 +730,12 @@ want to add more to avoid any legal uncertainties.
     Usage: \url{http://maps.stamen.com/#terrain-background}
     \mapexample{stamen terrain-background}{stamen_terrain-background}
 
-\clearpage
   \item\docValue{stamen terrain-labels}:\\
     Tile server of \href{http://stamen.com}{Stamen Design}.\\
     Usage: \url{http://maps.stamen.com/#terrain-labels}
     \mapexample{stamen terrain-labels}{stamen_terrain-labels}
 
+\clearpage
   \item\docValue{stamen terrain-lines}:\\
     Tile server of \href{http://stamen.com}{Stamen Design}.\\
     Usage: \url{http://maps.stamen.com/#terrain-lines}
@@ -706,12 +746,12 @@ want to add more to avoid any legal uncertainties.
     Usage: \url{http://maps.stamen.com/#toner}
     \mapexample{stamen toner}{stamen_toner}
 
-\clearpage
   \item\docValue{stamen toner-lite}:\\
     Tile server of \href{http://stamen.com}{Stamen Design}.\\
     Usage: \url{http://maps.stamen.com/#toner-lite}
     \mapexample{stamen toner-lite}{stamen_toner-lite}
 
+\clearpage
   \item\docValue{stamen toner-hybrid}:\\
     Tile server of \href{http://stamen.com}{Stamen Design}.\\
     Usage: \url{http://maps.stamen.com/#toner-hybrid}
@@ -722,12 +762,12 @@ want to add more to avoid any legal uncertainties.
     Usage: \url{http://maps.stamen.com/#toner-background}
     \mapexample{stamen toner-background}{stamen_toner-background}
 
-\clearpage
   \item\docValue{stamen toner-labels}:\\
     Tile server of \href{http://stamen.com}{Stamen Design}.\\
     Usage: \url{http://maps.stamen.com/#toner-labels}
     \mapexample{stamen toner-labels}{stamen_toner-labels}
 
+\clearpage
   \item\docValue{stamen toner-lines}:\\
     Tile server of \href{http://stamen.com}{Stamen Design}.\\
     Usage: \url{http://maps.stamen.com/#toner-lines}
@@ -738,7 +778,6 @@ want to add more to avoid any legal uncertainties.
     Usage: \url{http://maps.stamen.com/#watercolor}
     \mapexample{stamen watercolor}{stamen_watercolor}
 
-\clearpage
   \item\docValue{thunderforest opencyclemap}:\\
     Tile server of \href{https://www.thunderforest.com}{Thunderforest}.\\
     A registered \meta{api-key} is needed (free plan available)
@@ -750,6 +789,7 @@ want to add more to avoid any legal uncertainties.
     \end{itemize}
     \mapexample{thunderforest opencyclemap}{thunderforest_opencyclemap}
 
+\clearpage
   \item\docValue{thunderforest transport}:\\
     Tile server of \href{https://www.thunderforest.com}{Thunderforest}.\\
     A registered \meta{api-key} is needed (free plan available)
@@ -772,7 +812,6 @@ want to add more to avoid any legal uncertainties.
     \end{itemize}
     \mapexample{thunderforest landscape}{thunderforest_landscape}
 
-\clearpage
   \item\docValue{thunderforest outdoors}:\\
     Tile server of \href{https://www.thunderforest.com}{Thunderforest}.\\
     A registered \meta{api-key} is needed (free plan available)
@@ -784,6 +823,7 @@ want to add more to avoid any legal uncertainties.
     \end{itemize}
     \mapexample{thunderforest outdoors}{thunderforest_outdoors}
 
+\clearpage
   \item\docValue{thunderforest transport-dark}:\\
     Tile server of \href{https://www.thunderforest.com}{Thunderforest}.\\
     A registered \meta{api-key} is needed (free plan available)
@@ -806,7 +846,6 @@ want to add more to avoid any legal uncertainties.
     \end{itemize}
     \mapexample{thunderforest spinal-map}{thunderforest_spinal-map}
 
-\clearpage
   \item\docValue{thunderforest pioneer}:\\
     Tile server of \href{https://www.thunderforest.com}{Thunderforest}.\\
     A registered \meta{api-key} is needed (free plan available)
@@ -818,6 +857,7 @@ want to add more to avoid any legal uncertainties.
     \end{itemize}
     \mapexample{thunderforest pioneer}{thunderforest_pioneer}
 
+\clearpage
   \item\docValue{thunderforest mobile-atlas}:\\
     Tile server of \href{https://www.thunderforest.com}{Thunderforest}.\\
     A registered \meta{api-key} is needed (free plan available)

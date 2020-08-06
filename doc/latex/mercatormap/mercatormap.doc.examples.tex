@@ -132,12 +132,12 @@ is 5 (every zoom step doubles the map size in each direction).
 
 \tikzsetnextfilename{examples_boundaries}%
 \begin{dispExample*}{center lower,breakable}
-% \mrcsetapikey{openrouteservice}{YOUR-API-KEY}  % registered key
+% \mrcsetapikey{thunderforest}{YOUR-API-KEY}  % registered key
 \begin{tikzpicture}
   \mrcmap[type=boundaries,
     west=110,east=155,south=-45,north=-10,
     zoom=5,
-    source=openrouteservice mapsurfer,
+    source=thunderforest outdoors,
     ]{examples_boundaries}
   \mrcdrawmap
   \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)

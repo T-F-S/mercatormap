@@ -1,4 +1,4 @@
-%% The LaTeX package mercatormap - version 1.01 (2020/05/05)
+%% The LaTeX package mercatormap - version 1.02 (2020/08/06)
 %% mercatorsupplier.def: predefined map supplier list
 %%
 %% -------------------------------------------------------------------------------------------
@@ -109,6 +109,8 @@
 \__mermap_new_supply_source_topplusopen:n { p100 }
 \__mermap_new_supply_source_topplusopen:n { p250 }
 
+%% openrouteservice mapsurfer is DISCONTINUED after June 2020
+%% Therefore, the following source is DEPRECATED and will be removed in future
 \__mermap_new_supply_source:nn { openrouteservice~mapsurfer }
   {
     url~with~api~key = {https://api.openrouteservice.org/mapsurfer/{z}/{x}/{y}.png?api_key=}{openrouteservice}{},
