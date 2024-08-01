@@ -26,7 +26,7 @@ The mathematical background and further information are found in \cite{Sturm:202
 
 
 \begin{docTikzKey}{mermap samples}{=\meta{number}}{style, no default}
-  \tikzname\ variant to set \refKey{/mermap/samples}.
+  \tikzname\ variant to set \refKey{mermap/samples}.
 \end{docTikzKey}
 
 \enlargethispage*{1cm}
@@ -56,7 +56,7 @@ The mathematical background and further information are found in \cite{Sturm:202
         \mrcclipmap
       \draw (mrcmap.south west) rectangle (mrcmap.north east);
       \mrcdraworthodrome[red,very thick,mermap samples=100]
-        {48.14}{11.58}{40.71}{-74.01}
+         {48.14}{11.58}{40.71}{-74.01}
       \node[red,fill=white] at ([above=1.3cm]mrcmap) {
         \mrcprettyorthodistance{48.14}{11.58}{40.71}{-74.01} };
     \end{tikzpicture}
@@ -95,6 +95,112 @@ The mathematical background and further information are found in \cite{Sturm:202
     \end{tikzpicture}
   \end{dispExample}
 \end{docCommand}
+
+
+\clearpage
+%-------------------------------------------------------------------------------
+\subsection{Orthodrome Points}
+
+\begin{docCommands}[
+    doc new     = 2024-08-01,
+  ]{
+    {
+      doc name        = mrcNPfromOrthoFraction,
+      doc parameter   = \marg{name}\marg{lat1}\marg{lon1}\marg{lat2}\marg{lon2}\marg{fraction},
+    },
+    {
+      doc name        = mrcNPfromOrthoFractionNamed,
+      doc parameter   = \marg{name}\marg{name1}\marg{name2}\marg{fraction},
+    },
+  }
+  Defines a new named position \meta{name} which is located on a \meta{fraction}
+  from the starting point of the orthodromic curve
+  from a point with
+  latitude \meta{lat1} and longitude \meta{lon1} (or described by a named position \meta{name1})
+  to a point with
+  latitude \meta{lat2} and longitude \meta{lon2} (or described by a named position \meta{name2}).
+  The given starting and final point of the orthodrome need to have a distance of more than
+  \SI{1}{\meter}.
+
+\tikzsetnextfilename{ortho_orthodrome3}%
+\begin{dispExample}
+  \begin{tikzpicture}
+    \mrcNPdef{munich}{48.14}{11.58}
+    \mrcNPdef{newyork}{40.71}{-74.01}
+    \mrcmap[type=areafit, area={munich,newyork},
+        source=topplusopen web,
+        tex width=\linewidth,tex height=6cm,
+        ]{ortho_orthodrome3}
+      \mrcdrawmap
+      \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
+        {\mrcmapattribution};
+      \mrcclipmap
+    \draw (mrcmap.south west) rectangle (mrcmap.north east);
+    \mrcmarker{type=pin,named position=munich,contents={M\"unchen}}
+    \mrcmarker{type=pinflip,shift=5mm,named position=newyork,
+      contents={New York City}}
+    \mrcNPdraworthodrome[red,very thick] {munich}{newyork}
+    \foreach \fraction in { 0.1,0.3,0.5,0.7,1.0,1.1 }
+      {
+        \mrcNPfromOrthoFractionNamed{waypoint}{munich}{newyork}{\fraction}
+        \mrcmarker{type=pin,named position=waypoint,contents={\fraction}}
+      }
+  \end{tikzpicture}
+\end{dispExample}
+\end{docCommands}
+
+\clearpage
+
+\begin{docCommands}[
+    doc new     = 2024-08-01,
+  ]{
+    {
+      doc name        = mrcNPfromOrthoDistance,
+      doc parameter   = \marg{name}\marg{lat1}\marg{lon1}\marg{lat2}\marg{lon2}\marg{distance},
+    },
+    {
+      doc name        = mrcNPfromOrthoDistanceNamed,
+      doc parameter   = \marg{name}\marg{name1}\marg{name2}\marg{distance},
+    },
+  }
+  Defines a new named position \meta{name} which is located on a \meta{distance}
+  from the starting point of the orthodromic curve
+  from a point with
+  latitude \meta{lat1} and longitude \meta{lon1} (or described by a named position \meta{name1})
+  to a point with
+  latitude \meta{lat2} and longitude \meta{lon2} (or described by a named position \meta{name2}).
+  The given starting and final point of the orthodrome need to have a distance of more than
+  \SI{1}{\meter}. The unit for the \meta{distance} is kilometer.
+
+\tikzsetnextfilename{ortho_orthodrome4}%
+\begin{dispExample}
+  \begin{tikzpicture}
+    \mrcNPdef{munich}{48.14}{11.58}
+    \mrcNPdef{newyork}{40.71}{-74.01}
+    \mrcmap[type=areafit, area={munich,newyork},
+        source=topplusopen web,
+        tex width=\linewidth,tex height=6cm,
+        ]{ortho_orthodrome4}
+      \mrcdrawmap
+      \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
+        {\mrcmapattribution};
+      \mrcclipmap
+    \draw (mrcmap.south west) rectangle (mrcmap.north east);
+    \mrcmarker{type=pin,named position=munich,contents={M\"unchen}}
+    \mrcmarker{type=pinflip,shift=5mm,named position=newyork,
+      contents={New York City}}
+    \mrcNPdraworthodrome[red,very thick] {munich}{newyork}
+    \foreach \distance in { 1000,2000,3000,4000,5000,6000 }
+      {
+        \mrcNPfromOrthoDistanceNamed{waypoint}{munich}{newyork}{\distance}
+        \mrcmarker{type=pin,named position=waypoint,
+            contents={\SI{\distance}{\kilo\meter}}}
+      }
+  \end{tikzpicture}
+\end{dispExample}
+\end{docCommands}
+
+
 
 
 \clearpage

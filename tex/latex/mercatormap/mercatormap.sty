@@ -1,8 +1,8 @@
-%% The LaTeX package mercatormap - version 1.02 (2020/08/06)
+%% The LaTeX package mercatormap - version 1.1.0 (2024/08/01)
 %% mercatormap.sty: geographic coordinates (Mercator projection) and map tiles for TikZ pictures
 %%
 %% -------------------------------------------------------------------------------------------
-%% Copyright (c) 2020 by Prof. Dr. Dr. Thomas F. Sturm <thomas dot sturm at unibw dot de>
+%% Copyright (c) 2020-2024 by Prof. Dr. Dr. Thomas F. Sturm <thomas dot sturm at unibw dot de>
 %% -------------------------------------------------------------------------------------------
 %%
 %% This work may be distributed and/or modified under the
@@ -17,24 +17,11 @@
 %%
 %% This work consists of all files listed in README
 %%
-\RequirePackage{expl3}[2020/02/25]
-\RequirePackage{xparse}
-\ProvidesExplPackage{mercatormap}{2020/08/06}{1.02}
+\NeedsTeXFormat{LaTeX2e}[2023-11-01]
+\ProvidesExplPackage{mercatormap}{2024/08/01}{1.1.0}
   {A Web Mercator projection package with map tile support}
-\@ifpackagelater { expl3 } { 2020/02/25 }
-  { }
-  {
-    \PackageError { mercatormap } { Support~package~expl3~too~old }
-      {
-        You~need~to~update~your~installation~of~the~bundles~'l3kernel'~and~
-        'l3packages'.\MessageBreak
-        Loading~mercatormap~will~abort!
-      }
-    \tex_endinput:D
-  }
 
-\RequirePackage{siunitx}
-\RequirePackage{graphicx,tikz,pdftexcmds}
+\RequirePackage{siunitx,graphicx,tikz}
 
 \ExplSyntaxOff
 % space character problem if within explSyntax
@@ -51,8 +38,23 @@
 \NewDocumentCommand\mermapsetmarker{ m } { \keys_set:nn { mermap/marker } {#1} }
 
 
-%---- constants ----------------------------------------------------------------
+%---- scratch variables --------------------------------------------------------
 
+\box_new:N \l__mermap_tmpa_box
+
+\clist_new:N \l__mermap_tmpa_clist
+
+\dim_new:N \l__mermap_tmpa_dim
+\dim_new:N \l__mermap_tmpb_dim
+
+\fp_new:N \l__mermap_tmpa_fp
+\fp_new:N \l__mermap_tmpb_fp
+
+\tl_new:N \g__mermap_tmpa_tl
+\tl_new:N \l__mermap_tmpa_tl
+\tl_new:N \l__mermap_tmpb_tl
+
+%---- constants ----------------------------------------------------------------
 
 \fp_const:Nn \c__mermap_scale_radius_fp { 6371*pi/180 }
 \fp_const:Nn \c__mermap_mean_radius_fp { 637100000cm }
@@ -235,16 +237,16 @@
 
 \cs_new_nopar:Npn \__mermap_longitude_to_x:n #1
   {
-    \fp_set:Nn \l_tmpa_fp { #1-\l__mermap_mapwest_fp }
-    \fp_sub:Nn \l_tmpa_fp { 360*floor(\l_tmpa_fp/360) }
-    \fp_set:Nn \l_tmpa_fp
-      { \l_tmpa_fp>\l__mermap_westeast_fp
-          ?(\l_tmpa_fp-\l__mermap_westeast_fp>360-\l_tmpa_fp
-            ?\l_tmpa_fp-360
-            :\l_tmpa_fp)
-          :\l_tmpa_fp
+    \fp_set:Nn \l__mermap_tmpa_fp { #1-\l__mermap_mapwest_fp }
+    \fp_sub:Nn \l__mermap_tmpa_fp { 360*floor(\l__mermap_tmpa_fp/360) }
+    \fp_set:Nn \l__mermap_tmpa_fp
+      { \l__mermap_tmpa_fp>\l__mermap_westeast_fp
+          ?(\l__mermap_tmpa_fp-\l__mermap_westeast_fp>360-\l__mermap_tmpa_fp
+            ?\l__mermap_tmpa_fp-360
+            :\l__mermap_tmpa_fp)
+          :\l__mermap_tmpa_fp
       }
-    \fp_set:Nn \l__mermap_cs_x_fp { \l_tmpa_fp*\l__mermap_cs_xfactor_fp }
+    \fp_set:Nn \l__mermap_cs_x_fp { \l__mermap_tmpa_fp*\l__mermap_cs_xfactor_fp }
   }
 
 
@@ -340,14 +342,14 @@
         \prg_return_false:
       }
       {
-        \fp_set:Nn \l_tmpa_fp { #2-\l__mermap_mapwest_fp }
-        \fp_sub:Nn \l_tmpa_fp { 360*floor(\l_tmpa_fp/360) }
-        \fp_compare:nNnTF \l_tmpa_fp > \l__mermap_westeast_fp
+        \fp_set:Nn \l__mermap_tmpa_fp { #2-\l__mermap_mapwest_fp }
+        \fp_sub:Nn \l__mermap_tmpa_fp { 360*floor(\l__mermap_tmpa_fp/360) }
+        \fp_compare:nNnTF \l__mermap_tmpa_fp > \l__mermap_westeast_fp
         {
           \prg_return_false:
         }
         {
-          \fp_set:Nn \l__mermap_cs_x_fp { \l_tmpa_fp*\l__mermap_cs_xfactor_fp }
+          \fp_set:Nn \l__mermap_cs_x_fp { \l__mermap_tmpa_fp*\l__mermap_cs_xfactor_fp }
           \__mermap_latitude_to_y:n {#1}
           \pgfnoderename{mrclastpos}{mrcpos}
           \pgfcoordinate{mrcpos}{
@@ -378,14 +380,14 @@
         \prg_return_false:
       }
       {
-        \fp_set:Nn \l_tmpa_fp { #2-\l__mermap_vic_west_fp }
-        \fp_sub:Nn \l_tmpa_fp { 360*floor(\l_tmpa_fp/360) }
-        \fp_compare:nNnTF \l_tmpa_fp > \l__mermap_vic_westeast_fp
+        \fp_set:Nn \l__mermap_tmpa_fp { #2-\l__mermap_vic_west_fp }
+        \fp_sub:Nn \l__mermap_tmpa_fp { 360*floor(\l__mermap_tmpa_fp/360) }
+        \fp_compare:nNnTF \l__mermap_tmpa_fp > \l__mermap_vic_westeast_fp
         {
           \prg_return_false:
         }
         {
-          \fp_set:Nn \l__mermap_cs_x_fp { \l_tmpa_fp*\l__mermap_cs_xfactor_fp - \l__mermap_vic_dim_fp }
+          \fp_set:Nn \l__mermap_cs_x_fp { \l__mermap_tmpa_fp*\l__mermap_cs_xfactor_fp - \l__mermap_vic_dim_fp }
           \__mermap_latitude_to_y:n {#1}
           \pgfnoderename{mrclastpos}{mrcpos}
           \pgfcoordinate{mrcpos}{
@@ -485,7 +487,7 @@
 \char_set_catcode_other:n {`\"}
 
 \tl_const:Nn \c__mermap_supply_call_boundaries_tl
-  {%
+  {
     \l__mermap_python_tl\c_space_tl boundaries
       -u   "\str_use:N\l__mermap_supply_url_str"
       -at  "\str_use:N\l__mermap_supply_attribution_str"
@@ -503,7 +505,7 @@
   }
 
 \tl_const:Nn \c__mermap_supply_call_reference_tl
-  {%
+  {
     \l__mermap_python_tl\c_space_tl reference
       -u   "\str_use:N\l__mermap_supply_url_str"
       -at  "\str_use:N\l__mermap_supply_attribution_str"
@@ -523,7 +525,7 @@
 
 
 \tl_const:Nn \c__mermap_supply_call_areafit_tl
-  {%
+  {
     \l__mermap_python_tl\c_space_tl areafit
       -u   "\str_use:N\l__mermap_supply_url_str"
       -at  "\str_use:N\l__mermap_supply_attribution_str"
@@ -604,11 +606,11 @@
 \cs_new:Npn \__mermap_supply_url_with_api_key:nnn #1#2#3
   {
     \str_set:Nn \l__mermap_supply_url_str {#1}
-    \prop_get:NnNF \g__mermap_apikey_prop {#2} \l_tmpa_tl
+    \prop_get:NnNF \g__mermap_apikey_prop {#2} \l__mermap_tmpa_tl
       {
         \msg_error:nnx{ mercatormap }{ api-key-undefined }{ #2 }
       }
-    \str_put_right:NV \l__mermap_supply_url_str \l_tmpa_tl
+    \str_put_right:NV \l__mermap_supply_url_str \l__mermap_tmpa_tl
     \str_put_right:Nn \l__mermap_supply_url_str {#3}
   }
 
@@ -621,16 +623,16 @@
         {
           \msg_error:nnx{ mercatormap }{ np-undefined }{ ##1 }
         }
-        \fp_set:Nn \l_tmpa_fp { \mrcNPlat{##1} }
-        \fp_compare:nNnT \l_tmpa_fp < \l__mermap_supply_south_fp
-          { \fp_set_eq:NN \l__mermap_supply_south_fp \l_tmpa_fp }
-        \fp_compare:nNnT \l_tmpa_fp > \l__mermap_supply_north_fp
-          { \fp_set_eq:NN \l__mermap_supply_north_fp \l_tmpa_fp }
-        \fp_set:Nn \l_tmpa_fp { \mrcNPlon{##1} }
-        \fp_compare:nNnT \l_tmpa_fp < \l__mermap_supply_west_fp
-          { \fp_set_eq:NN \l__mermap_supply_west_fp \l_tmpa_fp }
-        \fp_compare:nNnT \l_tmpa_fp > \l__mermap_supply_east_fp
-          { \fp_set_eq:NN \l__mermap_supply_east_fp \l_tmpa_fp }
+        \fp_set:Nn \l__mermap_tmpa_fp { \mrcNPlat{##1} }
+        \fp_compare:nNnT \l__mermap_tmpa_fp < \l__mermap_supply_south_fp
+          { \fp_set_eq:NN \l__mermap_supply_south_fp \l__mermap_tmpa_fp }
+        \fp_compare:nNnT \l__mermap_tmpa_fp > \l__mermap_supply_north_fp
+          { \fp_set_eq:NN \l__mermap_supply_north_fp \l__mermap_tmpa_fp }
+        \fp_set:Nn \l__mermap_tmpa_fp { \mrcNPlon{##1} }
+        \fp_compare:nNnT \l__mermap_tmpa_fp < \l__mermap_supply_west_fp
+          { \fp_set_eq:NN \l__mermap_supply_west_fp \l__mermap_tmpa_fp }
+        \fp_compare:nNnT \l__mermap_tmpa_fp > \l__mermap_supply_east_fp
+          { \fp_set_eq:NN \l__mermap_supply_east_fp \l__mermap_tmpa_fp }
       }
   }
 
@@ -662,14 +664,14 @@
         {
           \msg_error:nnn { mercatormap }{ input-area-marker }{ #1 }
         }
-      \tl_gset:Nx \g_tmpa_tl
+      \tl_gset:Nx \g__mermap_tmpa_tl
         {
           \exp_not:N\fp_set:Nn \exp_not:N\l__mermap_supply_west_fp  { \fp_to_decimal:N\l__mermap_supply_west_fp }
           \exp_not:N\fp_set:Nn \exp_not:N\l__mermap_supply_east_fp  { \fp_to_decimal:N\l__mermap_supply_east_fp }
           \exp_not:N\fp_set:Nn \exp_not:N\l__mermap_supply_south_fp { \fp_to_decimal:N\l__mermap_supply_south_fp }
           \exp_not:N\fp_set:Nn \exp_not:N\l__mermap_supply_north_fp { \fp_to_decimal:N\l__mermap_supply_north_fp }
         }
-      \group_insert_after:N \g_tmpa_tl
+      \group_insert_after:N \g__mermap_tmpa_tl
     \group_end:
   }
 
@@ -715,18 +717,18 @@
     _source .choice:,
     area .code:n =
     {
-      \clist_set:Nn \l_tmpa_clist { #1 }
+      \clist_set:Nn \l__mermap_tmpa_clist { #1 }
       \fp_set:Nn \l__mermap_supply_west_fp { inf }
       \fp_set:Nn \l__mermap_supply_east_fp { -inf }
       \fp_set:Nn \l__mermap_supply_south_fp { 89 }
       \fp_set:Nn \l__mermap_supply_north_fp { -89 }
-      \__mermap_supply_add_area_clist:N \l_tmpa_clist
+      \__mermap_supply_add_area_clist:N \l__mermap_tmpa_clist
     },
     area .value_required:n = true,
     add~area .code:n =
     {
-      \clist_set:Nn \l_tmpa_clist { #1 }
-      \__mermap_supply_add_area_clist:N \l_tmpa_clist
+      \clist_set:Nn \l__mermap_tmpa_clist { #1 }
+      \__mermap_supply_add_area_clist:N \l__mermap_tmpa_clist
     },
     area~from~marker~input .code:n =
     {
@@ -756,20 +758,20 @@
     flex~area~fit .code:n = {
       \fp_compare:nNnF \l__mermap_tile_size_dim = \l__mermap_flex_tile_size_dim
         {
-          \fp_set:Nn \l_tmpa_fp { \l__mermap_tile_size_dim/\l__mermap_flex_tile_size_dim }
-          \fp_set:Nn \l__mermap_supply_width_fp{\l__mermap_supply_width_fp*\l_tmpa_fp}
-          \fp_set:Nn \l__mermap_supply_height_fp{\l__mermap_supply_height_fp*\l_tmpa_fp}
+          \fp_set:Nn \l__mermap_tmpa_fp { \l__mermap_tile_size_dim/\l__mermap_flex_tile_size_dim }
+          \fp_set:Nn \l__mermap_supply_width_fp{\l__mermap_supply_width_fp*\l__mermap_tmpa_fp}
+          \fp_set:Nn \l__mermap_supply_height_fp{\l__mermap_supply_height_fp*\l__mermap_tmpa_fp}
         }
       \fp_set:Nn \l__mermap_supply_width_fp{\l__mermap_supply_width_fp-(#1)/\l__mermap_flex_tile_size_dim}
       \fp_set:Nn \l__mermap_supply_height_fp{\l__mermap_supply_height_fp-(#1)/\l__mermap_flex_tile_size_dim}
-      \fp_set:Nn \l_tmpa_fp { min ( 180*\l__mermap_supply_width_fp / (\l__mermap_supply_east_fp-\l__mermap_supply_west_fp)
+      \fp_set:Nn \l__mermap_tmpa_fp { min ( 180*\l__mermap_supply_width_fp / (\l__mermap_supply_east_fp-\l__mermap_supply_west_fp)
         , pi*\l__mermap_supply_height_fp / ln( tand(\l__mermap_supply_north_fp/2+45) / tand(\l__mermap_supply_south_fp/2+45) ) ) }
-      \fp_set:Nn \l_tmpb_fp { ln(\l_tmpa_fp)/ln(2) }
-      \fp_set:Nn \l_tmpb_fp { round(\l_tmpb_fp)/\l_tmpb_fp }
-      \fp_set:Nn \l_tmpb_fp { \l_tmpa_fp^(\l_tmpb_fp-1+0.0000001) }
-      \dim_set:Nn \l__mermap_tile_size_dim { \fp_to_dim:n { \l__mermap_flex_tile_size_dim / \l_tmpb_fp }}
-      \fp_set:Nn \l__mermap_supply_width_fp { \l__mermap_supply_width_fp * \l_tmpb_fp + (#1)/\l__mermap_tile_size_dim }
-      \fp_set:Nn \l__mermap_supply_height_fp { \l__mermap_supply_height_fp * \l_tmpb_fp + (#1)/\l__mermap_tile_size_dim }
+      \fp_set:Nn \l__mermap_tmpb_fp { ln(\l__mermap_tmpa_fp)/ln(2) }
+      \fp_set:Nn \l__mermap_tmpb_fp { round(\l__mermap_tmpb_fp)/\l__mermap_tmpb_fp }
+      \fp_set:Nn \l__mermap_tmpb_fp { \l__mermap_tmpa_fp^(\l__mermap_tmpb_fp-1+0.0000001) }
+      \dim_set:Nn \l__mermap_tile_size_dim { \fp_to_dim:n { \l__mermap_flex_tile_size_dim / \l__mermap_tmpb_fp }}
+      \fp_set:Nn \l__mermap_supply_width_fp { \l__mermap_supply_width_fp * \l__mermap_tmpb_fp + (#1)/\l__mermap_tile_size_dim }
+      \fp_set:Nn \l__mermap_supply_height_fp { \l__mermap_supply_height_fp * \l__mermap_tmpb_fp + (#1)/\l__mermap_tile_size_dim }
     },
     flex~area~fit .default:n = 0pt,
   }
@@ -815,16 +817,13 @@
 
 
 \msg_new:nnn { mercatormap }{ python-script }
-  { Python~script~'maptiles.texpy'~is~created~(for~map~tile~download). }
+  { Python~script~'maptiles.texpy'~is~created~for~map~tile~download. }
 
 
 \NewDocumentCommand \mrcactivatescript {}
   {
     \msg_info:nn { mercatormap }{ python-script }
-    \group_begin:
-    \def\@latex@warning@no@line##1{}% suppress filecontents warning
     \file_input:n {\mrcpkgprefix mercatorpy.def}
-    \group_end:
     \bool_set_true:N \l__mermap_script_activated_bool
   }
 \@onlypreamble\mrcactivatescript
@@ -838,21 +837,21 @@
 
 \cs_new:Npn \__mermap_create_definition_id:n #1
   {
-    \tl_set:Nx \l_tmpa_tl {#1}
-    \tl_trim_spaces:N \l_tmpa_tl
-    \str_set:Nx \l__mermap_definition_postfix_str {\tl_to_str:N \l_tmpa_tl}
+    \tl_set:Nx \l__mermap_tmpa_tl {#1}
+    \tl_trim_spaces:N \l__mermap_tmpa_tl
+    \str_set:Nx \l__mermap_definition_postfix_str {\tl_to_str:N \l__mermap_tmpa_tl}
     \str_concat:NNN \l__mermap_definition_id_str
       \l__mermap_definition_prefix_str \l__mermap_definition_postfix_str
   }
 
 \cs_new:Npn \__mermap_map:nn #1#2
   {
-    \tl_set:Nx \l_tmpa_tl {#2}
-    \tl_trim_spaces:N \l_tmpa_tl
-    \tl_if_empty:NT \l_tmpa_tl
+    \tl_set:Nx \l__mermap_tmpa_tl {#2}
+    \tl_trim_spaces:N \l__mermap_tmpa_tl
+    \tl_if_empty:NT \l__mermap_tmpa_tl
       {
         \int_gincr:N \g__mermap_automap_int
-        \tl_set:Nx \l_tmpa_tl
+        \tl_set:Nx \l__mermap_tmpa_tl
           {
             automap-
             \int_compare:nNnTF \g__mermap_automap_int<{10} {000}
@@ -865,7 +864,7 @@
             \int_use:N \g__mermap_automap_int
           }
       }
-    \str_set:Nx \l__mermap_definition_postfix_str {\tl_to_str:N \l_tmpa_tl}
+    \str_set:Nx \l__mermap_definition_postfix_str {\tl_to_str:N \l__mermap_tmpa_tl}
     \str_concat:NNN \l__mermap_definition_id_str
     \l__mermap_definition_prefix_str \l__mermap_definition_postfix_str
     \__mermap_supplymap:n {#1}
@@ -886,12 +885,12 @@
   {
     \group_begin:
     \keys_set:nn { mermap/supply } { #1 }
-    \tl_set:Nx \l_tmpa_tl { \str_use:N\l__mermap_definition_id_str }
-    \prop_if_in:NVT \g__mermap_definition_prop \l_tmpa_tl
+    \tl_set:Nx \l__mermap_tmpa_tl { \str_use:N\l__mermap_definition_id_str }
+    \prop_if_in:NVT \g__mermap_definition_prop \l__mermap_tmpa_tl
       {
-        \msg_warning:nnx { mercatormap }{ definition-id-used }{ \tl_use:N \l_tmpa_tl }
+        \msg_warning:nnx { mercatormap }{ definition-id-used }{ \tl_use:N \l__mermap_tmpa_tl }
       }
-    \prop_gput:NVn \g__mermap_definition_prop \l_tmpa_tl {}
+    \prop_gput:NVn \g__mermap_definition_prop \l__mermap_tmpa_tl {}
     \bool_if:NT \l__mermap_script_activated_bool
     {
       \__mermap_supplymap_call:
@@ -927,10 +926,10 @@
 
 \cs_new:Npn \__mermap_supplymap_call:
   {
-    \tl_set_eq:Nc \l_tmpa_tl {
+    \tl_set_eq:Nc \l__mermap_tmpa_tl {
       c__mermap_supply_call_\l__mermap_supply_type_tl _tl }
-    \tl_set:Nx \l__mermap_supply_call_tl \l_tmpa_tl
-    \tl_set:Nx \l__mermap_mdfivesum_tl { \pdf@mdfivesum{\l__mermap_supply_call_tl} }
+    \tl_set:Nx \l__mermap_supply_call_tl \l__mermap_tmpa_tl
+    \tl_set:Nx \l__mermap_mdfivesum_tl { \str_mdfive_hash:e{\l__mermap_supply_call_tl} }
     \file_if_exist:nTF {\l__mermap_definition_id_str.def}
       {
         \tl_clear:N \l__mermap_last_mdfivesum_tl
@@ -1031,8 +1030,8 @@
 
 \cs_new_nopar:Npn \__mermap_set_flex_scale:nn  #1#2
   {
-    \fp_set:Nn \l_tmpa_fp { 1+ln(\c__mermap_mean_radius_fp/#1*cosd(#2)*pi/\l__mermap_flex_tile_size_dim)/ln(2) }
-    \keys_set:nn { mermap }{ flex~zoom=\l_tmpa_fp }
+    \fp_set:Nn \l__mermap_tmpa_fp { 1+ln(\c__mermap_mean_radius_fp/#1*cosd(#2)*pi/\l__mermap_flex_tile_size_dim)/ln(2) }
+    \keys_set:nn { mermap }{ flex~zoom=\l__mermap_tmpa_fp }
   }
 
 \use:x
@@ -1323,19 +1322,19 @@
 
 \cs_new_nopar:Npn \__mermap_compute_network_step:nn #1#2
   {
-    \fp_set:Nn \l_tmpa_fp
+    \fp_set:Nn \l__mermap_tmpa_fp
     {
       min ( \l__mermap_network_pieces_int, round((#1)/\l__mermap_network_distance_dim) )
     }
-    \fp_set:Nn \l_tmpb_fp { (#2)/\l_tmpa_fp }
-    \fp_set:Nn \l_tmpa_fp { floor(ln(\l_tmpb_fp)/ln(10)) }
-    \fp_compare:nNnTF {\l_tmpa_fp} < {0}
+    \fp_set:Nn \l__mermap_tmpb_fp { (#2)/\l__mermap_tmpa_fp }
+    \fp_set:Nn \l__mermap_tmpa_fp { floor(ln(\l__mermap_tmpb_fp)/ln(10)) }
+    \fp_compare:nNnTF {\l__mermap_tmpa_fp} < {0}
       {
-        \fp_compare:nNnTF {\l_tmpa_fp} > {-5}
+        \fp_compare:nNnTF {\l__mermap_tmpa_fp} > {-5}
           {
             \use:x
             {
-              \exp_not:N\keys_set:nn { mermap }{ format~angle=decimal\fp_to_int:N\l_tmpa_fp}
+              \exp_not:N\keys_set:nn { mermap }{ format~angle=decimal\fp_to_int:N\l__mermap_tmpa_fp}
             }
           }
           {
@@ -1345,25 +1344,25 @@
       {
         \keys_set:nn { mermap }{ format~angle=decimal-0 }
       }
-    \fp_set:Nn \l_tmpa_fp { 10^\l_tmpa_fp }
-    \fp_set:Nn \l_tmpb_fp { \l_tmpb_fp/\l_tmpa_fp }
-    \fp_compare:nNnTF {abs(\l_tmpb_fp-1)} < {abs(\l_tmpb_fp-2)}
+    \fp_set:Nn \l__mermap_tmpa_fp { 10^\l__mermap_tmpa_fp }
+    \fp_set:Nn \l__mermap_tmpb_fp { \l__mermap_tmpb_fp/\l__mermap_tmpa_fp }
+    \fp_compare:nNnTF {abs(\l__mermap_tmpb_fp-1)} < {abs(\l__mermap_tmpb_fp-2)}
       {
-        \fp_compare:nNnTF {abs(\l_tmpb_fp-1)} < {abs(\l_tmpb_fp-5)}
+        \fp_compare:nNnTF {abs(\l__mermap_tmpb_fp-1)} < {abs(\l__mermap_tmpb_fp-5)}
         {
-          \fp_set:Nn \l__mermap_result_fp {\l_tmpa_fp}
+          \fp_set:Nn \l__mermap_result_fp {\l__mermap_tmpa_fp}
         }
         {
-          \fp_set:Nn \l__mermap_result_fp {5*\l_tmpa_fp}
+          \fp_set:Nn \l__mermap_result_fp {5*\l__mermap_tmpa_fp}
         }
       }
       {
-        \fp_compare:nNnTF {abs(\l_tmpb_fp-2)} < {abs(\l_tmpb_fp-5)}
+        \fp_compare:nNnTF {abs(\l__mermap_tmpb_fp-2)} < {abs(\l__mermap_tmpb_fp-5)}
         {
-          \fp_set:Nn \l__mermap_result_fp {2*\l_tmpa_fp}
+          \fp_set:Nn \l__mermap_result_fp {2*\l__mermap_tmpa_fp}
         }
         {
-          \fp_set:Nn \l__mermap_result_fp {5*\l_tmpa_fp}
+          \fp_set:Nn \l__mermap_result_fp {5*\l__mermap_tmpa_fp}
         }
       }
   }
@@ -1376,46 +1375,46 @@
     \IfNoValueF {#1} { \keys_set:nn { mermap } {#1} }
     \tl_use:N \l__mermap_tikz_map_clip_tl
     \__mermap_compute_network_step:nn {\l__mermap_tex_height_fp}{\l__mermap_mapnorth_fp-\l__mermap_mapsouth_fp}
-    \fp_set:Nn \l_tmpa_fp { ceil(\l__mermap_mapsouth_fp/\l__mermap_result_fp)*\l__mermap_result_fp}
-    \fp_compare:nNnT {\l_tmpa_fp-\l__mermap_mapsouth_fp} < {1e-10}
+    \fp_set:Nn \l__mermap_tmpa_fp { ceil(\l__mermap_mapsouth_fp/\l__mermap_result_fp)*\l__mermap_result_fp}
+    \fp_compare:nNnT {\l__mermap_tmpa_fp-\l__mermap_mapsouth_fp} < {1e-10}
       {
-        \fp_add:Nn \l_tmpa_fp {\l__mermap_result_fp}
+        \fp_add:Nn \l__mermap_tmpa_fp {\l__mermap_result_fp}
       }
-    \fp_while_do:nNnn {\l_tmpa_fp} < {\l__mermap_mapnorth_fp}
+    \fp_while_do:nNnn {\l__mermap_tmpa_fp} < {\l__mermap_mapnorth_fp}
       {
-        \tl_set:Nn \l_tmpa_tl {\fp_use:N\l_tmpa_fp}
-        \draw[gray,very~thin] (mrc~cs\c_colon_str lat=\l_tmpa_tl,lon=\mrcmapwest)
+        \tl_set:Nn \l__mermap_tmpa_tl {\fp_use:N\l__mermap_tmpa_fp}
+        \draw[gray,very~thin] (mrc~cs\c_colon_str lat=\l__mermap_tmpa_tl,lon=\mrcmapwest)
           coordinate (mermap_temp)
           node[right=1mm,inner~sep=0.5pt,black!50!gray,font=\l__mermap_network_font_tl,
             fill=white,opacity=0.3,text~opacity=1,
-            ]{\mrcformlat{\l_tmpa_tl}}
+            ]{\mrcformlat{\l__mermap_tmpa_tl}}
           -- (mermap_temp -| mrcmap.east)
           node[left=1mm,inner~sep=0.5pt,black!50!gray,font=\l__mermap_network_font_tl,
             fill=white,opacity=0.3,text~opacity=1,
-          ]{\mrcformlat{\l_tmpa_tl}}
+          ]{\mrcformlat{\l__mermap_tmpa_tl}}
           ;
-        \fp_add:Nn \l_tmpa_fp {\l__mermap_result_fp}
+        \fp_add:Nn \l__mermap_tmpa_fp {\l__mermap_result_fp}
       }
     \__mermap_compute_network_step:nn {\l__mermap_tex_width_fp}{\l__mermap_mapeast_fp-\l__mermap_mapwest_fp}
-    \fp_set:Nn \l_tmpa_fp { ceil(\l__mermap_mapwest_fp/\l__mermap_result_fp)*\l__mermap_result_fp}
-    \fp_compare:nNnT {\l_tmpa_fp-\l__mermap_mapwest_fp} < {1e-10}
+    \fp_set:Nn \l__mermap_tmpa_fp { ceil(\l__mermap_mapwest_fp/\l__mermap_result_fp)*\l__mermap_result_fp}
+    \fp_compare:nNnT {\l__mermap_tmpa_fp-\l__mermap_mapwest_fp} < {1e-10}
       {
-        \fp_add:Nn \l_tmpa_fp {\l__mermap_result_fp}
+        \fp_add:Nn \l__mermap_tmpa_fp {\l__mermap_result_fp}
       }
-    \fp_while_do:nNnn {\l_tmpa_fp} < {\l__mermap_mapeast_fp}
+    \fp_while_do:nNnn {\l__mermap_tmpa_fp} < {\l__mermap_mapeast_fp}
       {
-        \tl_set:Nn \l_tmpa_tl {\fp_use:N\l_tmpa_fp}
-        \draw[gray,very~thin] (mrc~cs\c_colon_str lon=\l_tmpa_tl,lat=\mrcmapsouth)
+        \tl_set:Nn \l__mermap_tmpa_tl {\fp_use:N\l__mermap_tmpa_fp}
+        \draw[gray,very~thin] (mrc~cs\c_colon_str lon=\l__mermap_tmpa_tl,lat=\mrcmapsouth)
           coordinate (mermap_temp)
           node[above=1mm,inner~sep=0.5pt,black!50!gray,font=\l__mermap_network_font_tl,
             fill=white,opacity=0.3,text~opacity=1,
-            ]{\mrcformlon{\l_tmpa_tl}}
+            ]{\mrcformlon{\l__mermap_tmpa_tl}}
           -- (mermap_temp |- mrcmap.north)
           node[below=1mm,inner~sep=0.5pt,black!50!gray,font=\l__mermap_network_font_tl,
             fill=white,opacity=0.3,text~opacity=1,
-          ]{\mrcformlon{\l_tmpa_tl}}
+          ]{\mrcformlon{\l__mermap_tmpa_tl}}
           ;
-        \fp_add:Nn \l_tmpa_fp {\l__mermap_result_fp}
+        \fp_add:Nn \l__mermap_tmpa_fp {\l__mermap_result_fp}
       }
     \end{scope}
   }
@@ -1488,26 +1487,26 @@
 
 \cs_new_nopar:Npn \__mermap_pretty_distance:n #1
   {
-    \fp_set:Nn \l_tmpa_fp { #1 }
-    \fp_compare:nNnTF \l_tmpa_fp < 5
+    \fp_set:Nn \l__mermap_tmpa_fp { #1 }
+    \fp_compare:nNnTF \l__mermap_tmpa_fp < 5
       {
-        \SI[round-mode=figures,round-precision=3,detect-all]{\fp_to_decimal:n{1000*\l_tmpa_fp}}{\meter}
+        \SI[round-mode=figures,round-precision=3,detect-all]{\fp_to_decimal:n{1000*\l__mermap_tmpa_fp}}{\meter}
       }
       {
-        \SI[round-mode=figures,round-precision=3,detect-all]{\fp_to_decimal:N \l_tmpa_fp}{\kilo\meter}
+        \SI[round-mode=figures,round-precision=3,detect-all]{\fp_to_decimal:N \l__mermap_tmpa_fp}{\kilo\meter}
       }
   }
 
 
 \cs_new_nopar:Npn \__mermap_pretty_length:n #1
   {
-    \fp_set:Nn \l_tmpa_fp { (#1)*\l__mermap_scale_fp }
-    \fp_compare:nNnTF \l_tmpa_fp < 5
+    \fp_set:Nn \l__mermap_tmpa_fp { (#1)*\l__mermap_scale_fp }
+    \fp_compare:nNnTF \l__mermap_tmpa_fp < 5
       {
-        \SI[round-mode=figures,round-precision=3,detect-all]{\fp_to_decimal:n{1000*\l_tmpa_fp}}{\meter}
+        \SI[round-mode=figures,round-precision=3,detect-all]{\fp_to_decimal:n{1000*\l__mermap_tmpa_fp}}{\meter}
       }
       {
-        \SI[round-mode=figures,round-precision=3,detect-all]{\fp_to_decimal:N \l_tmpa_fp}{\kilo\meter}
+        \SI[round-mode=figures,round-precision=3,detect-all]{\fp_to_decimal:N \l__mermap_tmpa_fp}{\kilo\meter}
       }
   }
 
@@ -1535,25 +1534,25 @@
 
 \cs_new_nopar:Npn \__mermap_format_angle_minute:n #1
   {
-    \fp_set:Nn \l_tmpa_fp {floor(#1)}
-    \fp_set:Nn \l_tmpb_fp {round((#1-\l_tmpa_fp)*60)}
+    \fp_set:Nn \l__mermap_tmpa_fp {floor(#1)}
+    \fp_set:Nn \l__mermap_tmpb_fp {round((#1-\l__mermap_tmpa_fp)*60)}
     \ang[add-arc-degree-zero,add-arc-minute-zero]
       {
-        \fp_to_int:N \l_tmpa_fp ;
-        \fp_to_int:N \l_tmpb_fp ;
+        \fp_to_int:N \l__mermap_tmpa_fp ;
+        \fp_to_int:N \l__mermap_tmpb_fp ;
       }
   }
 
 
 \cs_new_nopar:Npn \__mermap_format_angle_second:n #1
   {
-    \fp_set:Nn \l_tmpa_fp {floor(#1)}
-    \fp_set:Nn \l_tmpb_fp {floor((#1-\l_tmpa_fp)*60)}
+    \fp_set:Nn \l__mermap_tmpa_fp {floor(#1)}
+    \fp_set:Nn \l__mermap_tmpb_fp {floor((#1-\l__mermap_tmpa_fp)*60)}
     \ang[add-arc-degree-zero,add-arc-minute-zero]
       {
-        \fp_to_int:N \l_tmpa_fp ;
-        \fp_to_int:N \l_tmpb_fp ;
-        \fp_to_int:n {round(((#1-\l_tmpa_fp)*60-\l_tmpb_fp)*60)}
+        \fp_to_int:N \l__mermap_tmpa_fp ;
+        \fp_to_int:N \l__mermap_tmpb_fp ;
+        \fp_to_int:n {round(((#1-\l__mermap_tmpa_fp)*60-\l__mermap_tmpb_fp)*60)}
       }
   }
 
@@ -1562,14 +1561,14 @@
     \group_begin:
     \IfNoValueF {#1}
       { \keys_set:nn { mermap } {#1} }
-    \fp_set:Nn \l_tmpa_fp {#2}
-    \fp_compare:nNnTF \l_tmpa_fp < 0
+    \fp_set:Nn \l__mermap_tmpa_fp {#2}
+    \fp_compare:nNnTF \l__mermap_tmpa_fp < 0
       {
-        \tl_set:Nx \l__mermap_temp_tl {\fp_to_decimal:n{-\l_tmpa_fp}}
+        \tl_set:Nx \l__mermap_temp_tl {\fp_to_decimal:n{-\l__mermap_tmpa_fp}}
         \__mermap_format_south:n {\__mermap_format_angle:n{\l__mermap_temp_tl}}
       }
       {
-        \tl_set:Nx \l__mermap_temp_tl {\fp_to_decimal:N \l_tmpa_fp}
+        \tl_set:Nx \l__mermap_temp_tl {\fp_to_decimal:N \l__mermap_tmpa_fp}
         \__mermap_format_north:n {\__mermap_format_angle:n{\l__mermap_temp_tl}}
       }
     \group_end:
@@ -1580,14 +1579,14 @@
     \group_begin:
     \IfNoValueF {#1}
       { \keys_set:nn { mermap } {#1} }
-    \fp_set:Nn \l_tmpa_fp {#2-360*floor((#2+180)/360)}
-    \fp_compare:nNnTF \l_tmpa_fp < 0
+    \fp_set:Nn \l__mermap_tmpa_fp {#2-360*floor((#2+180)/360)}
+    \fp_compare:nNnTF \l__mermap_tmpa_fp < 0
       {
-        \tl_set:Nx \l__mermap_temp_tl {\fp_to_decimal:n{-\l_tmpa_fp}}
+        \tl_set:Nx \l__mermap_temp_tl {\fp_to_decimal:n{-\l__mermap_tmpa_fp}}
         \__mermap_format_west:n{\__mermap_format_angle:n{\l__mermap_temp_tl}}
       }
       {
-        \tl_set:Nx \l__mermap_temp_tl {\fp_to_decimal:N \l_tmpa_fp}
+        \tl_set:Nx \l__mermap_temp_tl {\fp_to_decimal:N \l__mermap_tmpa_fp}
         \__mermap_format_east:n {\__mermap_format_angle:n{\l__mermap_temp_tl}}
       }
     \group_end:
@@ -1608,22 +1607,22 @@
   {
     \tl_if_empty:nTF {#5}
     {
-      \fp_set:Nn \l_tmpa_fp {0}
-      \fp_set:Nn \l_tmpb_fp {0}
+      \fp_set:Nn \l__mermap_tmpa_fp {0}
+      \fp_set:Nn \l__mermap_tmpb_fp {0}
     }
     {
-      \fp_set:Nn \l_tmpa_fp {#3*(#5)}
+      \fp_set:Nn \l__mermap_tmpa_fp {#3*(#5)}
       \tl_if_empty:nTF {#6}
       {
-        \fp_set:Nn \l_tmpb_fp {#4*(#5)}
+        \fp_set:Nn \l__mermap_tmpb_fp {#4*(#5)}
       }
       {
-        \fp_set:Nn \l_tmpb_fp {#4*(#6)}
+        \fp_set:Nn \l__mermap_tmpb_fp {#4*(#6)}
       }
     }
     \tl_set:Nx \l__mermap_scalebar_at_tl
       {
-        {([xshift=\fp_to_dim:N\l_tmpa_fp,yshift=\fp_to_dim:N\l_tmpb_fp]mrcmap.#1)}
+        {([xshift=\fp_to_dim:N\l__mermap_tmpa_fp,yshift=\fp_to_dim:N\l__mermap_tmpb_fp]mrcmap.#1)}
       }
     \tl_set:Nn \l__mermap_scalebar_placement_tl {#2}
   }
@@ -1691,60 +1690,56 @@
     \begin{scope}[shift=(mrcscalebar.south~west)]
     \__mermap_tikz_path_begin:n { fill=black, mrcscalebarmajor }
     \pgfseteorule
-    \fp_set:Nn \l_tmpa_fp {\l__mermap_scalebar_width_fp/\l__mermap_scale_fp} % Breite
+    \fp_set:Nn \l__mermap_tmpa_fp {\l__mermap_scalebar_width_fp/\l__mermap_scale_fp} % Breite
     \pgfpathrectangle{\pgfpoint{0pt}{0pt}}
-      {\pgfpoint{\fp_to_dim:N\l_tmpa_fp}{\l__mermap_scalebar_height_dim}}
+      {\pgfpoint{\fp_to_dim:N\l__mermap_tmpa_fp}{\l__mermap_scalebar_height_dim}}
     \bool_if:NF \l__mermap_scalebar_transparent_bool
       {
         \__mermap_tikz_path_end:
         \__mermap_tikz_path_begin:n { fill=white, mrcscalebarminor }
-        \fp_set:Nn \l_tmpa_fp {\l__mermap_scalebar_width_fp/\l__mermap_scale_fp}
+        \fp_set:Nn \l__mermap_tmpa_fp {\l__mermap_scalebar_width_fp/\l__mermap_scale_fp}
       }
-    \fp_set:Nn \l_tmpb_fp {\l_tmpa_fp/\l__mermap_scalebar_partitions_int}
+    \fp_set:Nn \l__mermap_tmpb_fp {\l__mermap_tmpa_fp/\l__mermap_scalebar_partitions_int}
     \bool_if:NTF \l__mermap_scalebar_double_bool
     {
-      \int_set:Nn \l_tmpa_int {1}
-      \dim_set:Nn \l_tmpb_dim {\l__mermap_scalebar_height_dim/2}
-      \dim_set:Nn \l_tmpa_dim {0.2pt-\l_tmpb_dim}
+      \dim_set:Nn \l__mermap_tmpb_dim {\l__mermap_scalebar_height_dim/2}
+      \dim_set:Nn \l__mermap_tmpa_dim {0.2pt-\l__mermap_tmpb_dim}
       \int_compare:nNnTF \l__mermap_scalebar_partitions_int = 1
         {
-          \pgfpathrectangle{\pgfpoint{0.2pt}{\l_tmpb_dim}}
-            {\pgfpoint{\fp_to_dim:n{\l_tmpb_fp-0.4pt}}{\l_tmpa_dim}}
+          \pgfpathrectangle{\pgfpoint{0.2pt}{\l__mermap_tmpb_dim}}
+            {\pgfpoint{\fp_to_dim:n{\l__mermap_tmpb_fp-0.4pt}}{\l__mermap_tmpa_dim}}
         }
         {
-          \pgfpathrectangle{\pgfpoint{0.2pt}{\l_tmpb_dim}}
-            {\pgfpoint{\fp_to_dim:n{\l_tmpb_fp-0.2pt}}{\l_tmpa_dim}}
+          \pgfpathrectangle{\pgfpoint{0.2pt}{\l__mermap_tmpb_dim}}
+            {\pgfpoint{\fp_to_dim:n{\l__mermap_tmpb_fp-0.2pt}}{\l__mermap_tmpa_dim}}
         }
-      \int_while_do:nNnn \l_tmpa_int < \l__mermap_scalebar_partitions_int
+      \int_step_inline:nn { \l__mermap_scalebar_partitions_int-1 }
         {
-          \dim_set:Nn \l_tmpa_dim {-\l_tmpa_dim}
-          \int_compare:nNnTF {\l_tmpa_int+1} = \l__mermap_scalebar_partitions_int
+          \dim_set:Nn \l__mermap_tmpa_dim {-\l__mermap_tmpa_dim}
+          \int_compare:nNnTF {##1+1} = \l__mermap_scalebar_partitions_int
             {
-              \pgfpathrectangle{\pgfpoint{\fp_to_dim:n{\l_tmpa_int*\l_tmpb_fp}}{\l_tmpb_dim}}
-                {\pgfpoint{\fp_to_dim:n{\l_tmpb_fp-0.2pt}}{\l_tmpa_dim}}
+              \pgfpathrectangle{\pgfpoint{\fp_to_dim:n{##1*\l__mermap_tmpb_fp}}{\l__mermap_tmpb_dim}}
+                {\pgfpoint{\fp_to_dim:n{\l__mermap_tmpb_fp-0.2pt}}{\l__mermap_tmpa_dim}}
             }
             {
-              \pgfpathrectangle{\pgfpoint{\fp_to_dim:n{\l_tmpa_int*\l_tmpb_fp}}{\l_tmpb_dim}}
-                {\pgfpoint{\fp_to_dim:N\l_tmpb_fp}{\l_tmpa_dim}}
+              \pgfpathrectangle{\pgfpoint{\fp_to_dim:n{##1*\l__mermap_tmpb_fp}}{\l__mermap_tmpb_dim}}
+                {\pgfpoint{\fp_to_dim:N\l__mermap_tmpb_fp}{\l__mermap_tmpa_dim}}
             }
-          \int_incr:N \l_tmpa_int
         }
     }
     {
-      \int_set:Nn \l_tmpa_int {1}
-      \dim_set:Nn \l_tmpa_dim {\l__mermap_scalebar_height_dim-0.4pt}
-      \int_while_do:nNnn \l_tmpa_int < \l__mermap_scalebar_partitions_int
+      \dim_set:Nn \l__mermap_tmpa_dim {\l__mermap_scalebar_height_dim-0.4pt}
+      \int_step_inline:nnnn { 1 }{ 2 }{ \l__mermap_scalebar_partitions_int-1 }
         {
-          \int_compare:nNnTF {\l_tmpa_int+1} = \l__mermap_scalebar_partitions_int
+          \int_compare:nNnTF {##1+1} = \l__mermap_scalebar_partitions_int
             {
-              \pgfpathrectangle{\pgfpoint{\fp_to_dim:n{\l_tmpa_int*\l_tmpb_fp}}{0.2pt}}
-                {\pgfpoint{\fp_to_dim:n{\l_tmpb_fp-0.2pt}}{\l_tmpa_dim}}
+              \pgfpathrectangle{\pgfpoint{\fp_to_dim:n{##1*\l__mermap_tmpb_fp}}{0.2pt}}
+                {\pgfpoint{\fp_to_dim:n{\l__mermap_tmpb_fp-0.2pt}}{\l__mermap_tmpa_dim}}
             }
             {
-              \pgfpathrectangle{\pgfpoint{\fp_to_dim:n{\l_tmpa_int*\l_tmpb_fp}}{0.2pt}}
-                {\pgfpoint{\fp_to_dim:N\l_tmpb_fp}{\l_tmpa_dim}}
+              \pgfpathrectangle{\pgfpoint{\fp_to_dim:n{##1*\l__mermap_tmpb_fp}}{0.2pt}}
+                {\pgfpoint{\fp_to_dim:N\l__mermap_tmpb_fp}{\l__mermap_tmpa_dim}}
             }
-          \int_add:Nn \l_tmpa_int {2}
         }
     }
     \__mermap_tikz_path_end:
@@ -2032,53 +2027,53 @@
 
 \__mermap_new_marker_type:nn {pin}
   {
-    \tl_set:Nx \l_tmpa_tl {\fp_to_dim:N \l__mermap_marker_distance_fp}
+    \tl_set:Nx \l__mermap_tmpa_tl {\fp_to_dim:N \l__mermap_marker_distance_fp}
     \path[fill=mrcmarkerfill,draw=none,fill~opacity=0.7]
-      (0,0) -- (0.1,\l_tmpa_tl) -- (-0.1,\l_tmpa_tl) -- cycle;
+      (0,0) -- (0.1,\l__mermap_tmpa_tl) -- (-0.1,\l__mermap_tmpa_tl) -- cycle;
     \node[fill=white,draw=none,text=mrcmarkertext,
       above,font=\mrcmarkerfont,inner~sep=0.5mm,align=center,
       line~width=0mm,xshift=\mrcmarkershift,
       fill~opacity=0.7,text~opacity=1,xshift=0mm,mrcnodestyle,mrchyperpath]
-      (pin_node) at (0,\l_tmpa_tl) {\mrcmarkercontents};
+      (pin_node) at (0,\l__mermap_tmpa_tl) {\mrcmarkercontents};
     \path[draw=mrcmarkerdraw,fill=none,line~join=round,mrcpathstyle]
-      (0,0) -- (0.1,\l_tmpa_tl) -- (pin_node.south~east) -- (pin_node.north~east)
+      (0,0) -- (0.1,\l__mermap_tmpa_tl) -- (pin_node.south~east) -- (pin_node.north~east)
       -- (pin_node.north~west) -- (pin_node.south~west)
-      -- (-0.1,\l_tmpa_tl) [line~join=bevel] --  cycle;
+      -- (-0.1,\l__mermap_tmpa_tl) [line~join=bevel] --  cycle;
   }
 
 \__mermap_new_marker_type:nn {pinflip}
   {
-    \tl_set:Nx \l_tmpa_tl {\fp_to_dim:N \l__mermap_marker_distance_fp}
+    \tl_set:Nx \l__mermap_tmpa_tl {\fp_to_dim:N \l__mermap_marker_distance_fp}
     \path[fill=mrcmarkerfill,draw=none,fill~opacity=0.7]
-      (0,0) -- (-0.1,-\l_tmpa_tl) -- (0.1,-\l_tmpa_tl) -- cycle;
+      (0,0) -- (-0.1,-\l__mermap_tmpa_tl) -- (0.1,-\l__mermap_tmpa_tl) -- cycle;
     \node[fill=white,draw=none,text=mrcmarkertext,
       below,font=\mrcmarkerfont,inner~sep=0.5mm,align=center,
       line~width=0mm,xshift=\mrcmarkershift,
       fill~opacity=0.7,text~opacity=1,xshift=0mm,mrcnodestyle,mrchyperpath]
-      (pin_node) at (0,-\l_tmpa_tl) {\mrcmarkercontents};
+      (pin_node) at (0,-\l__mermap_tmpa_tl) {\mrcmarkercontents};
     \path[draw=mrcmarkerdraw,fill=none,line~join=round,mrcpathstyle]
-      (0,0) -- (-0.1,-\l_tmpa_tl) -- (pin_node.north~west) -- (pin_node.south~west)
+      (0,0) -- (-0.1,-\l__mermap_tmpa_tl) -- (pin_node.north~west) -- (pin_node.south~west)
       -- (pin_node.south~east) -- (pin_node.north~east)
-      -- (0.1,-\l_tmpa_tl)  [line~join=bevel] -- cycle;
+      -- (0.1,-\l__mermap_tmpa_tl)  [line~join=bevel] -- cycle;
   }
 
 
 \cs_new_nopar:Npn \__mermap_tikz_drop_path:n #1
   {
-    \tl_set:Nn \l_tmpa_tl {\fp_to_dim:N\l__mermap_marker_radius_fp}
-    \tl_set:Nn \l_tmpb_tl {\fp_to_dim:n{\l__mermap_marker_radius_fp*0.552}}
+    \tl_set:Nn \l__mermap_tmpa_tl {\fp_to_dim:N\l__mermap_marker_radius_fp}
+    \tl_set:Nn \l__mermap_tmpb_tl {\fp_to_dim:n{\l__mermap_marker_radius_fp*0.552}}
     \__mermap_tikz_path_begin:n
     {
       line~join=bevel,draw=mrcmarkerdraw,fill=mrcmarkerfill,mrcpathstyle,mrchyperpath
     }
     \pgfpathmoveto{\pgfpoint{0pt}{\fp_to_dim:n{-2*\l__mermap_marker_radius_fp-\l__mermap_marker_shift_fp}}}
-    \pgfpathcurveto{\pgfpoint{\l_tmpb_tl}{-\l_tmpa_tl}}{\pgfpoint{\l_tmpa_tl}{-\l_tmpb_tl}}
-      {\pgfpoint{\l_tmpa_tl}{0pt}}
-    \pgfpathcurveto{\pgfpoint{\l_tmpa_tl}{\l_tmpb_tl}}{\pgfpoint{\l_tmpb_tl}{\l_tmpa_tl}}
-      {\pgfpoint{0pt}{\l_tmpa_tl}}
-    \pgfpathcurveto{\pgfpoint{-\l_tmpb_tl}{\l_tmpa_tl}}{\pgfpoint{-\l_tmpa_tl}{\l_tmpb_tl}}
-      {\pgfpoint{-\l_tmpa_tl}{0pt}}
-    \pgfpathcurveto{\pgfpoint{-\l_tmpa_tl}{-\l_tmpb_tl}}{\pgfpoint{-\l_tmpb_tl}{-\l_tmpa_tl}}
+    \pgfpathcurveto{\pgfpoint{\l__mermap_tmpb_tl}{-\l__mermap_tmpa_tl}}{\pgfpoint{\l__mermap_tmpa_tl}{-\l__mermap_tmpb_tl}}
+      {\pgfpoint{\l__mermap_tmpa_tl}{0pt}}
+    \pgfpathcurveto{\pgfpoint{\l__mermap_tmpa_tl}{\l__mermap_tmpb_tl}}{\pgfpoint{\l__mermap_tmpb_tl}{\l__mermap_tmpa_tl}}
+      {\pgfpoint{0pt}{\l__mermap_tmpa_tl}}
+    \pgfpathcurveto{\pgfpoint{-\l__mermap_tmpb_tl}{\l__mermap_tmpa_tl}}{\pgfpoint{-\l__mermap_tmpa_tl}{\l__mermap_tmpb_tl}}
+      {\pgfpoint{-\l__mermap_tmpa_tl}{0pt}}
+    \pgfpathcurveto{\pgfpoint{-\l__mermap_tmpa_tl}{-\l__mermap_tmpb_tl}}{\pgfpoint{-\l__mermap_tmpb_tl}{-\l__mermap_tmpa_tl}}
       {\pgfpoint{0pt}{\fp_to_dim:n{-2*\l__mermap_marker_radius_fp-\l__mermap_marker_shift_fp}}}
     \pgfpathclose
     #1
@@ -2089,14 +2084,14 @@
   {
     \node[circle,inner~sep=0pt,font=\mrcmarkerfont,text=mrcmarkertext,mrcnodestyle]
       {
-        \hbox_set:Nn \l_tmpa_box {\mrcmarkercontents}
-        \fp_compare:nNnT {\box_wd:N \l_tmpa_box} > {1.5*\l__mermap_marker_radius_fp}
+        \hbox_set:Nn \l__mermap_tmpa_box {\mrcmarkercontents}
+        \fp_compare:nNnT {\box_wd:N \l__mermap_tmpa_box} > {1.5*\l__mermap_marker_radius_fp}
         {
-          \box_resize_to_wd_and_ht:Nnn \l_tmpa_box
+          \box_resize_to_wd_and_ht:Nnn \l__mermap_tmpa_box
             {\fp_to_dim:n {1.5*\l__mermap_marker_radius_fp}}
-            {\box_ht:N \l_tmpa_box}
+            {\box_ht:N \l__mermap_tmpa_box}
         }
-        \box_use_drop:N \l_tmpa_box
+        \box_use_drop:N \l__mermap_tmpa_box
       };
   }
 
@@ -2153,22 +2148,22 @@
 
 \__mermap_new_marker_type:nn {ringx}
   {
-    \tl_set:Nn \l_tmpa_tl {\fp_to_dim:N\l__mermap_marker_radius_fp}
+    \tl_set:Nn \l__mermap_tmpa_tl {\fp_to_dim:N\l__mermap_marker_radius_fp}
     \path[draw=mrcmarkerdraw,very~thin]
-       (45 \c_colon_str \l_tmpa_tl)--(225\c_colon_str \l_tmpa_tl)
-       (135\c_colon_str \l_tmpa_tl)--(315\c_colon_str \l_tmpa_tl);
+       (45 \c_colon_str \l__mermap_tmpa_tl)--(225\c_colon_str \l__mermap_tmpa_tl)
+       (135\c_colon_str \l__mermap_tmpa_tl)--(315\c_colon_str \l__mermap_tmpa_tl);
     \path[draw=mrcmarkerdraw,fill=mrcmarkerfill,mrcpathstyle,mrchyperpath,even~odd~rule]
-      circle (\l_tmpa_tl) circle (\fp_to_dim:N\l__mermap_marker_inner_radius_fp);
+      circle (\l__mermap_tmpa_tl) circle (\fp_to_dim:N\l__mermap_marker_inner_radius_fp);
   }
 
 \__mermap_new_marker_type:nn {markx}
   {
-    \tl_set:Nn \l_tmpa_tl {\fp_to_dim:N\l__mermap_marker_radius_fp}
+    \tl_set:Nn \l__mermap_tmpa_tl {\fp_to_dim:N\l__mermap_marker_radius_fp}
     \path[line~join=bevel,draw=mrcmarkerdraw,fill=mrcmarkerfill,mrcpathstyle,mrchyperpath]
-       (0,0) -- (35 \c_colon_str \l_tmpa_tl) -- (55 \c_colon_str \l_tmpa_tl) -- cycle
-       (0,0) -- (125 \c_colon_str \l_tmpa_tl) -- (145 \c_colon_str \l_tmpa_tl) -- cycle
-       (0,0) -- (215 \c_colon_str \l_tmpa_tl) -- (235 \c_colon_str \l_tmpa_tl) -- cycle
-       (0,0) -- (305 \c_colon_str \l_tmpa_tl) -- (325 \c_colon_str \l_tmpa_tl) -- cycle;
+       (0,0) -- (35 \c_colon_str \l__mermap_tmpa_tl) -- (55 \c_colon_str \l__mermap_tmpa_tl) -- cycle
+       (0,0) -- (125 \c_colon_str \l__mermap_tmpa_tl) -- (145 \c_colon_str \l__mermap_tmpa_tl) -- cycle
+       (0,0) -- (215 \c_colon_str \l__mermap_tmpa_tl) -- (235 \c_colon_str \l__mermap_tmpa_tl) -- cycle
+       (0,0) -- (305 \c_colon_str \l__mermap_tmpa_tl) -- (325 \c_colon_str \l__mermap_tmpa_tl) -- cycle;
   }
 
 
@@ -2272,9 +2267,14 @@
 \fp_new:N \l__mermap_delta_lambda_fp
 \fp_new:N \l__mermap_delta_phi_fp
 \fp_new:N \l__mermap_psi_fp
+\fp_new:N \l__mermap_sin_psi_fp
+\fp_new:N \l__mermap_t_psi_fp
+\fp_new:N \l__mermap_t_fp
 \fp_new:N \l__mermap_t_x_fp
 \fp_new:N \l__mermap_t_y_fp
 \fp_new:N \l__mermap_t_z_fp
+\fp_const:Nn \c__mermap_linearization_threshold_fp { 10e-9 }
+\bool_new:N \l__mermap_linearization_bool
 
 \int_new:N \l__mermap_samples_int
 
@@ -2309,38 +2309,58 @@
   }
 
 
-\cs_new:Npn \__mermap_draw_orthodrome:nnnnn #1#2#3#4#5
+\cs_new_protected:Npn \__mermap_draw_orthodrome:nnnnn #1#2#3#4#5
   {
     \__mermap_tikz_path_begin:n { draw,mermap_every_route,#1 }
-    \fp_set:Nn \l__mermap_a_x_fp { cosd(#3)*cosd(#2) }
-    \fp_set:Nn \l__mermap_a_y_fp { sind(#3)*cosd(#2) }
-    \fp_set:Nn \l__mermap_a_z_fp { sind(#2) }
-    \fp_set:Nn \l__mermap_b_x_fp { cosd(#5)*cosd(#4) }
-    \fp_set:Nn \l__mermap_b_y_fp { sind(#5)*cosd(#4) }
-    \fp_set:Nn \l__mermap_b_z_fp { sind(#4) }
-
-    \fp_set:Nn \l_tmpa_fp { sind(#2)*sind(#4) + cosd(#2)*cosd(#4)*cosd(#5-(#3)) }
-    \fp_set:Nn \l__mermap_psi_fp { acosd(\l_tmpa_fp) }
-    \fp_set:Nn \l_tmpb_fp { sind(\l__mermap_psi_fp) }
-
-    \fp_set:Nn \l__mermap_b_x_fp { (\l__mermap_b_x_fp - \l_tmpa_fp*\l__mermap_a_x_fp)/\l_tmpb_fp }
-    \fp_set:Nn \l__mermap_b_y_fp { (\l__mermap_b_y_fp - \l_tmpa_fp*\l__mermap_a_y_fp)/\l_tmpb_fp }
-    \fp_set:Nn \l__mermap_b_z_fp { (\l__mermap_b_z_fp - \l_tmpa_fp*\l__mermap_a_z_fp)/\l_tmpb_fp }
-
-    \__mermap_pgf_moveto_point:nn {#2}{#3}
-    \int_set:Nn \l_tmpa_int {1}
-    \int_until_do:nNnn \l_tmpa_int > \l__mermap_samples_int
+    \__mermap_setup_orthodrome:nnnn { #2 }{ #3 }{ #4 }{ #5 }
+    \__mermap_pgf_moveto_point:nn { #2 }{ #3 }
+    \int_step_inline:nn { \l__mermap_samples_int }
       {
-        \fp_set:Nn \l_tmpa_fp { \l__mermap_psi_fp*\l_tmpa_int/\l__mermap_samples_int }
-        \fp_set:Nn \l_tmpb_fp { sind(\l_tmpa_fp) }
-        \fp_set:Nn \l_tmpa_fp { cosd(\l_tmpa_fp) }
-        \fp_set:Nn \l__mermap_t_x_fp { \l_tmpa_fp*\l__mermap_a_x_fp + \l_tmpb_fp*\l__mermap_b_x_fp }
-        \fp_set:Nn \l__mermap_t_y_fp { \l_tmpa_fp*\l__mermap_a_y_fp + \l_tmpb_fp*\l__mermap_b_y_fp }
-        \fp_set:Nn \l__mermap_t_z_fp { \l_tmpa_fp*\l__mermap_a_z_fp + \l_tmpb_fp*\l__mermap_b_z_fp }
-        \pgfpathlineto{\__mermap_unit_sphere_point:nnn {\l__mermap_t_x_fp}{\l__mermap_t_y_fp}{\l__mermap_t_z_fp}}
-        \int_incr:N \l_tmpa_int
+        \__mermap_point_on_orthodrome:n { ##1/\l__mermap_samples_int }
+        \__mermap_pgf_lineto_point:nn{ \l__mermap_cs_lat_fp }{ \l__mermap_cs_lon_fp }
       }
     \__mermap_tikz_path_end:
+  }
+
+
+\cs_new_protected:Npn \__mermap_setup_orthodrome:nnnn #1#2#3#4
+  {
+    \fp_set:Nn \l__mermap_a_x_fp { cosd(#2)*cosd(#1) }
+    \fp_set:Nn \l__mermap_a_y_fp { sind(#2)*cosd(#1) }
+    \fp_set:Nn \l__mermap_a_z_fp { sind(#1) }
+
+    \fp_set:Nn \l__mermap_b_x_fp { cosd(#4)*cosd(#3) }
+    \fp_set:Nn \l__mermap_b_y_fp { sind(#4)*cosd(#3) }
+    \fp_set:Nn \l__mermap_b_z_fp { sind(#3) }
+
+    \fp_set:Nn \l__mermap_psi_fp { acosd( sind(#1)*sind(#3) + cosd(#1)*cosd(#3)*cosd(#4-(#2)) ) }
+    \fp_set:Nn \l__mermap_sin_psi_fp { sind(\l__mermap_psi_fp) }
+
+    \bool_set:Nn \l__mermap_linearization_bool { \fp_compare_p:nNn \l__mermap_psi_fp < \c__mermap_linearization_threshold_fp }
+  }
+
+
+\cs_new_protected:Npn \__mermap_point_on_orthodrome:n #1
+  {
+    \fp_set:Nn \l__mermap_t_fp { #1 }
+
+    \bool_if:NTF \l__mermap_linearization_bool
+      {
+        \fp_set:Nn \l__mermap_tmpa_fp { 1 - \l__mermap_t_fp }
+        \fp_set_eq:NN \l__mermap_tmpb_fp \l__mermap_t_fp
+      }
+      {
+        \fp_set:Nn \l__mermap_t_psi_fp { \l__mermap_t_fp * \l__mermap_psi_fp }
+        \fp_set:Nn \l__mermap_tmpa_fp { sind( \l__mermap_psi_fp - \l__mermap_t_psi_fp ) / \l__mermap_sin_psi_fp }
+        \fp_set:Nn \l__mermap_tmpb_fp { sind( \l__mermap_t_psi_fp ) / \l__mermap_sin_psi_fp }
+      }
+
+    \fp_set:Nn \l__mermap_t_x_fp { \l__mermap_tmpa_fp*\l__mermap_a_x_fp + \l__mermap_tmpb_fp*\l__mermap_b_x_fp }
+    \fp_set:Nn \l__mermap_t_y_fp { \l__mermap_tmpa_fp*\l__mermap_a_y_fp + \l__mermap_tmpb_fp*\l__mermap_b_y_fp }
+    \fp_set:Nn \l__mermap_t_z_fp { \l__mermap_tmpa_fp*\l__mermap_a_z_fp + \l__mermap_tmpb_fp*\l__mermap_b_z_fp }
+
+    \fp_set:Nn \l__mermap_cs_lat_fp { asind(\l__mermap_t_z_fp) }
+    \fp_set:Nn \l__mermap_cs_lon_fp { sign(\l__mermap_t_y_fp)*acosd(\l__mermap_t_x_fp/sqrt(\l__mermap_t_x_fp^2+\l__mermap_t_y_fp^2)) }
   }
 
 
@@ -2392,11 +2412,11 @@
     \fp_set:Nn \l__mermap_delta_lambda_fp {(#4-(#2))/180*pi}
     \fp_compare:nNnTF {abs(\l__mermap_delta_phi_fp)} < {1e-5}
       {
-        \fp_set:Nn \l_tmpa_fp { tand(#1) }
-        \fp_set:Nn \l_tmpb_fp { \l__mermap_delta_lambda_fp*cosd(#1)
-          /( 1 + (\l_tmpa_fp + (1+2*\l_tmpa_fp*\l_tmpa_fp)*\l__mermap_delta_phi_fp/3)*\l__mermap_delta_phi_fp/2 ) }
+        \fp_set:Nn \l__mermap_tmpa_fp { tand(#1) }
+        \fp_set:Nn \l__mermap_tmpb_fp { \l__mermap_delta_lambda_fp*cosd(#1)
+          /( 1 + (\l__mermap_tmpa_fp + (1+2*\l__mermap_tmpa_fp*\l__mermap_tmpa_fp)*\l__mermap_delta_phi_fp/3)*\l__mermap_delta_phi_fp/2 ) }
         \fp_set:Nn \l__mermap_result_fp {
-          sqrt( \l__mermap_delta_phi_fp*\l__mermap_delta_phi_fp + \l_tmpb_fp*\l_tmpb_fp ) }
+          sqrt( \l__mermap_delta_phi_fp*\l__mermap_delta_phi_fp + \l__mermap_tmpb_fp*\l__mermap_tmpb_fp ) }
       }
       {
         \fp_set:Nn \l__mermap_result_fp { abs(\l__mermap_delta_phi_fp)
@@ -2426,6 +2446,290 @@
     \__mermap_pretty_distance:n { \l__mermap_result_fp }
   }
 
+
+\NewDocumentCommand \mrcNPfromOrthoFraction { mmmmmm }
+  {
+    \__mermap_setup_orthodrome:nnnn { #2 }{ #3 }{ #4 }{ #5 }
+    \__mermap_point_on_orthodrome:n { #6 }
+    \__mermap_set_named_position { #1 }{ \l__mermap_cs_lat_fp }{ \l__mermap_cs_lon_fp }
+  }
+
+\NewDocumentCommand \mrcNPfromOrthoFractionNamed { mmmm }
+  {
+    \__mermap_setup_orthodrome:nnnn { \mrcNPlat{#2} }{ \mrcNPlon{#2} }{ \mrcNPlat{#3} }{ \mrcNPlon{#3} }
+    \__mermap_point_on_orthodrome:n { #4 }
+    \__mermap_set_named_position { #1 }{ \l__mermap_cs_lat_fp }{ \l__mermap_cs_lon_fp }
+  }
+
+\NewDocumentCommand \mrcNPfromOrthoDistance { mmmmmm }
+  {
+    \__mermap_ortho_distance:nnnn { #2 }{ #3 }{ #4 }{ #5 }
+    \fp_compare:nNnTF \l__mermap_result_fp > { 0.001 }
+      {
+        \__mermap_setup_orthodrome:nnnn { #2 }{ #3 }{ #4 }{ #5 }
+        \__mermap_point_on_orthodrome:n { #6 / \l__mermap_result_fp }
+        \__mermap_set_named_position { #1 }{ \l__mermap_cs_lat_fp }{ \l__mermap_cs_lon_fp }
+      }
+      {
+        \__mermap_set_named_position { #1 }{ #2 }{ #3 }
+      }
+  }
+
+\NewDocumentCommand \mrcNPfromOrthoDistanceNamed { mmmm }
+  {
+    \__mermap_ortho_distance:nnnn { \mrcNPlat{#2} }{ \mrcNPlon{#2} }{ \mrcNPlat{#3} }{ \mrcNPlon{#3} }
+    \fp_compare:nNnTF \l__mermap_result_fp > { 0.001 }
+      {
+        \__mermap_setup_orthodrome:nnnn { \mrcNPlat{#2} }{ \mrcNPlon{#2} }{ \mrcNPlat{#3} }{ \mrcNPlon{#3} }
+        \__mermap_point_on_orthodrome:n { #4 / \l__mermap_result_fp }
+        \__mermap_set_named_position { #1 }{ \l__mermap_cs_lat_fp }{ \l__mermap_cs_lon_fp }
+      }
+      {
+        \__mermap_set_named_position { #1 }{ \mrcNPlat{#2} }{ \mrcNPlon{#2} }
+      }
+  }
+
+
+%---- animations ---------------------------------------------------------------
+
+\bool_new:N \l__mermap_anim_drop_first_frame_bool
+\bool_new:N \l__mermap_anim_drop_last_frame_bool
+
+\fp_new:N \l__mermap_anim_a_lat_fp
+\fp_new:N \l__mermap_anim_a_lon_fp
+\fp_new:N \l__mermap_anim_a_scaledenom_fp
+\fp_new:N \l__mermap_anim_a_time_fp
+\fp_new:N \l__mermap_anim_b_lat_fp
+\fp_new:N \l__mermap_anim_b_lon_fp
+\fp_new:N \l__mermap_anim_b_scaledenom_fp
+\fp_new:N \l__mermap_anim_b_time_fp
+\fp_new:N \l_mermap_anim_lat_fp
+\fp_new:N \l_mermap_anim_lon_fp
+\fp_new:N \l_mermap_anim_scaledenom_fp
+\fp_new:N \l_mermap_anim_time_fp
+
+\int_new:N \l__mermap_anim_final_frame_int
+\int_new:N \l__mermap_anim_frames_int
+\int_new:N \l__mermap_anim_start_frame_int
+\int_new:N \l_mermap_anim_frame_int
+
+\seq_new:N \l__mermap_anim_scaledenom_seq
+
+\tl_new:N \l__mermap_anim_timescale_tl
+\tl_new:N \l__mermap_anim_timewarp_tl
+
+
+\NewExpandableDocumentCommand \mrcTimewarpIdentity { m }
+  {
+    #1
+  }
+
+\NewExpandableDocumentCommand \mrcTimewarpSlowStart { m m }
+  {
+    (#2)^(#1)
+  }
+
+\NewExpandableDocumentCommand \mrcTimewarpSlowFinal { m m }
+  {
+    1 - (1-#2)^(#1)
+  }
+
+\NewExpandableDocumentCommand \mrcTimewarpSlowStartFinal { m m }
+  {
+    %1 - (1-#2)^(#1)
+    #2 <= 0.5
+    ? (2*(#2))^(#1) / 2
+    : 1 - (2-2*(#2))^(#1) / 2
+  }
+
+
+\NewDocumentEnvironment { mrcAnimation }{ m +b }
+  {
+    \keys_set:nn { mermap/anim }{ #1 }
+
+    \__mermap_anim_autocorrect_scaledenom_seq:
+    \int_compare:nNnT \l__mermap_anim_frames_int < 2
+      {
+        \int_set:Nn \l__mermap_anim_frames_int { 2 }
+      }
+    \bool_if:NTF \l__mermap_anim_drop_first_frame_bool
+      {
+        \int_set:Nn \l__mermap_anim_start_frame_int { 2 }
+      }
+      {
+        \int_set:Nn \l__mermap_anim_start_frame_int { 1 }
+      }
+    \bool_if:NTF \l__mermap_anim_drop_last_frame_bool
+      {
+        \int_set:Nn \l__mermap_anim_final_frame_int { \l__mermap_anim_frames_int-1 }
+      }
+      {
+        \int_set:Nn \l__mermap_anim_final_frame_int { \l__mermap_anim_frames_int }
+      }
+
+    \__mermap_setup_orthodrome:nnnn { \l__mermap_anim_a_lat_fp }{ \l__mermap_anim_a_lon_fp }
+                                    { \l__mermap_anim_b_lat_fp }{ \l__mermap_anim_b_lon_fp }
+
+    \__mermap_anim_pop_time_scale:NN \l__mermap_anim_a_time_fp \l__mermap_anim_a_scaledenom_fp
+    \__mermap_anim_pop_time_scale:NN \l__mermap_anim_b_time_fp \l__mermap_anim_b_scaledenom_fp
+
+    \int_step_variable:nnNn { \l__mermap_anim_start_frame_int }{ \l__mermap_anim_final_frame_int } \l_mermap_anim_frame_int
+      {
+        \fp_set:Nn \l_mermap_anim_time_fp { (\l_mermap_anim_frame_int-1)/(\l__mermap_anim_frames_int-1) }
+        \fp_set:Nn \l_mermap_anim_time_fp { \l__mermap_anim_timewarp_tl { \l_mermap_anim_time_fp } }
+
+        \__mermap_point_on_orthodrome:n { \l_mermap_anim_time_fp }
+
+        \fp_set_eq:NN \l_mermap_anim_lat_fp \l__mermap_cs_lat_fp
+        \fp_set_eq:NN \l_mermap_anim_lon_fp \l__mermap_cs_lon_fp
+        \__mermap_set_named_position{ AnimNP }{ \l_mermap_anim_lat_fp }{ \l_mermap_anim_lon_fp }
+
+        \fp_while_do:nNnn \l_mermap_anim_time_fp > \l__mermap_anim_b_time_fp
+          {
+            \fp_set_eq:NN \l__mermap_anim_a_time_fp \l__mermap_anim_b_time_fp
+            \fp_set_eq:NN \l__mermap_anim_a_scaledenom_fp \l__mermap_anim_b_scaledenom_fp
+            \__mermap_anim_pop_time_scale:NN \l__mermap_anim_b_time_fp \l__mermap_anim_b_scaledenom_fp
+          }
+        \fp_set:Nn \l_mermap_anim_scaledenom_fp
+          {
+            round ( exp (
+                ln(\l__mermap_anim_a_scaledenom_fp) +
+                ( ln(\l__mermap_anim_b_scaledenom_fp)-ln(\l__mermap_anim_a_scaledenom_fp) ) *
+                ( \l_mermap_anim_time_fp-\l__mermap_anim_a_time_fp ) / ( \l__mermap_anim_b_time_fp-\l__mermap_anim_a_time_fp )
+              ) )
+          }
+
+        #2
+      }
+  }{}
+
+
+\cs_new_protected:Npn \__mermap_anim_autocorrect_scaledenom_seq:
+  {
+    \seq_get_left:NN \l__mermap_anim_scaledenom_seq \l__mermap_anim_timescale_tl
+    \bool_lazy_any:nTF
+      {
+        { \seq_if_empty_p:N \l__mermap_anim_scaledenom_seq }
+        { \tl_if_empty_p:N \l__mermap_anim_timescale_tl }
+        { \quark_if_no_value_p:N \l__mermap_anim_timescale_tl }
+      }
+      {
+        \seq_set_split:Nnn \l__mermap_anim_scaledenom_seq { - }{ 0/25000 - 1/25000 },
+      }
+      {
+        \fp_compare:nNnF { \__mermap_anim_use_time:o \l__mermap_anim_timescale_tl } = 0
+           {
+             \seq_put_left:Ne \l__mermap_anim_scaledenom_seq { 0 / \__mermap_anim_use_scale:o \l__mermap_anim_timescale_tl }
+           }
+      }
+    \seq_get_right:NNF \l__mermap_anim_scaledenom_seq \l__mermap_anim_timescale_tl
+      {
+        \msg_error:nn{ mercatormap }{ anim-scaledenom-invalid }
+      }
+    \fp_compare:nNnF { \__mermap_anim_use_time:o \l__mermap_anim_timescale_tl } = 1
+       {
+         \seq_put_right:Ne \l__mermap_anim_scaledenom_seq { 1 / \__mermap_anim_use_scale:o \l__mermap_anim_timescale_tl }
+       }
+    \fp_set:Nn \l__mermap_anim_a_time_fp { -1 }
+    \seq_map_inline:Nn \l__mermap_anim_scaledenom_seq
+      {
+        \fp_set:Nn \l__mermap_anim_b_time_fp { \__mermap_anim_use_time:n { ##1 } }
+        \fp_compare:nNnTF \l__mermap_anim_a_time_fp < \l__mermap_anim_b_time_fp
+          {
+            \fp_set_eq:NN \l__mermap_anim_a_time_fp \l__mermap_anim_b_time_fp
+          }
+          {
+            \msg_error:nn{ mercatormap }{ anim-scaledenom-invalid }
+          }
+      }
+  }
+
+\cs_new_protected:Npn \__mermap_anim_pop_time_scale:NN #1#2
+  {
+    \seq_pop_left:NN \l__mermap_anim_scaledenom_seq \l__mermap_anim_timescale_tl
+    \fp_set:Nn #1 { \__mermap_anim_use_time:o \l__mermap_anim_timescale_tl }
+    \fp_set:Nn #2 { \__mermap_anim_use_scale:o \l__mermap_anim_timescale_tl }
+  }
+
+\msg_new:nnnn{ mercatormap }{ anim-scaledenom-invalid }
+  { The~animation~scale~denominator~sequence~is~invalid. }
+  {
+    Check~\seq_use:Nn \l__mermap_anim_scaledenom_seq { ~-~ }~with~the~documentation.~
+    Time~values~are~not~strictly~monotonically~increasing.
+  }
+
+\cs_new_protected_nopar:Npn \__mermap_anim_set_position:w #1 #2 / #3 \q_stop
+  {
+    \fp_set:cn { l__mermap_anim_#1_lat_fp }{ #2 }
+    \fp_set:cn { l__mermap_anim_#1_lon_fp }{ #3 }
+  }
+
+\cs_new_nopar:Npn \__mermap_anim_use_time:w #1 / #2 \q_stop
+  {
+    #1
+  }
+\cs_new_nopar:Npn \__mermap_anim_use_time:n #1
+  {
+    \__mermap_anim_use_time:w #1 \q_stop
+  }
+\cs_generate_variant:Nn \__mermap_anim_use_time:n { o }
+
+\cs_new_nopar:Npn \__mermap_anim_use_scale:w #1 / #2 \q_stop
+  {
+    #2
+  }
+\cs_new_nopar:Npn \__mermap_anim_use_scale:n #1
+  {
+    \__mermap_anim_use_scale:w #1 \q_stop
+  }
+\cs_generate_variant:Nn \__mermap_anim_use_scale:n { o }
+
+\keys_define:nn { mermap/anim }
+  {
+    start-position .code:n = \__mermap_anim_set_position:w { a } #1 \q_stop,
+    final-position .code:n = \__mermap_anim_set_position:w { b } #1 \q_stop,
+    position       .meta:n = { start-position = #1, final-position = #1 },
+    named-start-position .code:n =
+      {
+        \fp_set:Nn \l__mermap_anim_a_lat_fp { \mrcNPlat{ #1 } }
+        \fp_set:Nn \l__mermap_anim_a_lon_fp { \mrcNPlon{ #1 } }
+      },
+    named-final-position .code:n =
+      {
+        \fp_set:Nn \l__mermap_anim_b_lat_fp { \mrcNPlat{ #1 } }
+        \fp_set:Nn \l__mermap_anim_b_lon_fp { \mrcNPlon{ #1 } }
+      },
+    named-position     .meta:n     = { named-start-position = #1, named-final-position = #1 },
+    frames             .int_set:N  = \l__mermap_anim_frames_int,
+    drop-first-frame   .bool_set:N = \l__mermap_anim_drop_first_frame_bool,
+    drop-last-frame    .bool_set:N = \l__mermap_anim_drop_last_frame_bool,
+    drop-no-frame      .meta:n     = { drop-first-frame=false, drop-last-frame=false },
+    scale-denominators .code:n     = \seq_set_split:Nnn \l__mermap_anim_scaledenom_seq { - }{ #1 },
+    common-scale-denominator .meta:n = { scale-denominators = 0/#1 - 1/#1 },
+    timewarp           .tl_set:N   = \l__mermap_anim_timewarp_tl,
+    timewarp-identity         .meta:n = { timewarp = \mrcTimewarpIdentity },
+    timewarp-slow-start       .meta:n = { timewarp = \mrcTimewarpSlowStart{#1} },
+    timewarp-slow-start       .default:n = 2,
+    timewarp-slow-final       .meta:n = { timewarp = \mrcTimewarpSlowFinal{#1} },
+    timewarp-slow-final       .default:n = 2,
+    timewarp-slow-start-final .meta:n = { timewarp = \mrcTimewarpSlowStartFinal{#1} },
+    timewarp-slow-start-final .default:n = 2,
+  }
+
+\keys_set:nn { mermap/anim }
+  {
+    position = 51.4779 / 0,
+    frames   = 20,
+    drop-no-frame,
+    common-scale-denominator = 25000,
+    timewarp-identity,
+  }
+
+\NewExpandableDocumentCommand\mrcAnimFrame{}{\int_to_arabic:n \l_mermap_anim_frame_int}
+\NewExpandableDocumentCommand\mrcAnimTime{}{\fp_to_decimal:N \l_mermap_anim_time_fp}
+\NewExpandableDocumentCommand\mrcAnimScaleDenom{}{\fp_to_decimal:N \l_mermap_anim_scaledenom_fp}
+\NewExpandableDocumentCommand\mrcAnimLatitude{}{\fp_to_decimal:N \l_mermap_anim_lat_fp}
+\NewExpandableDocumentCommand\mrcAnimLongitude{}{\fp_to_decimal:N \l_mermap_anim_lon_fp}
 
 
 %---- supplier -----------------------------------------------------------------

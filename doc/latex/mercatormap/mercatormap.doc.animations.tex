@@ -1,0 +1,480 @@
+% !TeX root = mercatormap.tex
+% !TeX encoding=UTF-8
+% !TeX spellcheck=en_US
+% include file of mercatormap.tex (manual of the LaTeX package mercatormap)
+\clearpage
+\section{Animations}\label{sec:animations}%
+
+An animation in the context of map drawing is considered to be a direct movement
+from a starting position to a final position with possible adaption of
+scale denominators.
+
+This package does not provide animation production, but allows to create a
+PDF with a sequence of maps (frames) following such an animation path.
+
+
+%-------------------------------------------------------------------------------
+\subsection{Animation Environment}
+
+\begin{docEnvironment}[doc new=2024-07-31]{mrcAnimation}{\marg{options}}
+  According to the given \meta{options}, the environment loops over the
+  \meta{environment content} several times generating \textit{frames}
+  for an external animation program.
+  A detailed description for the \meta{options} is found in \Fullref{ref:animOptions}.
+  \begin{itemize}
+  \item Basically, the position is moved from
+    a given \refKey{mermap/anim/start-position} with time index |0|
+    following an orthodrome
+    to a \refKey{mermap/anim/final-position} with time index |1|.
+  \item
+    This time interval $[0,1]$ is divided into \refKey{mermap/anim/frames}.
+    The current frame number is denoted by \refCom{mrcAnimFrame},
+    the current time is denoted by  \refCom{mrcAnimTime}, and
+    the current position is denoted by
+    \refCom{mrcAnimLatitude} and \refCom{mrcAnimLongitude},
+    alternatively by the named positon \docValue{AnimNP}.
+  \item
+    During movement, a time dependent sequence of \refKey{mermap/anim/scale-denominators}
+    defines the current scale denominator \refCom{mrcAnimScaleDenom}.
+  \item
+    The frames may have an equal time distance or have different time
+    distances using a \refKey{mermap/anim/timewarp}. This could be used
+    to slow down movement near ground and to speed up with more height.
+  \end{itemize}
+  The generated sequence of frames is applicable for
+  \begin{itemize}
+  \item Movement along an orthodrome from starting to final position with an unchanged
+    common scale denominator.
+  \item Zoom in or out on a fixed position.
+  \item Combination of both animation.
+  \end{itemize}
+  For more complex animations, several \refEnv{mrcAnimation} environments may be
+  used consecutively.
+\end{docEnvironment}
+
+\clearpage
+\begin{dispExample*}{breakable}
+  \mrcNPdef{heathrow}{51.4678}{-0.4548}
+  \mrcNPdef{fiumicino}{41.8151}{12.2508}
+
+  \begin{tcbraster}[raster height=22cm,raster columns=4,raster rows=7,
+      tile,size=minimal,boxsep=1pt,colback=black!20 ]
+  \begin{mrcAnimation}
+    {
+      named-start-position = heathrow,
+      named-final-position = fiumicino,
+      frames = 36,
+      scale-denominators = 0/1000000 - 0.3/8000000 - 0.7/8000000 - 1/1000000,
+      timewarp-slow-start-final = 1.5,
+    }
+    \begin{tcolorbox}
+      \begin{tikzpicture}
+      \mermapset
+        {
+          named flex scale = \mrcAnimScaleDenom:AnimNP,
+        }
+      \mrcmap
+        [
+          type           = reference,
+          named position = AnimNP,
+          source         = topplusopen web,
+          tex width      = \tcbtextwidth,
+          tex height     = \tcbtextheight
+        ]{london-roma-\mrcAnimFrame}
+      \mrcdrawmap
+      \node[above left,font=\fontsize{3.5pt}{3.5pt}\sffamily]
+        at (mrcmap.south east) {\mrcmapattribution};
+      \mrcclipmap
+      \end{tikzpicture}
+    \end{tcolorbox}
+  \end{mrcAnimation}
+  \end{tcbraster}
+\end{dispExample*}
+
+
+\clearpage
+%-------------------------------------------------------------------------------
+\subsection{Animation Options}\label{ref:animOptions}
+
+\begin{docMrcKeys}[
+    doc keypath = anim,
+    doc new     = 2023-07-31,
+  ]{
+    {
+      doc name        = start-position,
+      doc parameter   = {=\meta{latitude}/\meta{longitude}},
+      doc description = initially |51.4779/0|
+    },
+    {
+      doc name      = named-start-position,
+      doc parameter = {=\meta{name}},
+    }
+  }
+  Starting position of the animation given by
+  \meta{latitude} and \meta{longitude} or by a named position using \meta{name}.
+\end{docMrcKeys}
+
+
+\begin{docMrcKeys}[
+    doc keypath = anim,
+    doc new     = 2023-07-31,
+  ]{
+    {
+      doc name        = final-position,
+      doc parameter   = {=\meta{latitude}/\meta{longitude}},
+      doc description = initially |51.4779/0|
+    },
+    {
+      doc name      = named-final-position,
+      doc parameter = {=\meta{name}},
+    }
+  }
+  Final position of the animation given by
+  \meta{latitude} and \meta{longitude} or by a named position using \meta{name}.
+\end{docMrcKeys}
+
+
+\begin{docMrcKeys}[
+    doc keypath = anim,
+    doc new     = 2023-07-31,
+  ]{
+    {
+      doc name        = position,
+      doc parameter   = {=\meta{latitude}/\meta{longitude}},
+      doc description = initially |51.4779/0|
+    },
+    {
+      doc name      = named-position,
+      doc parameter = {=\meta{name}},
+    }
+  }
+  Fixed position of the animation given by
+  \meta{latitude} and \meta{longitude} or by a named position using \meta{name}.
+  This sets \refKey{mermap/anim/start-position} and
+  \refKey{mermap/anim/final-position} to the identical value.
+\end{docMrcKeys}
+
+
+
+\begin{docMrcKeys}[
+    doc keypath = anim,
+    doc new     = 2023-07-31,
+  ]{
+    {
+      doc name        = frames,
+      doc parameter   = {=\meta{frame number}},
+      doc description = initially |20|
+    },
+  }
+  Integer \meta{frame number} for the animation, at least |2|. For maps made with tiles,
+  even a large \meta{frame number} typically results in limited downloads,
+  because the tiles a reused as far as possible. For WMS maps, every frame
+  could give another download!
+\end{docMrcKeys}
+
+
+\begin{docMrcKeys}[
+    doc keypath = anim,
+    doc new     = 2023-07-31,
+    doc parameter   = {\colOpt{=true\textbar false}},
+    doc description = {default |true|, initially |false|},
+  ]{
+    {
+      doc name        = drop-first-frame,
+    },
+    {
+      doc name        = drop-last-frame,
+    },
+  }
+  If several \refEnv{mrcAnimation} environments are used consecutively,
+  the end frame of one animation is identical to the start frame of the
+  next animation. These options allow to remove one superfluous connecting frame.
+\end{docMrcKeys}
+
+
+\begin{docMrcKeys}[
+    doc keypath = anim,
+    doc new     = 2023-07-31,
+  ]{
+    {
+      doc name        = drop-no-frame,
+      doc description = {no value, initially set},
+    },
+  }
+  Reset to drop no frames.
+\end{docMrcKeys}
+
+
+\begin{docMrcKeys}[
+    doc keypath = anim,
+    doc new     = 2023-07-31,
+  ]{
+    {
+      doc name        = scale-denominators,
+      doc parameter   = {=\marg{time and scale sequence}},
+      doc description = {initially |0/25000-1/25000|},
+    },
+  }
+  The \meta{time and scale sequence} has to obey the following pattern:
+  \par
+  \meta{time$_1$}|/|\meta{scale$_1$} |-|
+  \meta{time$_2$}|/|\meta{scale$_2$} |-| $\ldots$ |-|
+  \meta{time$_n$}|/|\meta{scale$_n$}
+  \par
+  The time values have to be taken from the interval $[0,1]$ and have to be
+  strictly monotonically increasing, i.e.
+  \par
+  $0\le$ \meta{time$_1$} $<$
+  \meta{time$_2$} $<$ $\ldots$ $<$
+  \meta{time$_n$} $\le 1$
+  \par
+  If not given, time and scale for time $0$ and $1$ are automatically added
+  as constant continuation.\par
+  Depending on the current time value \refCom{mrcAnimTime}, the current
+  scale denominator \refCom{mrcAnimScaleDenom} is interpolated from this
+  sequence using a logarithmic approach.
+\end{docMrcKeys}
+
+
+\begin{docMrcKeys}[
+    doc keypath = anim,
+    doc new     = 2023-07-31,
+  ]{
+    {
+      doc name        = common-scale-denominator,
+      doc parameter   = {=\marg{scale denominator}},
+      doc description = {initially |25000|},
+    },
+  }
+  This is a shortcut for\par
+  \refKey{mermap/anim/scale-denominators} |=|\\
+  \hspace*{5mm} |0/|\marg{scale denominator} |- 1/|\marg{scale denominator}
+  \par
+  Thereby, a fixed \marg{scale denominator} is set for the animation.
+\end{docMrcKeys}
+
+
+\clearpage
+\begin{docMrcKeys}[
+    doc keypath = anim,
+    doc new     = 2023-07-31,
+  ]{
+    {
+      doc name        = timewarp,
+      doc parameter   = {=\meta{macro}},
+      doc description = initially \texttt{\textbackslash mrcTimewarpIdentity}
+    },
+  }
+  \meta{macro} has to be a fully expandable \LaTeX\ macro with one parameter.
+  The expansion has to be a valid |expl3| \meta{floating point expression}
+  denoting a strictly monotonically increasing function mapping from
+  the interval \mbox{$[0,1]$} into \mbox{$[0,1]$} again.
+  This timewarp may slow down and accelerate time over the span from $0$ to $1$.
+\end{docMrcKeys}
+
+
+\begin{docCommands}[
+    doc new     = 2023-07-31,
+  ]{
+    {
+      doc name        = mrcTimewarpIdentity,
+      doc parameter   = {=\marg{time}},
+    },
+  }
+  Identity function from \mbox{$[0,1]$} into \mbox{$[0,1]$}.
+\end{docCommands}
+
+
+\begin{docMrcKeys}[
+    doc keypath = anim,
+    doc new     = 2023-07-31,
+  ]{
+    {
+      doc name        = timewarp-identity,
+      doc description = {no value, initially set}
+    },
+  }
+  Sets \refKey{mermap/anim/timewarp} to \refCom{mrcTimewarpIdentity}.
+  This means that time flows constantly.
+\end{docMrcKeys}
+
+
+\begin{docCommands}[
+    doc new     = 2023-07-31,
+  ]{
+    {
+      doc name        = mrcTimewarpSlowStart,
+      doc parameter   = {=\marg{exponent}\marg{time}},
+      doc description = {default |2|}
+    },
+  }
+  Function term $t^{\text{\meta{exponent}}}$
+\end{docCommands}
+
+
+\begin{docMrcKeys}[
+    doc keypath = anim,
+    doc new     = 2023-07-31,
+  ]{
+    {
+      doc name        = timewarp-slow-start,
+      doc parameter   = \colOpt{=\meta{exponent}},
+      doc description = {default |2|}
+    },
+  }
+  Sets \refKey{mermap/anim/timewarp} to \refCom{mrcTimewarpSlowStart}\marg{exponent}.
+  \par
+  If $\text{\meta{exponent}}>1$ is used, time flows slower at the begin of the
+  interval \mbox{$[0,1]$}. This can be used, if a low scale denominator is
+  present at begin of a movement and is becoming larger later. Here, for smoothness,
+  you may want this to have slower speed near ground and larger speed later.
+\end{docMrcKeys}
+
+
+\begin{docCommands}[
+    doc new     = 2023-07-31,
+  ]{
+    {
+      doc name        = mrcTimewarpSlowFinal,
+      doc parameter   = {=\marg{exponent}\marg{time}},
+      doc description = {default |2|}
+    },
+  }
+  Function term $1 - (1-t)^{\text{\meta{exponent}}}$
+\end{docCommands}
+
+
+\begin{docMrcKeys}[
+    doc keypath = anim,
+    doc new     = 2023-07-31,
+  ]{
+    {
+      doc name        = timewarp-slow-final,
+      doc parameter   = \colOpt{=\meta{exponent}},
+      doc description = {default |2|}
+    },
+  }
+  Sets \refKey{mermap/anim/timewarp} to \refCom{mrcTimewarpSlowFinal}\marg{exponent}.
+  \par
+  If $\text{\meta{exponent}}>1$ is used, time flows slower at the end of the
+  interval \mbox{$[0,1]$}. This can be used, if a large scale denominator is
+  present at begin of a movement and is becoming lower later. Here, for smoothness,
+  you may want this to have slower speed near ground at the end.
+\end{docMrcKeys}
+
+
+\begin{docCommands}[
+    doc new     = 2023-07-31,
+  ]{
+    {
+      doc name        = mrcTimewarpSlowStartFinal,
+      doc parameter   = {=\marg{exponent}\marg{time}},
+      doc description = {default |2|}
+    },
+  }
+  Combination of \refCom{mrcTimewarpSlowStart} and \refCom{mrcTimewarpSlowFinal}
+  using case discrimination for the first and the second half of the intervall.
+\end{docCommands}
+
+
+\begin{docMrcKeys}[
+    doc keypath = anim,
+    doc new     = 2023-07-31,
+  ]{
+    {
+      doc name        = timewarp-slow-start-final,
+      doc parameter   = \colOpt{=\meta{exponent}},
+      doc description = {default |2|}
+    },
+  }
+  Sets \refKey{mermap/anim/timewarp} to \refCom{mrcTimewarpSlowStartFinal}\marg{exponent}.
+  \par
+  If $\text{\meta{exponent}}>1$ is used, time flows slower at the begin and at the end of the
+  interval \mbox{$[0,1]$}. This can be used, if a low scale denominator is
+  present at begin of a movement, becomes larger in the middle, and finally
+  is becoming lower later. Here, for smoothness,
+  you may want this to have slower speed near ground at the begin and the end.
+\end{docMrcKeys}
+
+
+\clearpage
+%-------------------------------------------------------------------------------
+\subsection{Macros inside the Animation Environment}\label{ref:animMacros}
+
+\begin{docCommands}[
+    doc new     = 2023-07-31,
+  ]{
+    {
+      doc name        = mrcAnimFrame,
+    },
+    {
+      doc name        = l_mermap_anim_frame_int,
+    },
+  }
+  The current frame number ranging from $1$ to \refKey{mermap/anim/frames}.
+\end{docCommands}
+
+
+\begin{docCommands}[
+    doc new     = 2023-07-31,
+  ]{
+    {
+      doc name        = mrcAnimTime,
+    },
+    {
+      doc name        = l_mermap_anim_time_fp,
+    },
+  }
+  The current time ranging from $0$ to $1$.
+\end{docCommands}
+
+
+\begin{docCommands}[
+    doc new     = 2023-07-31,
+  ]{
+    {
+      doc name        = mrcAnimScaleDenom,
+    },
+    {
+      doc name        = l_mermap_anim_scaledenom_fp,
+    },
+  }
+  The current scale denominator according to \refKey{mermap/anim/scale-denominators}.
+\end{docCommands}
+
+
+\begin{docCommands}[
+    doc new     = 2023-07-31,
+  ]{
+    {
+      doc name        = mrcAnimLatitude,
+    },
+    {
+      doc name        = l_mermap_anim_lat_fp,
+    },
+  }
+  The latitude of the current position.
+\end{docCommands}
+
+
+
+\begin{docCommands}[
+    doc new     = 2023-07-31,
+  ]{
+    {
+      doc name        = mrcAnimLongitude,
+    },
+    {
+      doc name        = l_mermap_anim_lon_fp,
+    },
+  }
+  The longitude of the current position.
+\end{docCommands}
+
+
+\docValue{AnimNP}\tcbdocmarginnote{\tcbdocnew{2024-07-31}}:
+  The current named position.
+
+
+
+

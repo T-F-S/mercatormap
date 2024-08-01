@@ -42,8 +42,8 @@
   remember that the eastern hemisphere lies \emph{west} and
   the western hemisphere lies \emph{east} for your map.
   Consider the following example displaying Vladivostok and Anchorage.
-  Here, \refKey{/mermap/supply/west} is set to \ang{130}\,E (|130|)
-  and \refKey{/mermap/supply/east} is set to \ang{149}\,W (|211| instead of |-149|).
+  Here, \refKey{mermap/supply/west} is set to \ang{130}\,E (|130|)
+  and \refKey{mermap/supply/east} is set to \ang{149}\,W (|211| instead of |-149|).
 
   There is some automatic correction for positions to fit inside the
   defined map (see Anchorage in the example below), but
@@ -123,7 +123,7 @@
 
   \tikzsetnextfilename{limit_zoom_scale_1}
   \begin{dispExample}
-    \mermapsetsupply{source=stamen terrain, type=reference, zoom=12,
+    \mermapsetsupply{source=topplusopen web, type=reference, zoom=12,
       tex width=7cm, tex height=5cm}
     \begin{tikzpicture}
       \mrcmap[latitude=59.91,longitude=10.75]{oslo1}   \mrcdrawmap
@@ -133,12 +133,12 @@
     \begin{center}\fontsize{7pt}{7pt}\sffamily\mrcmapattribution\end{center}
   \end{dispExample}
 
-  Same example again, but with \refKey{/mermap/flex scale} which gives
+  Same example again, but with \refKey{mermap/flex scale} which gives
   1:150000 for both cities and comparable maps.
 
   \tikzsetnextfilename{limit_zoom_scale_2}
   \begin{dispExample}
-    \mermapsetsupply{source=stamen terrain, type=reference}
+    \mermapsetsupply{source=topplusopen web, type=reference}
     \begin{tikzpicture}
       \mrcmap[latitude=59.91,longitude=10.75, flex reference scale=150000,
         tex width=7cm, tex height=5cm]{oslo2}    \mrcdrawmap

@@ -164,7 +164,7 @@ but not for critical navigation purposes etc.
 
 \begin{docCommand}{mrcdrawscalebar}{\oarg{options}}
   Draws a scale bar according to the given \meta{options}.
-  All \meta{options} share the common prefix |/mermap/scalebar/|.
+  All \meta{options} share the common prefix |mermap/scalebar/|.
   The most essential option is the \emph{width} of the scale bar.
 
   \tikzsetnextfilename{scales_scalebar1}
@@ -216,7 +216,7 @@ but not for critical navigation purposes etc.
 \end{docMrcKey}
 
 \begin{docMrcKey}[scalebar]{width-in-kilometer}{=\meta{number}}{no default, initially |0|}
-  Alias for \refKey{/mermap/scalebar/width-in-km}
+  Alias for \refKey{mermap/scalebar/width-in-km}
 \end{docMrcKey}
 
 \begin{docMrcKey}[scalebar]{width-in-meter}{=\meta{number}}{no default, initially |0|}
@@ -247,7 +247,7 @@ but not for critical navigation purposes etc.
 \begin{docMrcKey}[scalebar]{at}{=\marg{\tikzname\ coordinate}}{no default,
     initially \texttt{\brackets{(0,0)}}}
   The scale bar is positioned at the given \meta{\tikzname\ coordinate}.
-  The placement is done with the \refKey{/mermap/scalebar/placement} option.
+  The placement is done with the \refKey{mermap/scalebar/placement} option.
   Both option correspond to the \tikzname\ options for positioning nodes.
   The scale bar can be positioned outside the map (e.g. below), but
   remember to use \refCom{mrcclipmap} \emph{after} the scale bar
@@ -285,7 +285,7 @@ but not for critical navigation purposes etc.
 
 \begin{docMrcKey}[scalebar]{placement}{=\meta{\tikzname\ positioning}}{no default, initially empty}
   \meta{\tikzname\ positioning} of a scale bar in combination with
-  \refKey{/mermap/scalebar/at}. All \tikzname\ placement options for nodes
+  \refKey{mermap/scalebar/at}. All \tikzname\ placement options for nodes
   can be used, e.g. \texttt{above left} or \texttt{anchor=mid west}, etc.
   Actually, \emph{any} node option could be applied here, but the intended use
   is for placement options only.
@@ -298,7 +298,7 @@ but not for critical navigation purposes etc.
   absolute shift values in each direction, i.e. the algebraic sign is
   automatically complemented.
   If only \meta{x shift} is given, then \meta{y shift} is set
-  to the same value. \refKey{/mermap/scalebar/at} and \refKey{/mermap/scalebar/placement}
+  to the same value. \refKey{mermap/scalebar/at} and \refKey{mermap/scalebar/placement}
   are set by this option.
 \end{docMrcKey}
 
@@ -349,8 +349,8 @@ but not for critical navigation purposes etc.
   The \emph{minor} part of the scale bar is a single \tikzname\ path object
   which can be customized by the given \meta{\tikzname\ options}.
   The \emph{minor} part is seen as holes in the default case.
-  \refKey{/mermap/scalebar/minor style} has only an effect, if
-  the minor part is drawn \refKey{/mermap/scalebar/solid}.
+  \refKey{mermap/scalebar/minor style} has only an effect, if
+  the minor part is drawn \refKey{mermap/scalebar/solid}.
   \tikzsetnextfilename{scales_scalebar5}
   \begin{dispExample}
   \begin{tikzpicture}
@@ -369,7 +369,7 @@ but not for critical navigation purposes etc.
 
 \begin{docMrcKey}[scalebar]{single}{\colOpt{=true\textbar false}}{default |true|, initially |false|}
   If set to |true|, the scale bar is drawn as a single ruler.
-  \refKey{/mermap/scalebar/single} is inverse to \refKey{/mermap/scalebar/double}.
+  \refKey{mermap/scalebar/single} is inverse to \refKey{mermap/scalebar/double}.
   \tikzsetnextfilename{scales_scalebar6}
   \begin{dispExample}
   \begin{tikzpicture}
@@ -387,8 +387,8 @@ but not for critical navigation purposes etc.
 
 \begin{docMrcKey}[scalebar]{solid}{\colOpt{=true\textbar false}}{default |true|, initially |false|}
   If set to |true|, the \emph{minor} part of the scale bar is drawn opaque.
-  It is drawn white or according to \refKey{/mermap/scalebar/minor style}.
-  \refKey{/mermap/scalebar/solid} is inverse to \refKey{/mermap/scalebar/transparent}.
+  It is drawn white or according to \refKey{mermap/scalebar/minor style}.
+  \refKey{mermap/scalebar/solid} is inverse to \refKey{mermap/scalebar/transparent}.
 \end{docMrcKey}
 
 

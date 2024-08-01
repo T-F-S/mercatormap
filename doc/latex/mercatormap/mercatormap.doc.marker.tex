@@ -14,8 +14,8 @@ may be helpful which provides some predefined marker types.
 
 \begin{docCommand}{mrcmarker}{\marg{options}}
   Places a marker according to the given \meta{options} on the map.
-  All \meta{options} share the common prefix |/mermap/marker/|.
-  Different \refKey{/mermap/marker/type} settings are available which are
+  All \meta{options} share the common prefix |mermap/marker/|.
+  Different \refKey{mermap/marker/type} settings are available which are
   more or less customizable.
 
 \tikzsetnextfilename{marker_mrcmarker}%
@@ -48,8 +48,8 @@ may be helpful which provides some predefined marker types.
 
 \begin{docCommand}{mermapsetmarker}{\marg{options}}
   Sets \meta{options} for all following markers inside the current \TeX\ group.
-  All options share the common prefix |/mermap/marker/|, e.g. for setting
-  \refKey{/mermap/marker/type} use
+  All options share the common prefix |mermap/marker/|, e.g. for setting
+  \refKey{mermap/marker/type} use
   \begin{dispListing}
     \mermapsetmarker{type=pin}
   \end{dispListing}
@@ -74,7 +74,7 @@ may be helpful which provides some predefined marker types.
 \end{docMrcKey}
 
 \begin{docMrcKey}[marker]{lat}{=\meta{latitude}}{no default, initially |12|}
-  Alias for \refKey{/mermap/marker/latitude}.
+  Alias for \refKey{mermap/marker/latitude}.
 \end{docMrcKey}
 
 \begin{docMrcKey}[marker]{longitude}{=\meta{longitude}}{no default, initially |49|}
@@ -83,7 +83,7 @@ may be helpful which provides some predefined marker types.
 \end{docMrcKey}
 
 \begin{docMrcKey}[marker]{lon}{=\meta{longitude}}{no default, initially |49|}
-  Alias for \refKey{/mermap/marker/longitude}.
+  Alias for \refKey{mermap/marker/longitude}.
 \end{docMrcKey}
 
 \begin{docMrcKey}[marker]{position}{=\meta{place latitude}:\meta{place longitude}}{no default, initially |12:49|}
@@ -100,7 +100,7 @@ may be helpful which provides some predefined marker types.
   given \meta{area}. Feasible values for \meta{area} are:
   \begin{itemize}
   \item\docValue{map}: Use inside map.
-  \item\docValue{vicinity}: Use inside map plus vicinity, see \refKey{/mermap/vicinity}.
+  \item\docValue{vicinity}: Use inside map plus vicinity, see \refKey{mermap/vicinity}.
   \end{itemize}
 \end{docMrcKey}
 
@@ -157,36 +157,36 @@ may be helpful which provides some predefined marker types.
 
 \begin{docMrcKey}[marker]{hide}{\colOpt{=true\textbar false}}{default |true|, initially |false|}
   If set to |true|, the marker is not used.
-  \refKey{/mermap/marker/hide} is inverse to \refKey{/mermap/marker/show}.
+  \refKey{mermap/marker/hide} is inverse to \refKey{mermap/marker/show}.
 \end{docMrcKey}
 
 
 
 \begin{docMrcKey}[marker]{show category}{=\meta{category}}{style, no default}
-  Sets \refKey{/mermap/marker/show} to |true|, if \refKey{/mermap/marker/category} equals \meta{category}.
+  Sets \refKey{mermap/marker/show} to |true|, if \refKey{mermap/marker/category} equals \meta{category}.
   Otherwise, nothing happens.
-  \refKey{/mermap/marker/category} has to be set \emph{before}.
+  \refKey{mermap/marker/category} has to be set \emph{before}.
 \end{docMrcKey}
 
 
 \begin{docMrcKey}[marker]{show all but category}{=\meta{category}}{style, no default}
-  Sets \refKey{/mermap/marker/show} to |true|, if \refKey{/mermap/marker/category} does not equal \meta{category}.
+  Sets \refKey{mermap/marker/show} to |true|, if \refKey{mermap/marker/category} does not equal \meta{category}.
   Otherwise, nothing happens.
-  \refKey{/mermap/marker/category} has to be set \emph{before}.
+  \refKey{mermap/marker/category} has to be set \emph{before}.
 \end{docMrcKey}
 
 
 \begin{docMrcKey}[marker]{hide category}{=\meta{category}}{style, no default}
-  Sets \refKey{/mermap/marker/show} to |false|, if \refKey{/mermap/marker/category} equals \meta{category}.
+  Sets \refKey{mermap/marker/show} to |false|, if \refKey{mermap/marker/category} equals \meta{category}.
   Otherwise, nothing happens.
-  \refKey{/mermap/marker/category} has to be set \emph{before}.
+  \refKey{mermap/marker/category} has to be set \emph{before}.
 \end{docMrcKey}
 
 
 \begin{docMrcKey}[marker]{hide all but category}{=\meta{category}}{style, no default}
-  Sets \refKey{/mermap/marker/show} to |false|, if \refKey{/mermap/marker/category} does not equal \meta{category}.
+  Sets \refKey{mermap/marker/show} to |false|, if \refKey{mermap/marker/category} does not equal \meta{category}.
   Otherwise, nothing happens.
-  \refKey{/mermap/marker/category} has to be set \emph{before}.
+  \refKey{mermap/marker/category} has to be set \emph{before}.
   \tikzsetnextfilename{marker_hide}%
   \begin{dispExample}
   \begin{tikzpicture}
@@ -206,10 +206,10 @@ may be helpful which provides some predefined marker types.
 \clearpage
 
 The following options require the package |hyperref| to be loaded.
-If |hyperref| is not loaded, \refKey{/mermap/marker/url} and
-\refKey{/mermap/marker/link} are ignored.\\
-Note that if \refKey{/mermap/marker/url} and \refKey{/mermap/marker/link}
-are applied concurrently, then \refKey{/mermap/marker/link} will win.
+If |hyperref| is not loaded, \refKey{mermap/marker/url} and
+\refKey{mermap/marker/link} are ignored.\\
+Note that if \refKey{mermap/marker/url} and \refKey{mermap/marker/link}
+are applied concurrently, then \refKey{mermap/marker/link} will win.
 
 
 \begin{docMrcKeys}[
@@ -279,9 +279,9 @@ are applied concurrently, then \refKey{/mermap/marker/link} will win.
     doc description = {default |true|, initially |false|},
   },
 }
-  If \refKey{/mermap/marker/use urls} is set to |false|, external links
-  with \refKey{/mermap/marker/url} are ignored.\\
-  \refKey{/mermap/marker/ignore urls} is inverse to \refKey{/mermap/marker/use urls}.
+  If \refKey{mermap/marker/use urls} is set to |false|, external links
+  with \refKey{mermap/marker/url} are ignored.\\
+  \refKey{mermap/marker/ignore urls} is inverse to \refKey{mermap/marker/use urls}.
 \end{docMrcKeys}
 
 
@@ -299,9 +299,9 @@ are applied concurrently, then \refKey{/mermap/marker/link} will win.
     doc description = {default |true|, initially |false|},
   },
 }
-  If \refKey{/mermap/marker/use links} is set to |false|, internal links
-  with \refKey{/mermap/marker/link} are ignored.\\
-  \refKey{/mermap/marker/ignore links} is inverse to \refKey{/mermap/marker/use links}.
+  If \refKey{mermap/marker/use links} is set to |false|, internal links
+  with \refKey{mermap/marker/link} are ignored.\\
+  \refKey{mermap/marker/ignore links} is inverse to \refKey{mermap/marker/use links}.
 \end{docMrcKeys}
 
 
@@ -596,7 +596,7 @@ The different marker types can be customized by some additional options:
 \subsection{New Marker Types}
 
 \begin{docCommand}{mrcnewmarkertype}{\marg{type name}\marg{\tikzname\ code}}
-  Creates a new \refKey{/mermap/marker/type} value \meta{type name} using the
+  Creates a new \refKey{mermap/marker/type} value \meta{type name} using the
   given \meta{\tikzname\ code} for drawing a place marker.
   To avoid future name clashes, you should start a private \meta{type name}
   with letter |x|. For \meta{\tikzname\ code} settings like
@@ -630,9 +630,9 @@ The different marker types can be customized by some additional options:
 \subsection{New Marker Styles}
 
 \begin{docCommand}{mrcnewmarkerstyle}{\marg{style name}\marg{options}}
-  Creates a new \refKey{/mermap/marker/style} value \meta{style name} using the
+  Creates a new \refKey{mermap/marker/style} value \meta{style name} using the
   given \meta{options} for drawing a place marker.
-  All \meta{options} share the common prefix |/mermap/marker/|. Here, a \emph{style}
+  All \meta{options} share the common prefix |mermap/marker/|. Here, a \emph{style}
   has the same concept as a \tikzname\ style.
 
   \tikzsetnextfilename{marker_markerstyle}%

@@ -1,15 +1,15 @@
-%% The LaTeX package mercatormap - version 1.02 (2020/08/06)
+%% The LaTeX package mercatormap - version 1.1.0 (2024/08/01)
 %% mercatorsupplier.def: predefined map supplier list
 %%
 %% -------------------------------------------------------------------------------------------
-%% Copyright (c) 2020 by Prof. Dr. Dr. Thomas F. Sturm <thomas dot sturm at unibw dot de>
+%% Copyright (c) 2020-2024 by Prof. Dr. Dr. Thomas F. Sturm <thomas dot sturm at unibw dot de>
 %% -------------------------------------------------------------------------------------------
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3
 %% of this license or (at your option) any later version.
 %% The latest version of this license is in
-%%   http://www.latex-project.org/lppl.txt
+%%   https://www.latex-project.org/lppl.txt
 %% and version 1.3 or later is part of all distributions of LaTeX
 %% version 2005/12/01 or later.
 %%
@@ -46,7 +46,7 @@
     attribution = {
       Kartendaten:~\textcopyright\nobreakspace\href{https://openstreetmap.org/copyright}{OpenStreetMap}
       \ Mitwirkende,~SRTM\nobreakspace\textbar\nobreakspace
-      Kartendarstellung:~\textcopyright\nobreakspace\href{http://opentopomap.org/}{OpenTopoMap}
+      Kartendarstellung:~\textcopyright\nobreakspace\href{https://opentopomap.org/}{OpenTopoMap}
       \ (\href{https://creativecommons.org/licenses/by-sa/3.0/}{CC-BY-SA})
     },
     attribution~print = {
@@ -61,12 +61,12 @@
   {
     __attribution_topplusopen .meta:nn = {mermap/supply} {
     attribution = {
-      \textcopyright\nobreakspace\href{http://www.bkg.bund.de}{Bundesamt~f\mrcumlaut{u}r~Kartographie~und~Geod\mrcumlaut{a}sie}\nobreakspace\the\year,
-      \ \href{http://sg.geodatenzentrum.de/web_public/Datenquellen_TopPlus_Open.pdf}{Datenquellen}
+      Kartendarstellung:\nobreakspace\textcopyright\nobreakspace\href{https://www.bkg.bund.de}{BKG\nobreakspace(\the\year)},
+      \ \href{https://sgx.geodatenzentrum.de/web_public/Datenquellen_TopPlus_Open.pdf}{Datenquellen}
       },
     attribution~print = {
-      \textcopyright\nobreakspace Bundesamt~f\mrcumlaut{u}r~Kartographie~und~Geod\mrcumlaut{a}sie\nobreakspace\the\year,
-      \ Datenquellen:~\detokenize{http://sg.geodatenzentrum.de/web_public/Datenquellen_TopPlus_Open.pdf}
+      \textcopyright\nobreakspace BKG\nobreakspace(\the\year),
+      \ Datenquellen:~\detokenize{https://sgx.geodatenzentrum.de/web_public/Datenquellen_TopPlus_Open.pdf}
       }
     }
   }
@@ -85,142 +85,45 @@
     basename = tiles/tpo_web_grau,
   }
 
-\cs_new:Npn \__mermap_new_supply_source_topplusopen:n #1
+\__mermap_new_supply_source:nn { topplusopen~web~light }
+  {
+    url = {https://sgx.geodatenzentrum.de/wmts_topplus_open/tile/1.0.0/web_light/default/WEBMERCATOR/{z}/{y}/{x}.png},
+    __attribution_topplusopen,
+    basename = tiles/tpo_web_light,
+  }
+
+\__mermap_new_supply_source:nn { topplusopen~web~light~grau }
+  {
+    url = {https://sgx.geodatenzentrum.de/wmts_topplus_open/tile/1.0.0/web_light_grau/default/WEBMERCATOR/{z}/{y}/{x}.png},
+    __attribution_topplusopen,
+    basename = tiles/tpo_web_light_grau,
+  }
+
+
+\cs_new:Npn \__mermap_new_supply_source_topplusopen:nn #1#2
   {
     \keys_define:nn { mermap/supply/_source }
       {
         topplusopen~#1 .meta:nn = {mermap/supply}{
-          url = {https://sgx.geodatenzentrum.de/wms_topplus_open?service=wms&version=1.3.0&request=GetMap&Layers=#1&STYLES=default&CRS=EPSG:3857&bbox={xmin},{ymin},{xmax},{ymax}&width={width}&height={height}&Format=image/png},
+          url = {https://sgx.geodatenzentrum.de/wms_topplus_open_#2?service=wms&version=1.3.0&request=GetMap&Layers=#1&STYLES=default&CRS=EPSG:3857&bbox={xmin},{ymin},{xmax},{ymax}&width={width}&height={height}&Format=image/png},
           __attribution_topplusopen,
           basename = tiles/tpo,
         },
         topplusopen~#1~grau .meta:nn = {mermap/supply}{
-          url = {https://sgx.geodatenzentrum.de/wms_topplus_open?service=wms&version=1.3.0&request=GetMap&Layers=#1_grau&STYLES=default&CRS=EPSG:3857&bbox={xmin},{ymin},{xmax},{ymax}&width={width}&height={height}&Format=image/png},
+          url = {https://sgx.geodatenzentrum.de/wms_topplus_open_#2?service=wms&version=1.3.0&request=GetMap&Layers=#1&STYLES=grau&CRS=EPSG:3857&bbox={xmin},{ymin},{xmax},{ymax}&width={width}&height={height}&Format=image/png},
           __attribution_topplusopen,
           basename = tiles/tpo,
         },
       }
   }
-\__mermap_new_supply_source_topplusopen:n { p5 }
-\__mermap_new_supply_source_topplusopen:n { p10 }
-\__mermap_new_supply_source_topplusopen:n { p17.5 }
-\__mermap_new_supply_source_topplusopen:n { p25 }
-\__mermap_new_supply_source_topplusopen:n { p50 }
-\__mermap_new_supply_source_topplusopen:n { p100 }
-\__mermap_new_supply_source_topplusopen:n { p250 }
+\__mermap_new_supply_source_topplusopen:nn { p5 }{ p5 }
+\__mermap_new_supply_source_topplusopen:nn { p10 }{ p10 }
+\__mermap_new_supply_source_topplusopen:nn { p17.5 }{ p17 }
+\__mermap_new_supply_source_topplusopen:nn { p25 }{ p25 }
+\__mermap_new_supply_source_topplusopen:nn { p50 }{ p50 }
+\__mermap_new_supply_source_topplusopen:nn { p100 }{ p100 }
+\__mermap_new_supply_source_topplusopen:nn { p250 }{ p250 }
 
-%% openrouteservice mapsurfer is DISCONTINUED after June 2020
-%% Therefore, the following source is DEPRECATED and will be removed in future
-\__mermap_new_supply_source:nn { openrouteservice~mapsurfer }
-  {
-    url~with~api~key = {https://api.openrouteservice.org/mapsurfer/{z}/{x}/{y}.png?api_key=}{openrouteservice}{},
-    attribution = {
-      Service~\textcopyright\nobreakspace\href{https://openrouteservice.org/}{openrouteservice.org}
-      \nobreakspace\textbar\nobreakspace
-      Map~data~\textcopyright\nobreakspace\href{https://openstreetmap.org/copyright}{OpenStreetMap}~contributors
-    },
-    attribution~print = {
-      Service~\textcopyright\nobreakspace openrouteservice.org
-      \nobreakspace\textbar\nobreakspace
-      Map~data~\textcopyright\nobreakspace OpenStreetMap~contributors
-    },
-    basename = tiles/mapsurfer,
-  }
-
-\keys_define:nn { mermap/supply }
-  {
-    __attribution_stamen .meta:nn = {mermap/supply} {
-    attribution = {
-      Map~tiles~by~\href{http://stamen.com}{Stamen~Design},
-      \ under~\href{http://creativecommons.org/licenses/by/3.0}{CC~BY~3.0}.
-      \ Data~by~\href{http://openstreetmap.org}{OpenStreetMap},
-      \ under~\href{http://www.openstreetmap.org/copyright}{ODbL}.
-      },
-    attribution~print = {
-      Map~tiles~by~Stamen~Design~(stamen.com),
-      \ under~CC~BY~3.0.
-      \ Data~by~OpenStreetMap,
-      \ under~ODbl~(www.openstreetmap.org/copyright).
-      }
-    }
-  }
-\__mermap_new_supply_source:nn { stamen~terrain }
-  {
-    url = {https://stamen-tiles-a.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png},
-    __attribution_stamen,
-    basename = tiles/terrain,
-  }
-\__mermap_new_supply_source:nn { stamen~terrain-background }
-  {
-    url = {https://stamen-tiles-a.a.ssl.fastly.net/terrain-background/{z}/{x}/{y}.png},
-    __attribution_stamen,
-    basename = tiles/terrain-background,
-  }
-\__mermap_new_supply_source:nn { stamen~terrain-labels }
-  {
-    url = {https://stamen-tiles-a.a.ssl.fastly.net/terrain-labels/{z}/{x}/{y}.png},
-    __attribution_stamen,
-    basename = tiles/terrain-labels,
-  }
-\__mermap_new_supply_source:nn { stamen~terrain-lines }
-  {
-    url = {https://stamen-tiles-a.a.ssl.fastly.net/terrain-lines/{z}/{x}/{y}.png},
-    __attribution_stamen,
-    basename = tiles/terrain-lines,
-  }
-\__mermap_new_supply_source:nn { stamen~toner }
-  {
-    url = {https://stamen-tiles-a.a.ssl.fastly.net/toner/{z}/{x}/{y}.png},
-    __attribution_stamen,
-    basename = tiles/toner,
-  }
-\__mermap_new_supply_source:nn { stamen~toner-lite }
-  {
-    url = {https://stamen-tiles-a.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.png},
-    __attribution_stamen,
-    basename = tiles/toner-lite,
-  }
-\__mermap_new_supply_source:nn { stamen~toner-hybrid }
-  {
-    url = {https://stamen-tiles-a.a.ssl.fastly.net/toner-hybrid/{z}/{x}/{y}.png},
-    __attribution_stamen,
-    basename = tiles/toner-hybrid,
-  }
-\__mermap_new_supply_source:nn { stamen~toner-background }
-  {
-    url = {https://stamen-tiles-a.a.ssl.fastly.net/toner-background/{z}/{x}/{y}.png},
-    __attribution_stamen,
-    basename = tiles/toner-background,
-  }
-\__mermap_new_supply_source:nn { stamen~toner-labels }
-  {
-    url = {https://stamen-tiles-a.a.ssl.fastly.net/toner-labels/{z}/{x}/{y}.png},
-    __attribution_stamen,
-    basename = tiles/toner-labels,
-  }
-\__mermap_new_supply_source:nn { stamen~toner-lines }
-  {
-    url = {https://stamen-tiles-a.a.ssl.fastly.net/toner-lines/{z}/{x}/{y}.png},
-    __attribution_stamen,
-    basename = tiles/toner-lines,
-  }
-\__mermap_new_supply_source:nn { stamen~watercolor }
-  {
-    url = {https://stamen-tiles-a.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png},
-    attribution = {
-      Map~tiles~by~\href{http://stamen.com}{Stamen~Design},
-      \ under~\href{http://creativecommons.org/licenses/by/3.0}{CC~BY~3.0}.
-      \ Data~by~\href{http://openstreetmap.org}{OpenStreetMap},
-      \ under~\href{http://creativecommons.org/licenses/by-sa/3.0}{CC~BY~SA}.
-      },
-    attribution~print = {
-      Map~tiles~by~Stamen~Design~(stamen.com),
-      \ under~CC~BY~3.0.
-      \ Data~by~OpenStreetMap,
-      \ under~CC~BY~SA.
-      },
-    basename = tiles/watercolor,
-  }
 
 \keys_define:nn { mermap/supply }
   {
@@ -259,6 +162,12 @@
     __attribution_thunderforest,
     basename = tiles/outdoors,
   }
+\__mermap_new_supply_source:nn { thunderforest~atlas }
+  {
+    url~with~api~key = {https://tile.thunderforest.com/atlas/{z}/{x}/{y}.png?apikey=}{thunderforest}{},
+    __attribution_thunderforest,
+    basename = tiles/atlas,
+  }
 \__mermap_new_supply_source:nn { thunderforest~transport-dark }
   {
     url~with~api~key = {https://tile.thunderforest.com/transport-dark/{z}/{x}/{y}.png?apikey=}{thunderforest}{},
@@ -290,3 +199,117 @@
     basename = tiles/neighbourhood,
   }
 
+
+
+%% openrouteservice mapsurfer is DISCONTINUED after June 2020
+%% Therefore, the following source is DEPRECATED and will be removed in future
+\__mermap_new_supply_source:nn { openrouteservice~mapsurfer }
+  {
+    url~with~api~key = {https://api.openrouteservice.org/mapsurfer/{z}/{x}/{y}.png?api_key=}{openrouteservice}{},
+    attribution = {
+      Service~\textcopyright\nobreakspace\href{https://openrouteservice.org/}{openrouteservice.org}
+      \nobreakspace\textbar\nobreakspace
+      Map~data~\textcopyright\nobreakspace\href{https://openstreetmap.org/copyright}{OpenStreetMap}~contributors
+    },
+    attribution~print = {
+      Service~\textcopyright\nobreakspace openrouteservice.org
+      \nobreakspace\textbar\nobreakspace
+      Map~data~\textcopyright\nobreakspace OpenStreetMap~contributors
+    },
+    basename = tiles/mapsurfer,
+  }
+
+\keys_define:nn { mermap/supply }% DISCONTINUED after July 2023 and DEPRECATED
+  {
+    __attribution_stamen .meta:nn = {mermap/supply} {
+    attribution = {
+      Map~tiles~by~\href{http://stamen.com}{Stamen~Design},
+      \ under~\href{http://creativecommons.org/licenses/by/3.0}{CC~BY~3.0}.
+      \ Data~by~\href{http://openstreetmap.org}{OpenStreetMap},
+      \ under~\href{http://www.openstreetmap.org/copyright}{ODbL}.
+      },
+    attribution~print = {
+      Map~tiles~by~Stamen~Design~(stamen.com),
+      \ under~CC~BY~3.0.
+      \ Data~by~OpenStreetMap,
+      \ under~ODbl~(www.openstreetmap.org/copyright).
+      }
+    }
+  }
+\__mermap_new_supply_source:nn { stamen~terrain }% DISCONTINUED after July 2023 and DEPRECATED
+  {
+    url = {https://stamen-tiles-a.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png},
+    __attribution_stamen,
+    basename = tiles/terrain,
+  }
+\__mermap_new_supply_source:nn { stamen~terrain-background }% DISCONTINUED after July 2023 and DEPRECATED
+  {
+    url = {https://stamen-tiles-a.a.ssl.fastly.net/terrain-background/{z}/{x}/{y}.png},
+    __attribution_stamen,
+    basename = tiles/terrain-background,
+  }
+\__mermap_new_supply_source:nn { stamen~terrain-labels }% DISCONTINUED after July 2023 and DEPRECATED
+  {
+    url = {https://stamen-tiles-a.a.ssl.fastly.net/terrain-labels/{z}/{x}/{y}.png},
+    __attribution_stamen,
+    basename = tiles/terrain-labels,
+  }
+\__mermap_new_supply_source:nn { stamen~terrain-lines }% DISCONTINUED after July 2023 and DEPRECATED
+  {
+    url = {https://stamen-tiles-a.a.ssl.fastly.net/terrain-lines/{z}/{x}/{y}.png},
+    __attribution_stamen,
+    basename = tiles/terrain-lines,
+  }
+\__mermap_new_supply_source:nn { stamen~toner }% DISCONTINUED after July 2023 and DEPRECATED
+  {
+    url = {https://stamen-tiles-a.a.ssl.fastly.net/toner/{z}/{x}/{y}.png},
+    __attribution_stamen,
+    basename = tiles/toner,
+  }
+\__mermap_new_supply_source:nn { stamen~toner-lite }% DISCONTINUED after July 2023 and DEPRECATED
+  {
+    url = {https://stamen-tiles-a.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.png},
+    __attribution_stamen,
+    basename = tiles/toner-lite,
+  }
+\__mermap_new_supply_source:nn { stamen~toner-hybrid }% DISCONTINUED after July 2023 and DEPRECATED
+  {
+    url = {https://stamen-tiles-a.a.ssl.fastly.net/toner-hybrid/{z}/{x}/{y}.png},
+    __attribution_stamen,
+    basename = tiles/toner-hybrid,
+  }
+\__mermap_new_supply_source:nn { stamen~toner-background }% DISCONTINUED after July 2023 and DEPRECATED
+  {
+    url = {https://stamen-tiles-a.a.ssl.fastly.net/toner-background/{z}/{x}/{y}.png},
+    __attribution_stamen,
+    basename = tiles/toner-background,
+  }
+\__mermap_new_supply_source:nn { stamen~toner-labels }% DISCONTINUED after July 2023 and DEPRECATED
+  {
+    url = {https://stamen-tiles-a.a.ssl.fastly.net/toner-labels/{z}/{x}/{y}.png},
+    __attribution_stamen,
+    basename = tiles/toner-labels,
+  }
+\__mermap_new_supply_source:nn { stamen~toner-lines }% DISCONTINUED after July 2023 and DEPRECATED
+  {
+    url = {https://stamen-tiles-a.a.ssl.fastly.net/toner-lines/{z}/{x}/{y}.png},
+    __attribution_stamen,
+    basename = tiles/toner-lines,
+  }
+\__mermap_new_supply_source:nn { stamen~watercolor }% DISCONTINUED after July 2023 and DEPRECATED
+  {
+    url = {https://stamen-tiles-a.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png},
+    attribution = {
+      Map~tiles~by~\href{http://stamen.com}{Stamen~Design},
+      \ under~\href{http://creativecommons.org/licenses/by/3.0}{CC~BY~3.0}.
+      \ Data~by~\href{http://openstreetmap.org}{OpenStreetMap},
+      \ under~\href{http://creativecommons.org/licenses/by-sa/3.0}{CC~BY~SA}.
+      },
+    attribution~print = {
+      Map~tiles~by~Stamen~Design~(stamen.com),
+      \ under~CC~BY~3.0.
+      \ Data~by~OpenStreetMap,
+      \ under~CC~BY~SA.
+      },
+    basename = tiles/watercolor,
+  }

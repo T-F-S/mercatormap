@@ -73,7 +73,7 @@ accompanying Python script. The technical background is documented in
 \cite[Section~5]{Sturm:2020}.
 
 \begin{enumerate}
-\item \refKey{/mermap/supply/type}|=|\docValue{reference}:
+\item \refKey{mermap/supply/type}|=|\docValue{reference}:
   \tcbsidebyside[sidebyside adapt=left,blankest,grow to left by=1cm]
   {
   \tikzexternaldisable
@@ -85,12 +85,12 @@ accompanying Python script. The technical background is documented in
   }{
   The default method determines the map dimensions from a reference
   position and given document map dimensions.
-  Also, a zoom level \refKey{/mermap/supply/zoom}
+  Also, a zoom level \refKey{mermap/supply/zoom}
   is required which relates to the Web Mercator map tile covering of the Earth.
   A higher zoom level gives a growing number of smaller map tiles.
   Alternative to the zoom level, a \meta{scale denominator} can be provided
-  by \refKey{/mermap/supply/flex area scale}, \refKey{/mermap/flex scale}
-  or \refKey{/mermap/supply/flex reference scale} which determines
+  by \refKey{mermap/supply/flex area scale}, \refKey{mermap/flex scale}
+  or \refKey{mermap/supply/flex reference scale} which determines
   the zoom level implicitly.
   As default, the reference position is the center of the map, but can be
   aligned at the map borders. This method is quite safe to use and could
@@ -100,7 +100,7 @@ accompanying Python script. The technical background is documented in
   be more tricky.
   }
 
-\item \refKey{/mermap/supply/type}|=|\docValue{areafit}:
+\item \refKey{mermap/supply/type}|=|\docValue{areafit}:
   \tcbsidebyside[sidebyside adapt=left,blankest,grow to left by=1cm]
   {
   \tikzexternaldisable
@@ -114,7 +114,7 @@ accompanying Python script. The technical background is documented in
   The map dimensions are determined by an area with
   latitude and longitude boundaries which is fitted into given
   document map dimensions. The zoom level is computed accordingly
-  for a fixed document tile size or by \refKey{/mermap/supply/flex area fit}.
+  for a fixed document tile size or by \refKey{mermap/supply/flex area fit}.
   In any case, the map contains the target area plus some protrusion.
   This method is also quite safe to use and may be
   the preferred one for many applications like showing a map which contains
@@ -123,7 +123,7 @@ accompanying Python script. The technical background is documented in
   the third method can be regarded.
   }
 
-\item \refKey{/mermap/supply/type}|=|\docValue{boundaries}:
+\item \refKey{mermap/supply/type}|=|\docValue{boundaries}:
   \tcbsidebyside[sidebyside adapt=left,blankest,grow to left by=1cm]
   {
   \tikzexternaldisable
@@ -134,11 +134,11 @@ accompanying Python script. The technical background is documented in
   }{
   The most obvious method determines the map dimensions from
   latitude and longitude boundaries. For this, a corresponding zoom level
-  \refKey{/mermap/supply/zoom}
+  \refKey{mermap/supply/zoom}
   is required which relates to the Web Mercator map tile covering of the Earth.
   Alternative to the zoom level, a \meta{scale denominator} can be provided
-  by \refKey{/mermap/supply/flex area scale}
-  or \refKey{/mermap/supply/flex reference scale} which determines
+  by \refKey{mermap/supply/flex area scale}
+  or \refKey{mermap/supply/flex reference scale} which determines
   the zoom level implicitly.
   Note that a too high zoom level imposes the risk of downloading an unwanted
   high quantity of map tiles resulting in a much too large document map.
@@ -156,9 +156,9 @@ accompanying Python script. The technical background is documented in
 \begin{docCommand}{mrcsupplymap}{\oarg{options}\marg{definition}}
   The \meta{options} provide parameters for the Python~3 script to supply all
   materials for a map.
-  All options share the common prefix |/mermap/supply/|.\par
+  All options share the common prefix |mermap/supply/|.\par
   The map is identified by\\
-  \meta{id}=\refKey{/mermap/definition prefix}+\meta{definition}\\
+  \meta{id}=\refKey{mermap/definition prefix}+\meta{definition}\\
   for later drawing.
   This identifier \meta{id} has to be unique for the document.
   It corresponds to generated files \meta{id}|.def|, \meta{id}|.md5|, and
@@ -172,8 +172,8 @@ accompanying Python script. The technical background is documented in
 
 \begin{docCommand}{mermapsetsupply}{\marg{options}}
   Sets \meta{options} for all following maps inside the current \TeX\ group.
-  All options share the common prefix |/mermap/supply/|, e.g. for setting
-  \refKey{/mermap/supply/type} use
+  All options share the common prefix |mermap/supply/|, e.g. for setting
+  \refKey{mermap/supply/type} use
   \begin{dispListing}
     \mermapsetsupply{type=reference}
   \end{dispListing}
@@ -184,7 +184,7 @@ accompanying Python script. The technical background is documented in
 \begin{docMrcKey}{definition prefix}{=\meta{definition prefix}}{no default, initially |maps/|}
   Prefix for map identifiers and generated map files, see \refCom{mrcsupplymap}
   and \refCom{mrcapplymap}.
-  Note that \refKey{/mermap/definition prefix} is not to be used inside
+  Note that \refKey{mermap/definition prefix} is not to be used inside
   the option list for \refCom{mrcsupplymap}.
 \end{docMrcKey}
 
@@ -193,30 +193,30 @@ accompanying Python script. The technical background is documented in
   \begin{itemize}
   \item\docValue{reference}: \flqq map with reference position\frqq\\
     The map is constructed from a given reference position
-    \refKey{/mermap/supply/latitude},\\
-    \refKey{/mermap/supply/longitude},\\
-    a zoom level \refKey{/mermap/supply/zoom},\\
+    \refKey{mermap/supply/latitude},\\
+    \refKey{mermap/supply/longitude},\\
+    a zoom level \refKey{mermap/supply/zoom},\\
     map dimensions\\
-    \refKey{/mermap/supply/width},\\
-    \refKey{/mermap/supply/height},\\
-    and alignment \refKey{/mermap/supply/align}.
+    \refKey{mermap/supply/width},\\
+    \refKey{mermap/supply/height},\\
+    and alignment \refKey{mermap/supply/align}.
   \item\docValue{areafit}: \flqq map fitting an area\frqq\\
     The map is constructed from a given area boundaries\\
-    \refKey{/mermap/supply/west},\\
-    \refKey{/mermap/supply/east},\\
-    \refKey{/mermap/supply/north},\\
-    \refKey{/mermap/supply/south},\\
+    \refKey{mermap/supply/west},\\
+    \refKey{mermap/supply/east},\\
+    \refKey{mermap/supply/north},\\
+    \refKey{mermap/supply/south},\\
     map dimensions\\
-    \refKey{/mermap/supply/width},\\
-    \refKey{/mermap/supply/height},\\
-    and alignment \refKey{/mermap/supply/align}.
+    \refKey{mermap/supply/width},\\
+    \refKey{mermap/supply/height},\\
+    and alignment \refKey{mermap/supply/align}.
   \item\docValue{boundaries}: \flqq map with boundaries\frqq\\
     The map is constructed from given boundaries\\
-    \refKey{/mermap/supply/west},\\
-    \refKey{/mermap/supply/east},\\
-    \refKey{/mermap/supply/north},\\
-    \refKey{/mermap/supply/south},\\
-    and zoom level \refKey{/mermap/supply/zoom}.
+    \refKey{mermap/supply/west},\\
+    \refKey{mermap/supply/east},\\
+    \refKey{mermap/supply/north},\\
+    \refKey{mermap/supply/south},\\
+    and zoom level \refKey{mermap/supply/zoom}.
   \end{itemize}
 \end{docMrcKey}
 
@@ -229,25 +229,25 @@ accompanying Python script. The technical background is documented in
 
 \begin{docMrcKey}[supply]{north}{=\meta{setup north latitude}}{no default, initially |50|}
   Northern latitude degree, possibly negative for the southern hemisphere,
-  lower than $90$ but always larger than \refKey{/mermap/supply/south}.
+  lower than $90$ but always larger than \refKey{mermap/supply/south}.
   Used for map types \docValue{boundaries} and \docValue{areafit}.
 \end{docMrcKey}
 
 \begin{docMrcKey}[supply]{south}{=\meta{setup south latitude}}{no default, initially |48|}
   Southern latitude degree, possibly negative for the southern hemisphere,
-  larger than $-90$ but always lower than \refKey{/mermap/supply/north}.
+  larger than $-90$ but always lower than \refKey{mermap/supply/north}.
   Used for map types \docValue{boundaries} and \docValue{areafit}.
 \end{docMrcKey}
 
 \begin{docMrcKey}[supply]{west}{=\meta{setup west longitude}}{no default, initially |11|}
   Western longitude degree, possibly negative for the western hemisphere,
-  possibly shifted periodically, but always lower than \refKey{/mermap/supply/east}.
+  possibly shifted periodically, but always lower than \refKey{mermap/supply/east}.
   Used for map types \docValue{boundaries} and \docValue{areafit}.
 \end{docMrcKey}
 
 \begin{docMrcKey}[supply]{east}{=\meta{setup east longitude}}{no default, initially |13|}
   Eastern longitude degree, possibly negative for the western hemisphere,
-  possibly shifted periodically, but always larger than \refKey{/mermap/supply/west}.
+  possibly shifted periodically, but always larger than \refKey{mermap/supply/west}.
   Used for map types \docValue{boundaries} and \docValue{areafit}.
 \end{docMrcKey}
 
@@ -262,19 +262,19 @@ accompanying Python script. The technical background is documented in
   { doc name = add area },
 }
   Sets
-  \refKey{/mermap/supply/north}, \refKey{/mermap/supply/south},
-  \refKey{/mermap/supply/west}, \refKey{/mermap/supply/east}
+  \refKey{mermap/supply/north}, \refKey{mermap/supply/south},
+  \refKey{mermap/supply/west}, \refKey{mermap/supply/east}
   according to the given \meta{comma separated list of named positions}, i.e.
   the described area contains all these positions.\\
-  \refKey{/mermap/supply/area} resets the current area which requires
+  \refKey{mermap/supply/area} resets the current area which requires
   at least two points inside the list.\\
-  \refKey{/mermap/supply/add area} does not reset the current area,
+  \refKey{mermap/supply/add area} does not reset the current area,
   i.e. the positions are added to the
   current area which possibly grows to fit all positions.\\
   Also note to take special care, if the international dateline is on your
   resulting map, see \Fullref{sec:dateline}.
   Used for map types \docValue{boundaries} and \docValue{areafit}
-  or in combination with \refKey{/mermap/supply/area to reference} also
+  or in combination with \refKey{mermap/supply/area to reference} also
   for for map type \docValue{reference}.
 \end{docMrcKeys}
 
@@ -290,19 +290,19 @@ accompanying Python script. The technical background is documented in
   { doc name = add area from marker input },
 }
   Sets
-  \refKey{/mermap/supply/north}, \refKey{/mermap/supply/south},
-  \refKey{/mermap/supply/west}, \refKey{/mermap/supply/east}
+  \refKey{mermap/supply/north}, \refKey{mermap/supply/south},
+  \refKey{mermap/supply/west}, \refKey{mermap/supply/east}
   according to the given \refCom{mrcmarker} positions contained in a
   file with the given \meta{file name}.\\
-  \refKey{/mermap/supply/area from marker input} resets the current area which requires
+  \refKey{mermap/supply/area from marker input} resets the current area which requires
   at least two marker positions inside the file.\\
-  \refKey{/mermap/supply/add area from marker input} does not reset the current area,
+  \refKey{mermap/supply/add area from marker input} does not reset the current area,
   i.e. the positions are added to the
   current area which possibly grows to fit all positions.\\
   Also note to take special care, if the international dateline is on your
   resulting map, see \Fullref{sec:dateline}.
   Used for map types \docValue{boundaries} and \docValue{areafit}
-  or in combination with \refKey{/mermap/supply/area to reference} also
+  or in combination with \refKey{mermap/supply/area to reference} also
   for for map type \docValue{reference}.
 \end{docMrcKeys}
 
@@ -310,10 +310,10 @@ accompanying Python script. The technical background is documented in
 
 \begin{docMrcKey}[supply]{area to reference}{}{no value, initially unset}
   The map settings
-  \refKey{/mermap/supply/north}, \refKey{/mermap/supply/south},
-  \refKey{/mermap/supply/west}, \refKey{/mermap/supply/east}
+  \refKey{mermap/supply/north}, \refKey{mermap/supply/south},
+  \refKey{mermap/supply/west}, \refKey{mermap/supply/east}
   are taken to compute the map center. This center position is saved
-  to \refKey{/mermap/supply/latitude} and \refKey{/mermap/supply/longitude}.
+  to \refKey{mermap/supply/latitude} and \refKey{mermap/supply/longitude}.
   Used for map type \docValue{reference}.
 \end{docMrcKey}
 
@@ -352,8 +352,8 @@ accompanying Python script. The technical background is documented in
 
 \begin{docMrcKey}[supply]{tex width}{=\meta{width}}{style, no default}
   Width of the map as \TeX\ dimension.
-  This is a style to compute \refKey{/mermap/supply/width} according to
-  the current \refKey{/mermap/tile size}.
+  This is a style to compute \refKey{mermap/supply/width} according to
+  the current \refKey{mermap/tile size}.
 \end{docMrcKey}
 
 \begin{docMrcKey}[supply]{height}{=\meta{setup height in tiles}}{no default, initially |4|}
@@ -363,8 +363,8 @@ accompanying Python script. The technical background is documented in
 
 \begin{docMrcKey}[supply]{tex height}{=\meta{width}}{style, no default}
   Height of the map as \TeX\ dimension.
-  This is a style to compute \refKey{/mermap/supply/height} according to
-  the current \refKey{/mermap/tile size}.
+  This is a style to compute \refKey{mermap/supply/height} according to
+  the current \refKey{mermap/tile size}.
 \end{docMrcKey}
 
 \begin{docMrcKey}[supply]{align}{=\meta{setup alignment}}{no default, initially |center|}
@@ -379,12 +379,12 @@ accompanying Python script. The technical background is documented in
   \begin{itemize}
   \item\docValue{none}: No tiles are downloaded and no merged map is generated, just map computation.
     This is the fastest method and needs no tile supplier.
-  \item\docValue{tiles}: Download map tiles from a tile map service (TMS) \refKey{/mermap/supply/url}.
+  \item\docValue{tiles}: Download map tiles from a tile map service (TMS) \refKey{mermap/supply/url}.
     Compilation of a document with map tile takes longer than compilation
     with a merged map and transparency should not be used with tiles,
     but the resulting document is smaller than a document with merged maps.
   \item\docValue{mergedmap}: Download map tiles from a tile map service (TMS)
-    \refKey{/mermap/supply/url} and merge them into a single map picture.
+    \refKey{mermap/supply/url} and merge them into a single map picture.
     This speeds compilation and allows transparency effects, but
     the resulting document is possibly larger than a document with map tiles,
     because map tiles often are optimized 8-bit image files while the merged
@@ -394,7 +394,7 @@ accompanying Python script. The technical background is documented in
     may differ (shift/size) from the more accurate tile representation by
     one pixel.
   \item\docValue{wmsmap}: Download a single map from a web map service (WMS)
-    \refKey{/mermap/supply/url}. Internally, the package treats a WMS like
+    \refKey{mermap/supply/url}. Internally, the package treats a WMS like
     a tile map service including all tile calculations. Actually, a single
     file is downloaded.
   \end{itemize}
@@ -404,7 +404,7 @@ accompanying Python script. The technical background is documented in
 
 \begin{docMrcKey}[][doc new=2020-08-06]{fail on missing resource}{\colOpt{=true\textbar false}}{default |true|, initially |true|}
   If set to |true|, compilation stops with an error, if
-  \refKey{/mermap/supply/target} and \refKey{/mermap/mapdef/resource} are different.
+  \refKey{mermap/supply/target} and \refKey{mermap/mapdef/resource} are different.
   Typically, this means that something went wrong while trying to download
   map tiles. Set this option temporarily to |false|,
   if the map tile service or the internet
@@ -427,7 +427,7 @@ accompanying Python script. The technical background is documented in
 
 
 \begin{docMrcKey}[supply]{url with api key}{=\marg{prefix}\marg{name}\marg{postfix}}{no default}
-  This is an alternative version of \refKey{/mermap/supply/url}.
+  This is an alternative version of \refKey{mermap/supply/url}.
   The URL is constructed from some fixed \meta{prefix} and \meta{postfix} with
   an API key in between. The API key is retrieved by \meta{name} from a
   repository filled by \refCom{mrcsetapikey}.
@@ -442,7 +442,7 @@ accompanying Python script. The technical background is documented in
   Stores an API key \meta{value} for access with the given \meta{name}.
   Typically, \meta{value} is a received ID from a map tile service provider
   after personal registration. \meta{name} is a placeholder which is used
-  inside \refKey{/mermap/supply/url with api key} to mark the insertion
+  inside \refKey{mermap/supply/url with api key} to mark the insertion
   point for the API key.
   \begin{dispListing}
     \mrcsetapikey{myservice}{....K942XY....}
@@ -454,7 +454,7 @@ accompanying Python script. The technical background is documented in
 \begin{docMrcKey}[supply]{attribution}{=\meta{attribution text}}{no default, initially empty}
   Attribution text for the map source. Typically, it acknowledges the copyright
   of the map data provider. It may contain hyperlinks.
-  It is used to set up \refKey{/mermap/mapdef/attribution} afterwards
+  It is used to set up \refKey{mermap/mapdef/attribution} afterwards
   and it is accessible as \docAuxCommand{mrcmapattribution} (use read-only).\par
   For technical reasons, do not use \verb+"+. \docAuxCommand{mrcumlaut}
   may be used for masking umlauts, e.g. use \verb+\mrcumlaut{u}+ instead of
@@ -463,9 +463,9 @@ accompanying Python script. The technical background is documented in
 
 \begin{docMrcKey}[supply]{attribution print}{=\meta{attribution text}}{no default, initially empty}
   Attribution text for the map source.
-  In contrast to \refKey{/mermap/supply/attribution} it is intended for media
+  In contrast to \refKey{mermap/supply/attribution} it is intended for media
   that does not support hyperlinks like printed posters, books, etc.
-  It is used to set up \refKey{/mermap/mapdef/attribution print} afterwards
+  It is used to set up \refKey{mermap/mapdef/attribution print} afterwards
   and it is accessible as \docAuxCommand{mrcmapattributionprint} (use read-only).
 \end{docMrcKey}
 
@@ -477,10 +477,10 @@ accompanying Python script. The technical background is documented in
 
 \clearpage
 \begin{docMrcKey}[supply]{flex reference scale}{=\meta{scale denominator}}{no default}
-  With the given \meta{scale denominator}, an appropriate \refKey{/mermap/supply/zoom}
-  and \refKey{/mermap/tile size} is computed. Note that
+  With the given \meta{scale denominator}, an appropriate \refKey{mermap/supply/zoom}
+  and \refKey{mermap/tile size} is computed. Note that
   the \meta{scale denominator}
-  always applies to the current \refKey{/mermap/supply/latitude}
+  always applies to the current \refKey{mermap/supply/latitude}
   and is used for map type \docValue{boundaries} and \docValue{reference}.
   For example, if the reference point is on the north side of the map,
   also the \meta{scale denominator}
@@ -489,16 +489,16 @@ accompanying Python script. The technical background is documented in
   Note to take special care to the order of the options.
   \begin{itemize}
   \item The reference point has to be set \emph{before}
-    \refKey{/mermap/supply/flex reference scale}, e.g. by
-    \refKey{/mermap/supply/latitude}, \refKey{/mermap/supply/position},
-    \refKey{/mermap/supply/named position}.
-  \item \refKey{/mermap/supply/tex height}, \refKey{/mermap/supply/tex width}
+    \refKey{mermap/supply/flex reference scale}, e.g. by
+    \refKey{mermap/supply/latitude}, \refKey{mermap/supply/position},
+    \refKey{mermap/supply/named position}.
+  \item \refKey{mermap/supply/tex height}, \refKey{mermap/supply/tex width}
     (only for map type \docValue{reference})
-    have to be set \emph{after} \refKey{/mermap/supply/flex reference scale},
-    because the \refKey{/mermap/tile size} is adapted.
+    have to be set \emph{after} \refKey{mermap/supply/flex reference scale},
+    because the \refKey{mermap/tile size} is adapted.
   \end{itemize}
-  Also see \refKey{/mermap/flex tile size}, \refKey{/mermap/flex zoom},
-  and \refKey{/mermap/flex scale}.
+  Also see \refKey{mermap/flex tile size}, \refKey{mermap/flex zoom},
+  and \refKey{mermap/flex scale}.
 \tikzsetnextfilename{maptiles_flex_reference_scale}%
 \begin{dispExample}
 \begin{tikzpicture}
@@ -519,17 +519,17 @@ accompanying Python script. The technical background is documented in
 
 
 \begin{docMrcKey}[supply]{flex area scale}{=\meta{scale denominator}}{no default}
-  This is a shortcut for setting \refKey{/mermap/supply/area to reference}
-  and \refKey{/mermap/supply/flex reference scale}=\meta{scale denominator}.
+  This is a shortcut for setting \refKey{mermap/supply/area to reference}
+  and \refKey{mermap/supply/flex reference scale}=\meta{scale denominator}.
   Used for map type \docValue{boundaries} and \docValue{reference}.
 
   Note to take special care to the order of the options.
   \begin{itemize}
   \item The reference point has to be set \emph{before}
-    \refKey{/mermap/supply/flex area scale}.
-  \item \refKey{/mermap/supply/tex height}, \refKey{/mermap/supply/tex width}
+    \refKey{mermap/supply/flex area scale}.
+  \item \refKey{mermap/supply/tex height}, \refKey{mermap/supply/tex width}
     (only for map type \docValue{reference})
-    have to be set \emph{after} \refKey{/mermap/supply/flex reference scale}.
+    have to be set \emph{after} \refKey{mermap/supply/flex reference scale}.
   \end{itemize}
 \end{docMrcKey}
 
@@ -538,13 +538,13 @@ accompanying Python script. The technical background is documented in
 \begin{docMrcKey}[supply]{flex area fit}{\colOpt{=\meta{size}}}{default |0pt|}
   This key can be used for map type \docValue{areafit} as \emph{final}
   option \emph{after} all other options.
-  It applies a fine tuning to \refKey{/mermap/tile size},
-  \refKey{/mermap/supply/width}, and \refKey{/mermap/supply/height} such
+  It applies a fine tuning to \refKey{mermap/tile size},
+  \refKey{mermap/supply/width}, and \refKey{mermap/supply/height} such
   that the defined area fits exactly into the map region.
   If a \meta{size} is specified, width and height are reduced for the
   calculation by this \meta{size}, e.g. \meta{size}|=1cm| ensures a
   border of |5mm| on each side.
-  Also see \refKey{/mermap/flex tile size} and \refKey{/mermap/flex zoom}.
+  Also see \refKey{mermap/flex tile size} and \refKey{mermap/flex zoom}.
 
 \tikzsetnextfilename{maptiles_flex_area_fit}%
 \begin{dispExample}
@@ -580,24 +580,24 @@ accompanying Python script. The technical background is documented in
 
 
 \begin{docMrcKey}[supply]{dpi}{=\meta{dpi value}}{style, no default}
-  This style sets \refKey{/mermap/supply/pixel} such that the given \meta{dpi value}
+  This style sets \refKey{mermap/supply/pixel} such that the given \meta{dpi value}
   is resulting (approximately).
   \begin{itemize}
   \item Note that this only applies for WMS Servers and not for
     TMS (Tile Map Service) Servers,
-    because there \refKey{/mermap/supply/pixel} is a fixed number depending on
+    because there \refKey{mermap/supply/pixel} is a fixed number depending on
     Server settings and cannot be chosen arbitrarily.
   \item A high \meta{dpi value} results in large downloaded map files.
     If the server does not provide a high resolution map, you will get
     unnecessary large files with blurred content.
   \item The \meta{dpi value} for TMS data can be changed by adapting
-    \refKey{/mermap/tile size} or \refKey{/mermap/flex tile size}.
+    \refKey{mermap/tile size} or \refKey{mermap/flex tile size}.
   \end{itemize}
 
 \tikzsetnextfilename{maptiles_dpi_value}
 \begin{dispExample}
 \begin{tikzpicture}
-  \mrcmap[type=reference,latitude=48.14,longitude=11.57,
+ \mrcmap[type=reference,latitude=48.14,longitude=11.57,
     flex reference scale=250000,
     source=topplusopen p250, target=wmsmap, dpi=300,
     tex width=\linewidth,tex height=5cm]{dpi_value}
@@ -654,7 +654,7 @@ map data is free for everyone to use.
 \textbf{But, map tile servers based on OpenStreetMap are not necessarily free}.
 
 A list of online raster tile servers based on OpenStreetMap data is found here:\\
-\url{https://wiki.openstreetmap.org/wiki/Tile_servers}
+\url{https://wiki.openstreetmap.org/wiki/Raster_tile_providers}
 
 \begin{itemize}
 \item\bfseries I do not run a map tile server.
@@ -681,8 +681,8 @@ want to add more to avoid any legal uncertainties.
 
 \medskip
 \begin{docMrcKey}[supply]{source}{=\meta{source}}{style, no default}
-  This style sets \refKey{/mermap/supply/url}, \refKey{/mermap/supply/attribution},\\
-  \refKey{/mermap/supply/attribution print} and \refKey{/mermap/supply/basename}.\\
+  This style sets \refKey{mermap/supply/url}, \refKey{mermap/supply/attribution},\\
+  \refKey{mermap/supply/attribution print} and \refKey{mermap/supply/basename}.\\
   Feasible values for \meta{source} are:
   %\mermapset{tile size=3.2512cm}
   \newcommand{\mapexample}[3][]{%
@@ -690,10 +690,10 @@ want to add more to avoid any legal uncertainties.
     \mermapset{supply/source=#2}%
     \begin{itemize}
     \item Required attribution (\docAuxCommand{mrcmapattribution}):
-      \begin{tcolorbox}[sharp corners,size=fbox,colback=yellow!8,colframe=yellow!80!gray,halign=flush left]
+      \begin{tcolorbox}[sharp corners,size=fbox,colback=yellow!8,colframe=yellow!80!gray,halign=flush left,before skip=2pt]
         \mrcmapattribution\end{tcolorbox}
     \item Required attribution for media without hyperlinks (\docAuxCommand{mrcmapattributionprint}):
-      \begin{tcolorbox}[sharp corners,size=fbox,colback=yellow!8,colframe=yellow!80!gray,halign=flush left]
+      \begin{tcolorbox}[sharp corners,size=fbox,colback=yellow!8,colframe=yellow!80!gray,halign=flush left,before skip=2pt]
         \mrcmapattributionprint\end{tcolorbox}
     %\par\smallskip\
     \end{itemize}
@@ -713,71 +713,13 @@ want to add more to avoid any legal uncertainties.
     Dummy tile server at loopback |127.0.0.1| for test purposes.
 
   \item\docValue{opentopomap}:\\
-    Tile server (TMS) of \href{http://opentopomap.org/}{OpenTopoMap}.
+    Tile server (TMS) of \href{https://opentopomap.org/}{OpenTopoMap}.
     \begin{itemize}
     \item Usage (German language): \url{https://opentopomap.org/about#verwendung}
     \end{itemize}
     \mapexample{opentopomap}{opentopomap}
 
 \clearpage
-  \item\docValue{stamen terrain}:\\
-    Tile server of \href{http://stamen.com}{Stamen Design}.\\
-    Usage: \url{http://maps.stamen.com/#terrain}
-    \mapexample{stamen terrain}{stamen_terrain}
-
-  \item\docValue{stamen terrain-background}:\\
-    Tile server of \href{http://stamen.com}{Stamen Design}.\\
-    Usage: \url{http://maps.stamen.com/#terrain-background}
-    \mapexample{stamen terrain-background}{stamen_terrain-background}
-
-  \item\docValue{stamen terrain-labels}:\\
-    Tile server of \href{http://stamen.com}{Stamen Design}.\\
-    Usage: \url{http://maps.stamen.com/#terrain-labels}
-    \mapexample{stamen terrain-labels}{stamen_terrain-labels}
-
-\clearpage
-  \item\docValue{stamen terrain-lines}:\\
-    Tile server of \href{http://stamen.com}{Stamen Design}.\\
-    Usage: \url{http://maps.stamen.com/#terrain-lines}
-    \mapexample{stamen terrain-lines}{stamen_terrain-lines}
-
-  \item\docValue{stamen toner}:\\
-    Tile server of \href{http://stamen.com}{Stamen Design}.\\
-    Usage: \url{http://maps.stamen.com/#toner}
-    \mapexample{stamen toner}{stamen_toner}
-
-  \item\docValue{stamen toner-lite}:\\
-    Tile server of \href{http://stamen.com}{Stamen Design}.\\
-    Usage: \url{http://maps.stamen.com/#toner-lite}
-    \mapexample{stamen toner-lite}{stamen_toner-lite}
-
-\clearpage
-  \item\docValue{stamen toner-hybrid}:\\
-    Tile server of \href{http://stamen.com}{Stamen Design}.\\
-    Usage: \url{http://maps.stamen.com/#toner-hybrid}
-    \mapexample{stamen toner-hybrid}{stamen_toner-hybrid}
-
-  \item\docValue{stamen toner-background}:\\
-    Tile server of \href{http://stamen.com}{Stamen Design}.\\
-    Usage: \url{http://maps.stamen.com/#toner-background}
-    \mapexample{stamen toner-background}{stamen_toner-background}
-
-  \item\docValue{stamen toner-labels}:\\
-    Tile server of \href{http://stamen.com}{Stamen Design}.\\
-    Usage: \url{http://maps.stamen.com/#toner-labels}
-    \mapexample{stamen toner-labels}{stamen_toner-labels}
-
-\clearpage
-  \item\docValue{stamen toner-lines}:\\
-    Tile server of \href{http://stamen.com}{Stamen Design}.\\
-    Usage: \url{http://maps.stamen.com/#toner-lines}
-    \mapexample{stamen toner-lines}{stamen_toner-lines}
-
-  \item\docValue{stamen watercolor}:\\
-    Tile server of \href{http://stamen.com}{Stamen Design}.\\
-    Usage: \url{http://maps.stamen.com/#watercolor}
-    \mapexample{stamen watercolor}{stamen_watercolor}
-
   \item\docValue{thunderforest opencyclemap}:\\
     Tile server of \href{https://www.thunderforest.com}{Thunderforest}.\\
     A registered \meta{api-key} is needed (free plan available)
@@ -789,7 +731,6 @@ want to add more to avoid any legal uncertainties.
     \end{itemize}
     \mapexample{thunderforest opencyclemap}{thunderforest_opencyclemap}
 
-\clearpage
   \item\docValue{thunderforest transport}:\\
     Tile server of \href{https://www.thunderforest.com}{Thunderforest}.\\
     A registered \meta{api-key} is needed (free plan available)
@@ -812,6 +753,7 @@ want to add more to avoid any legal uncertainties.
     \end{itemize}
     \mapexample{thunderforest landscape}{thunderforest_landscape}
 
+\clearpage
   \item\docValue{thunderforest outdoors}:\\
     Tile server of \href{https://www.thunderforest.com}{Thunderforest}.\\
     A registered \meta{api-key} is needed (free plan available)
@@ -823,7 +765,17 @@ want to add more to avoid any legal uncertainties.
     \end{itemize}
     \mapexample{thunderforest outdoors}{thunderforest_outdoors}
 
-\clearpage
+  \item\docValue{thunderforest atlas}:\tcbdocmarginnote{\tcbdocnew{2024-07-29}}\\
+    Tile server of \href{https://www.thunderforest.com}{Thunderforest}.\\
+    A registered \meta{api-key} is needed (free plan available)
+    which is applied by\\
+    \refCom{mrcsetapikey}\brackets{\docValue{thunderforest}}\marg{api-key}.
+    \begin{itemize}
+    \item Usage: \url{https://www.thunderforest.com/terms}
+    \item API documentation: \url{https://www.thunderforest.com/maps/atlas}
+    \end{itemize}
+    \mapexample{thunderforest atlas}{thunderforest_atlas}
+
   \item\docValue{thunderforest transport-dark}:\\
     Tile server of \href{https://www.thunderforest.com}{Thunderforest}.\\
     A registered \meta{api-key} is needed (free plan available)
@@ -835,6 +787,7 @@ want to add more to avoid any legal uncertainties.
     \end{itemize}
     \mapexample{thunderforest transport-dark}{thunderforest_transport-dark}
 
+\clearpage
   \item\docValue{thunderforest spinal-map}:\\
     Tile server of \href{https://www.thunderforest.com}{Thunderforest}.\\
     A registered \meta{api-key} is needed (free plan available)
@@ -857,7 +810,6 @@ want to add more to avoid any legal uncertainties.
     \end{itemize}
     \mapexample{thunderforest pioneer}{thunderforest_pioneer}
 
-\clearpage
   \item\docValue{thunderforest mobile-atlas}:\\
     Tile server of \href{https://www.thunderforest.com}{Thunderforest}.\\
     A registered \meta{api-key} is needed (free plan available)
@@ -869,6 +821,7 @@ want to add more to avoid any legal uncertainties.
     \end{itemize}
     \mapexample{thunderforest mobile-atlas}{thunderforest_mobile-atlas}
 
+\clearpage
   \item\docValue{thunderforest neighbourhood}:\\
     Tile server of \href{https://www.thunderforest.com}{Thunderforest}.\\
     A registered \meta{api-key} is needed (free plan available)
@@ -880,31 +833,49 @@ want to add more to avoid any legal uncertainties.
     \end{itemize}
     \mapexample{thunderforest neighbourhood}{thunderforest_neighbourhood}
 
-\clearpage
   \item\docValue{topplusopen web}:\\
-    Tile server (TMS) of \href{http://www.bkg.bund.de}{Bundesamt f\"{u}r Kartographie und Geod\"{a}sie}.
+    Tile server (TMS) of \href{https://www.bkg.bund.de}{Bundesamt f\"{u}r Kartographie und Geod\"{a}sie}.
     \begin{itemize}
     \item Covers world / Europe / Germany depending on zoom level
-    \item Usage (German language): \url{https://gdz.bkg.bund.de/index.php/default/webdienste/topplus-produkte/wmts-topplusopen-wmts-topplus-open.html}
+    \item Usage (German language): \url{https://gdz.bkg.bund.de/index.php/default/digitale-geodaten/topplusopen-produkte.html}
     \end{itemize}
     \mapexample{topplusopen web}{topplusopen_web}
 
   \item\docValue{topplusopen web grau}:\\
-    Tile server (TMS) of \href{http://www.bkg.bund.de}{Bundesamt f\"{u}r Kartographie und Geod\"{a}sie}.
+    Tile server (TMS) of \href{https://www.bkg.bund.de}{Bundesamt f\"{u}r Kartographie und Geod\"{a}sie}.
     \begin{itemize}
     \item Covers world / Europe / Germany depending on zoom level
-    \item Usage (German language): \url{https://gdz.bkg.bund.de/index.php/default/webdienste/topplus-produkte/wmts-topplusopen-wmts-topplus-open.html}
+    \item Usage (German language): \url{https://gdz.bkg.bund.de/index.php/default/digitale-geodaten/topplusopen-produkte.html}
     \end{itemize}
     \mapexample{topplusopen web grau}{topplusopen_web_grau}
 
+\clearpage
+  \item\docValue{topplusopen web light}:\tcbdocmarginnote{\tcbdocnew{2024-07-29}}\\
+    Tile server (TMS) of \href{https://www.bkg.bund.de}{Bundesamt f\"{u}r Kartographie und Geod\"{a}sie}.
+    \begin{itemize}
+    \item Covers world / Europe / Germany depending on zoom level
+    \item Usage (German language): \url{https://gdz.bkg.bund.de/index.php/default/digitale-geodaten/topplusopen-produkte.html}
+    \end{itemize}
+    \mapexample{topplusopen web light}{topplusopen_web_light}
+
+  \item\docValue{topplusopen web light grau}\tcbdocmarginnote{\tcbdocnew{2024-07-29}}:\\
+    Tile server (TMS) of \href{https://www.bkg.bund.de}{Bundesamt f\"{u}r Kartographie und Geod\"{a}sie}.
+    \begin{itemize}
+    \item Covers world / Europe / Germany depending on zoom level
+    \item Usage (German language): \url{https://gdz.bkg.bund.de/index.php/default/digitale-geodaten/topplusopen-produkte.html}
+    \end{itemize}
+    \mapexample{topplusopen web light grau}{topplusopen_web_light_grau}
+
 \end{itemize}
 
-\clearpage
+
+\vfill
 \begin{tcolorbox}[spartan,colback=white]
 The following sources are Web map server (WMS). Therefore,
-\refKey{/mermap/supply/target} can only be set to \docValue{wmsmap}
+\refKey{mermap/supply/target} can only be set to \docValue{wmsmap}
 or \docValue{none}.
 \end{tcolorbox}
+\clearpage
 
 \begingroup
 \ExplSyntaxOn
@@ -928,19 +899,19 @@ or \docValue{none}.
 {
 \cleanstep
   \item\docValue{topplusopen \name}:\\
-    Web map server (WMS) of \href{http://www.bkg.bund.de}{Bundesamt f\"{u}r Kartographie und Geod\"{a}sie}.
+    Web map server (WMS) of \href{https://www.bkg.bund.de}{Bundesamt f\"{u}r Kartographie und Geod\"{a}sie}.
     \begin{itemize}
     \item 1:\scdenom, covers Europe / Germany depending on zoom level
-    \item Usage (German language): \url{https://gdz.bkg.bund.de/index.php/default/webdienste/topplus-produkte/wmts-topplusopen-wmts-topplus-open.html}
+    \item Usage (German language): \url{https://gdz.bkg.bund.de/index.php/default/digitale-geodaten/topplusopen-produkte.html}
     \end{itemize}
     \mapexample[target=wmsmap]{topplusopen \name}{topplusopen_\name}
 
 \cleanstep
   \item\docValue{topplusopen \name\ grau}:\\
-    Web map server (WMS) of \href{http://www.bkg.bund.de}{Bundesamt f\"{u}r Kartographie und Geod\"{a}sie}.
+    Web map server (WMS) of \href{https://www.bkg.bund.de}{Bundesamt f\"{u}r Kartographie und Geod\"{a}sie}.
     \begin{itemize}
     \item 1:\scdenom, covers Europe / Germany depending on zoom level
-    \item Usage (German language): \url{https://gdz.bkg.bund.de/index.php/default/webdienste/topplus-produkte/wmts-topplusopen-wmts-topplus-open.html}
+    \item Usage (German language): \url{https://gdz.bkg.bund.de/index.php/default/digitale-geodaten/topplusopen-produkte.html}
     \end{itemize}
     \def\grau{ grau}%
     \mapexample[target=wmsmap]{topplusopen \name\grau}{topplusopen_\name_grau}
@@ -954,16 +925,16 @@ or \docValue{none}.
 
 
 \begin{docCommand}{mrcnewsupplysource}{\marg{source}\marg{options}}
-  Adds a new \meta{source} value to \refKey{/mermap/supply/source}.
+  Adds a new \meta{source} value to \refKey{mermap/supply/source}.
   The \meta{options} should set the keys
-  \refKey{/mermap/supply/url}, \refKey{/mermap/supply/attribution},\\
-  \refKey{/mermap/supply/attribution print} and \refKey{/mermap/supply/basename}.
+  \refKey{mermap/supply/url}, \refKey{mermap/supply/attribution},\\
+  \refKey{mermap/supply/attribution print} and \refKey{mermap/supply/basename}.
   It is recommend to use |x ...| for \meta{source} to avoid conflicts
-  with future official additions to \refKey{/mermap/supply/source}.
+  with future official additions to \refKey{mermap/supply/source}.
   \begin{dispListing}
   \mrcnewsupplysource{x example}
   {
-    url               = http://127.0.0.1/dummy/{z}/{x}/{y}.png,
+    url               = https://127.0.0.1/dummy/{z}/{x}/{y}.png,
     attribution       = {Dummy tile server},
     attribution print = {Dummy tile server},
     basename          = tiles/dummy,

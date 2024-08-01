@@ -2,11 +2,11 @@
 % !TeX encoding=UTF-8
 % !TeX spellcheck=en_US
 %%
-%% The LaTeX package mercatormap - version 1.02 (2020/08/06)
+%% The LaTeX package mercatormap - version 1.1.0 (2024/08/01)
 %% mercatormap.tex: Manual
 %%
 %% -------------------------------------------------------------------------------------------
-%% Copyright (c) 2020 by Prof. Dr. Dr. Thomas F. Sturm <thomas dot sturm at unibw dot de>
+%% Copyright (c) 2020-2024 by Prof. Dr. Dr. Thomas F. Sturm <thomas dot sturm at unibw dot de>
 %% -------------------------------------------------------------------------------------------
 %%
 %% This work may be distributed and/or modified under the
@@ -32,8 +32,8 @@
 % The following personal API-keys are needed for compilation
 % \mrcsetapikey{thunderforest}{YOUR-API-KEY}     % registered key
 
-\def\version{1.02}%
-\def\datum{2020/08/06}%
+\def\version{1.1.0}%
+\def\datum{2024/08/01}%
 
 \mrcactivatescript% activates Python script
 
@@ -54,9 +54,14 @@
 \tikzexternaldisable% for final version
 \tcbset{shield externalize}
 
-\nocite{Sturm:2020,package:tikz,package:xparse,package:siunitx,package:expl3}
+\nocite{Sturm:2020,package:tikz,package:siunitx}
 
-\pdfsuppresswarningpagegroup=1
+\ExplSyntaxOn
+\cs_if_exist:NT \pdfsuppresswarningpagegroup
+  {
+    \pdfsuppresswarningpagegroup=1
+  }
+\ExplSyntaxOff
 
 %\includeonly{mercatormap.doc.intro}
 %\includeonly{mercatormap.doc.examples}
@@ -67,8 +72,8 @@
 %\includeonly{mercatormap.doc.marker}
 %\includeonly{mercatormap.doc.routes}
 %\includeonly{mercatormap.doc.orthodromes}
+%\includeonly{mercatormap.doc.animations}
 %\includeonly{mercatormap.doc.limitations}
-%\includeonly{mercatormap.doc.versionhistory}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
@@ -83,8 +88,8 @@
 \include{mercatormap.doc.marker}
 \include{mercatormap.doc.routes}
 \include{mercatormap.doc.orthodromes}
+\include{mercatormap.doc.animations}
 \include{mercatormap.doc.limitations}
-\include{mercatormap.doc.versionhistory}
 
 \clearpage
 \phantomsection

@@ -4,10 +4,9 @@
 \renewcommand*\l@subsubsection{\@dottedtocline{3}{4.2em}{3.2em}}
 
 \RequirePackage[T1]{fontenc}
-\RequirePackage[utf8]{inputenc}
 \RequirePackage[english]{babel}
 \RequirePackage{lmodern,parskip,array}
-\RequirePackage[svgnames,table,hyperref]{xcolor}
+\RequirePackage[svgnames,table]{xcolor}
 \RequirePackage{tikz}
 \RequirePackage{varioref}
 \RequirePackage[makeindex]{imakeidx}
@@ -31,10 +30,10 @@
 \RequirePackage{array,tabularx,booktabs}
 \RequirePackage{lipsum}
 \RequirePackage[extendedchars,encoding,filenameencoding=utf-8]{grffile}
-\RequirePackage{siunitx,xfp}
+\RequirePackage{xfp}
 
 \RequirePackage{tcolorbox}
-\tcbuselibrary{skins,xparse,minted,breakable,documentation,raster}
+\tcbuselibrary{skins,minted,breakable,documentation,raster}
 
 \providecommand\mrcpkgprefix{}
 \RequirePackage{\mrcpkgprefix mercatormap}
@@ -96,8 +95,8 @@
   borderline horizontal={0.3mm}{0pt}{red!50},
   #1}{#2}
 
-\tcbmakedocSubKey{docMrcKey}{mermap}
-\tcbmakedocSubKeys{docMrcKeys}{mermap}
+\tcbmakedocSubKey[doc key prefix=]{docMrcKey}{mermap}
+\tcbmakedocSubKeys[doc key prefix=]{docMrcKeys}{mermap}
 \tcbmakedocSubKey{docTikzKey}{tikz}
 
 \def\tikzname{\textup{Ti\textit{k}Z}}

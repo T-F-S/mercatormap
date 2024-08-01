@@ -14,13 +14,13 @@ Note to do all preparations documented in \Fullref{sec:python}.
 %-------------------------------------------------------------------------------
 \subsection{Reference Position}
 
-With \refKey{/mermap/supply/type}|=|\docValue{reference} a map with a
+With \refKey{mermap/supply/type}|=|\docValue{reference} a map with a
 \emph{reference position} is constructed. Here, Munich is taken as
 reference position and center of the map. Since the position is used
 more than once, it is stored with \refCom{mrcNPdef} for further reference.
-With \refKey{/mermap/supply/flex reference scale} the scale
+With \refKey{mermap/supply/flex reference scale} the scale
 is set to 1:6\,000\,000. For the background map tiles, a
-\refKey{/mermap/supply/source} is selected for download.
+\refKey{mermap/supply/source} is selected for download.
 This setup is done by \refCom{mrcmap} while \refCom{mrcdrawmap} draws
 the downloaded map tiles.
 
@@ -84,10 +84,10 @@ the downloaded map tiles.
 %-------------------------------------------------------------------------------
 \subsection{Fitting Area}
 
-With \refKey{/mermap/supply/type}|=|\docValue{areafit} a map is constructed
+With \refKey{mermap/supply/type}|=|\docValue{areafit} a map is constructed
 where a given area is fitted in. The following example lists some
-US-American cities and constructs an \refKey{/mermap/supply/area} which
-contains all of them. With \refKey{/mermap/supply/flex area fit}|=15mm| a
+US-American cities and constructs an \refKey{mermap/supply/area} which
+contains all of them. With \refKey{mermap/supply/flex area fit}|=15mm| a
 border region is added.
 
 
@@ -102,7 +102,7 @@ border region is added.
   \mrcNPdef{denver}{39.7372435}{-104.997378}
   \mrcmap[type=areafit,
     area={honolulu,fairbanks,sandiego,miami,boston,denver},
-    source=stamen terrain,
+    source=topplusopen web,
     tex width=15cm, tex height=11cm,
     flex area fit=15mm,
     ]{examples_fitting_area}
@@ -122,12 +122,12 @@ border region is added.
 %-------------------------------------------------------------------------------
 \subsection{Fixed Boundaries}
 
-With \refKey{/mermap/supply/type}|=|\docValue{boundaries} a map is constructed
+With \refKey{mermap/supply/type}|=|\docValue{boundaries} a map is constructed
 with fixed boundaries. In contrast to the other map types, the document
 map size cannot be given directly but derives from the map setup. This bears
 the risk of too large maps. The following example is a map with exact
 boundaries \mrcformlat{-45} to \mrcformlat{-10}
-and \mrcformlon{110} to \mrcformlon{155}. A decent \refKey{/mermap/supply/zoom}
+and \mrcformlon{110} to \mrcformlon{155}. A decent \refKey{mermap/supply/zoom}
 is 5 (every zoom step doubles the map size in each direction).
 
 \tikzsetnextfilename{examples_boundaries}%
@@ -160,7 +160,7 @@ is 5 (every zoom step doubles the map size in each direction).
 \subsection{Map Without Map Tiles}
 
 There is no coercion to use downloaded map tiles, if they are not needed or
-wanted. With \refKey{/mermap/supply/target}|=none| no map tiles are downloaded.
+wanted. With \refKey{mermap/supply/target}|=none| no map tiles are downloaded.
 The following example draws a rough polygon shape of Germany using
 \refEnv{mrcroute*}.
 
@@ -299,7 +299,7 @@ The following example draws a rough polygon shape of Germany using
 %-------------------------------------------------------------------------------
 \subsection{Alignment of the Reference Position}
 
-With \refKey{/mermap/supply/align} the reference position can be aligned
+With \refKey{mermap/supply/align} the reference position can be aligned
 at different map positions.
 
 \tikzsetnextfilename{examples_alignment}%
@@ -332,13 +332,13 @@ at different map positions.
 \subsection{Flexible Zoom}
 
 Map tiles are only provided at fixed zoom levels with natural numbers,
-but the package allows a \refKey{/mermap/flex zoom} with rational numbers.
+but the package allows a \refKey{mermap/flex zoom} with rational numbers.
 The flexible zoom is realized by combining a suitable fixed zoom with
 an adapted document tile scaling, see \Fullref{sec:flexible_tile_size}.
 The following example shows a more or less smooth zoom increase.
 The same technique is used by all options starting with |flex|, e.g.
-\refKey{/mermap/supply/flex reference scale}
-or \refKey{/mermap/supply/flex area fit}
+\refKey{mermap/supply/flex reference scale}
+or \refKey{mermap/supply/flex area fit}
 as seen in the examples before.
 
 \tikzexternaldisable

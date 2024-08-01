@@ -23,14 +23,14 @@
 \subsection{Option Setting}
 \begin{docCommand}{mermapset}{\marg{options}}
   Sets \meta{options} for all following maps inside the current \TeX\ group.
-  All options share the common prefix |/mermap/|, e.g. for setting
-  \refKey{/mermap/vicinity} use
+  All options share the common prefix |mermap/|, e.g. for setting
+  \refKey{mermap/vicinity} use
   \begin{dispListing}
     \mermapset{vicinity=3cm}
   \end{dispListing}
   Also see  \refCom{mrcdefinemap}, \refCom{mermapsetsupply},
   and \refCom{mermapsetmarker}.\par
-  Note that the options by \refCom{mermapset} are |expl3| \cite{package:expl3}
+  Note that the options by \refCom{mermapset} are |expl3| \cite{l3kernel:interfaces}
   keys while \tikzname\ \cite{package:tikz} uses its own key management.
 \end{docCommand}
 
@@ -45,7 +45,7 @@ See \Fullref{sec:automated_map} for script aided map definitions.
 \begin{docCommand}{mrcdefinemap}{\marg{options}}
   Establishes a map inside a |tikzpicture| environment following
   and applying the given \meta{options}.
-  All options share the common prefix |/mermap/mapdef/|.
+  All options share the common prefix |mermap/mapdef/|.
   After \refCom{mrcdefinemap} is applied, map drawing and map coordinates
   can be used.
   \begin{itemize}
@@ -60,25 +60,25 @@ See \Fullref{sec:automated_map} for script aided map definitions.
 
 \begin{docMrcKey}[mapdef]{north}{=\meta{map north latitude}}{no default, initially 50}
   Northern latitude degree of the visible map, possibly negative for the southern hemisphere,
-  lower than $90$ but always larger than \refKey{/mermap/mapdef/south}.
+  lower than $90$ but always larger than \refKey{mermap/mapdef/south}.
   It is accessible as \docAuxCommand{mrcmapnorth} (use read-only).
 \end{docMrcKey}
 
 \begin{docMrcKey}[mapdef]{south}{=\meta{map south latitude}}{no default, initially 48}
   Southern latitude degree of the visible map, possibly negative for the southern hemisphere,
-  larger than $-90$ but always lower than \refKey{/mermap/mapdef/north}.
+  larger than $-90$ but always lower than \refKey{mermap/mapdef/north}.
   It is accessible as \docAuxCommand{mrcmapsouth} (use read-only).
 \end{docMrcKey}
 
 \begin{docMrcKey}[mapdef]{west}{=\meta{map west longitude}}{no default, initially 11}
   Western longitude degree of the visible map, possibly negative for the western hemisphere,
-  possibly shifted periodically, but always lower than \refKey{/mermap/mapdef/east}.
+  possibly shifted periodically, but always lower than \refKey{mermap/mapdef/east}.
   It is accessible as \docAuxCommand{mrcmapwest} (use read-only).
 \end{docMrcKey}
 
 \begin{docMrcKey}[mapdef]{east}{=\meta{map east longitude}}{no default, initially 13}
   Eastern longitude degree of the visible map, possibly negative for the western hemisphere,
-  possibly shifted periodically, but always larger than \refKey{/mermap/mapdef/west}.
+  possibly shifted periodically, but always larger than \refKey{mermap/mapdef/west}.
   It is accessible as \docAuxCommand{mrcmapeast} (use read-only).
 \end{docMrcKey}
 
@@ -149,7 +149,7 @@ information.
 
 \begin{docMrcKey}[mapdef]{attribution print}{=\meta{attribution text}}{no default, initially empty}
   Attribution text for the map source.
-  In contrast to \refKey{/mermap/mapdef/attribution} it is intended for media
+  In contrast to \refKey{mermap/mapdef/attribution} it is intended for media
   that does not support hyperlinks like printed posters, books, etc.
   It is accessible as \docAuxCommand{mrcmapattributionprint} (use read-only).
 \end{docMrcKey}
@@ -166,7 +166,7 @@ information.
 \end{docMrcKey}
 
 \begin{docMrcKey}[mapdef]{tile size}{=\meta{length}}{no default, initially |32.512mm|}
-  Typically set computationally. It is identical to \refKey{/mermap/tile size}
+  Typically set computationally. It is identical to \refKey{mermap/tile size}
   which is the recommended user option for manual setup.
 \end{docMrcKey}
 
@@ -204,7 +204,7 @@ The border of the visible map is denoted by a \tikzname\ node \docNode{mrcmap}.
 
 \medskip
 The |mrc cs| coordinate system defines a map point by
-\refKey{/mermap/cs/latitude} and \refKey{/mermap/cs/longitude}
+\refKey{mermap/cs/latitude} and \refKey{mermap/cs/longitude}
 
 \begin{docMrcKey}[cs]{latitude}{=\meta{latitude}}{no default}
   Sets the \meta{latitude} of a map point.
@@ -220,7 +220,7 @@ The |mrc cs| coordinate system defines a map point by
 
 \medskip
 A map point can also be defined by shorter variants
-\refKey{/mermap/cs/lat} and \refKey{/mermap/cs/lon}
+\refKey{mermap/cs/lat} and \refKey{mermap/cs/lon}
 
 \begin{docMrcKey}[cs]{lat}{=\meta{latitude}}{no default}
   Sets the \meta{latitude} of a map point.
@@ -356,7 +356,7 @@ Very similar to \refCom{ifmrcinmap} is \refCom{ifmrcinvicinity}.
 
 \begin{docCommand}{ifmrcinvicinity}{\marg{latitude}\marg{longitude}\marg{true}\marg{false}}
   If the given \meta{latitude} and \meta{longitude} describes a point
-  inside a vicinity of the visible map, i.e. the map \emph{plus} a margin of \refKey{/mermap/vicinity},
+  inside a vicinity of the visible map, i.e. the map \emph{plus} a margin of \refKey{mermap/vicinity},
   the \meta{true} code is executed, otherwise
   the \meta{false} code.\par
   Inside the \meta{true} code a \tikzname\ coordinate \docNode{mrcpos}
