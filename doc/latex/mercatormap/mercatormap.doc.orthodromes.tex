@@ -102,15 +102,15 @@ The mathematical background and further information are found in \cite{Sturm:202
 \subsection{Orthodrome Points}
 
 \begin{docCommands}[
-    doc new     = 2024-08-01,
   ]{
     {
+      doc new and updated = {2024-08-01}{2024-08-05},
       doc name        = mrcNPfromOrthoFraction,
-      doc parameter   = \marg{name}\marg{lat1}\marg{lon1}\marg{lat2}\marg{lon2}\marg{fraction},
+      doc parameter   = \marg{name}\oarg{\textbackslash angle}\marg{lat1}\marg{lon1}\marg{lat2}\marg{lon2}\marg{fraction},
     },
     {
       doc name        = mrcNPfromOrthoFractionNamed,
-      doc parameter   = \marg{name}\marg{name1}\marg{name2}\marg{fraction},
+      doc parameter   = \marg{name}\oarg{\textbackslash angle}\marg{name1}\marg{name2}\marg{fraction},
     },
   }
   Defines a new named position \meta{name} which is located on a \meta{fraction}
@@ -121,6 +121,9 @@ The mathematical background and further information are found in \cite{Sturm:202
   latitude \meta{lat2} and longitude \meta{lon2} (or described by a named position \meta{name2}).
   The given starting and final point of the orthodrome need to have a distance of more than
   \SI{1}{\meter}.
+  If \meta{\textbackslash angle} is given, this macro is set to the
+  angle between the tangent vector to the orthodrome and
+  the current parallel circle.
 
 \tikzsetnextfilename{ortho_orthodrome3}%
 \begin{dispExample}
@@ -142,8 +145,10 @@ The mathematical background and further information are found in \cite{Sturm:202
     \mrcNPdraworthodrome[red,very thick] {munich}{newyork}
     \foreach \fraction in { 0.1,0.3,0.5,0.7,1.0,1.1 }
       {
-        \mrcNPfromOrthoFractionNamed{waypoint}{munich}{newyork}{\fraction}
-        \mrcmarker{type=pin,named position=waypoint,contents={\fraction}}
+        \mrcNPfromOrthoFractionNamed{waypoint}[\myangle]
+          {munich}{newyork}{\fraction}
+        \mrcmarker{type=pin,named position=waypoint,
+          contents={\fraction: \fpeval{round(\myangle)}\textdegree }}
       }
   \end{tikzpicture}
 \end{dispExample}
@@ -152,15 +157,15 @@ The mathematical background and further information are found in \cite{Sturm:202
 \clearpage
 
 \begin{docCommands}[
-    doc new     = 2024-08-01,
   ]{
     {
+      doc new and updated = {2024-08-01}{2024-08-05},
       doc name        = mrcNPfromOrthoDistance,
-      doc parameter   = \marg{name}\marg{lat1}\marg{lon1}\marg{lat2}\marg{lon2}\marg{distance},
+      doc parameter   = \marg{name}\oarg{\textbackslash angle}\marg{lat1}\marg{lon1}\marg{lat2}\marg{lon2}\marg{distance},
     },
     {
       doc name        = mrcNPfromOrthoDistanceNamed,
-      doc parameter   = \marg{name}\marg{name1}\marg{name2}\marg{distance},
+      doc parameter   = \marg{name}\oarg{\textbackslash angle}\marg{name1}\marg{name2}\marg{distance},
     },
   }
   Defines a new named position \meta{name} which is located on a \meta{distance}
@@ -171,6 +176,9 @@ The mathematical background and further information are found in \cite{Sturm:202
   latitude \meta{lat2} and longitude \meta{lon2} (or described by a named position \meta{name2}).
   The given starting and final point of the orthodrome need to have a distance of more than
   \SI{1}{\meter}. The unit for the \meta{distance} is kilometer.
+  If \meta{\textbackslash angle} is given, this macro is set to the
+  angle between the tangent vector to the orthodrome and
+  the current parallel circle.
 
 \tikzsetnextfilename{ortho_orthodrome4}%
 \begin{dispExample}

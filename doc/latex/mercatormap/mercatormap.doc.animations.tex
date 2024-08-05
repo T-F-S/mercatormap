@@ -46,7 +46,8 @@ PDF with a sequence of maps (frames) following such an animation path.
   \item Movement along an orthodrome from starting to final position with an unchanged
     common scale denominator.
   \item Zoom in or out on a fixed position.
-  \item Combination of both animation.
+  \item Combination of both animations.
+  \item Animated orthodrome drawing on a static map.
   \end{itemize}
   For more complex animations, several \refEnv{mrcAnimation} environments may be
   used consecutively.
@@ -92,13 +93,54 @@ PDF with a sequence of maps (frames) following such an animation path.
 \end{dispExample*}
 
 
+
+\clearpage
+\begin{dispExample*}{breakable}
+  % \usepackage{fontawesome5}
+  \mrcNPdef{heathrow}{51.4678}{-0.4548}
+  \mrcNPdef{lax}{33.9421}{-118.4088}
+  \mrcNPdef{reykjavik}{64.1289}{-21.9369}
+
+  \begin{tcbraster}[raster height=22cm,raster columns=2,raster rows=4,
+      tile,size=minimal,boxsep=1pt,colback=black!20 ]
+  \begin{mrcAnimation}
+    {
+      named-start-position = heathrow,
+      named-final-position = lax,
+      frames = 8,
+    }
+    \begin{tcolorbox}
+      \begin{tikzpicture}
+      \mrcmap
+        [
+          type           = areafit,
+          area           = {heathrow,lax,reykjavik},
+          source         = topplusopen web,
+          tex width      = \tcbtextwidth,
+          tex height     = \tcbtextheight,
+          flex area fit  = 8mm,
+        ]{london-lax-\mrcAnimFrame}
+      \mrcdrawmap
+      \node[above left,font=\fontsize{3.5pt}{3.5pt}\sffamily]
+        at (mrcmap.south east) {\mrcmapattribution};
+      \mrcclipmap
+      \mrcNPdraworthodrome[red,very thick]{heathrow}{AnimNP}
+      \node[red!70!black,rotate=\mrcAnimAngle]
+          at (\mrcNPcs{AnimNP}) {\large\faPlane};
+      \end{tikzpicture}
+    \end{tcolorbox}
+  \end{mrcAnimation}
+  \end{tcbraster}
+\end{dispExample*}
+
+
 \clearpage
 %-------------------------------------------------------------------------------
 \subsection{Animation Options}\label{ref:animOptions}
 
 \begin{docMrcKeys}[
     doc keypath = anim,
-    doc new     = 2023-07-31,
+    doc new     = 2024-07-31,
   ]{
     {
       doc name        = start-position,
@@ -117,7 +159,7 @@ PDF with a sequence of maps (frames) following such an animation path.
 
 \begin{docMrcKeys}[
     doc keypath = anim,
-    doc new     = 2023-07-31,
+    doc new     = 2024-07-31,
   ]{
     {
       doc name        = final-position,
@@ -136,7 +178,7 @@ PDF with a sequence of maps (frames) following such an animation path.
 
 \begin{docMrcKeys}[
     doc keypath = anim,
-    doc new     = 2023-07-31,
+    doc new     = 2024-07-31,
   ]{
     {
       doc name        = position,
@@ -158,7 +200,7 @@ PDF with a sequence of maps (frames) following such an animation path.
 
 \begin{docMrcKeys}[
     doc keypath = anim,
-    doc new     = 2023-07-31,
+    doc new     = 2024-07-31,
   ]{
     {
       doc name        = frames,
@@ -175,7 +217,7 @@ PDF with a sequence of maps (frames) following such an animation path.
 
 \begin{docMrcKeys}[
     doc keypath = anim,
-    doc new     = 2023-07-31,
+    doc new     = 2024-07-31,
     doc parameter   = {\colOpt{=true\textbar false}},
     doc description = {default |true|, initially |false|},
   ]{
@@ -194,7 +236,7 @@ PDF with a sequence of maps (frames) following such an animation path.
 
 \begin{docMrcKeys}[
     doc keypath = anim,
-    doc new     = 2023-07-31,
+    doc new     = 2024-07-31,
   ]{
     {
       doc name        = drop-no-frame,
@@ -207,7 +249,7 @@ PDF with a sequence of maps (frames) following such an animation path.
 
 \begin{docMrcKeys}[
     doc keypath = anim,
-    doc new     = 2023-07-31,
+    doc new     = 2024-07-31,
   ]{
     {
       doc name        = scale-denominators,
@@ -238,7 +280,7 @@ PDF with a sequence of maps (frames) following such an animation path.
 
 \begin{docMrcKeys}[
     doc keypath = anim,
-    doc new     = 2023-07-31,
+    doc new     = 2024-07-31,
   ]{
     {
       doc name        = common-scale-denominator,
@@ -257,7 +299,7 @@ PDF with a sequence of maps (frames) following such an animation path.
 \clearpage
 \begin{docMrcKeys}[
     doc keypath = anim,
-    doc new     = 2023-07-31,
+    doc new     = 2024-07-31,
   ]{
     {
       doc name        = timewarp,
@@ -274,7 +316,7 @@ PDF with a sequence of maps (frames) following such an animation path.
 
 
 \begin{docCommands}[
-    doc new     = 2023-07-31,
+    doc new     = 2024-07-31,
   ]{
     {
       doc name        = mrcTimewarpIdentity,
@@ -287,7 +329,7 @@ PDF with a sequence of maps (frames) following such an animation path.
 
 \begin{docMrcKeys}[
     doc keypath = anim,
-    doc new     = 2023-07-31,
+    doc new     = 2024-07-31,
   ]{
     {
       doc name        = timewarp-identity,
@@ -300,7 +342,7 @@ PDF with a sequence of maps (frames) following such an animation path.
 
 
 \begin{docCommands}[
-    doc new     = 2023-07-31,
+    doc new     = 2024-07-31,
   ]{
     {
       doc name        = mrcTimewarpSlowStart,
@@ -314,7 +356,7 @@ PDF with a sequence of maps (frames) following such an animation path.
 
 \begin{docMrcKeys}[
     doc keypath = anim,
-    doc new     = 2023-07-31,
+    doc new     = 2024-07-31,
   ]{
     {
       doc name        = timewarp-slow-start,
@@ -332,7 +374,7 @@ PDF with a sequence of maps (frames) following such an animation path.
 
 
 \begin{docCommands}[
-    doc new     = 2023-07-31,
+    doc new     = 2024-07-31,
   ]{
     {
       doc name        = mrcTimewarpSlowFinal,
@@ -346,7 +388,7 @@ PDF with a sequence of maps (frames) following such an animation path.
 
 \begin{docMrcKeys}[
     doc keypath = anim,
-    doc new     = 2023-07-31,
+    doc new     = 2024-07-31,
   ]{
     {
       doc name        = timewarp-slow-final,
@@ -364,7 +406,7 @@ PDF with a sequence of maps (frames) following such an animation path.
 
 
 \begin{docCommands}[
-    doc new     = 2023-07-31,
+    doc new     = 2024-07-31,
   ]{
     {
       doc name        = mrcTimewarpSlowStartFinal,
@@ -379,7 +421,7 @@ PDF with a sequence of maps (frames) following such an animation path.
 
 \begin{docMrcKeys}[
     doc keypath = anim,
-    doc new     = 2023-07-31,
+    doc new     = 2024-07-31,
   ]{
     {
       doc name        = timewarp-slow-start-final,
@@ -402,7 +444,7 @@ PDF with a sequence of maps (frames) following such an animation path.
 \subsection{Macros inside the Animation Environment}\label{ref:animMacros}
 
 \begin{docCommands}[
-    doc new     = 2023-07-31,
+    doc new     = 2024-07-31,
   ]{
     {
       doc name        = mrcAnimFrame,
@@ -416,7 +458,7 @@ PDF with a sequence of maps (frames) following such an animation path.
 
 
 \begin{docCommands}[
-    doc new     = 2023-07-31,
+    doc new     = 2024-07-31,
   ]{
     {
       doc name        = mrcAnimTime,
@@ -430,7 +472,7 @@ PDF with a sequence of maps (frames) following such an animation path.
 
 
 \begin{docCommands}[
-    doc new     = 2023-07-31,
+    doc new     = 2024-07-31,
   ]{
     {
       doc name        = mrcAnimScaleDenom,
@@ -444,7 +486,7 @@ PDF with a sequence of maps (frames) following such an animation path.
 
 
 \begin{docCommands}[
-    doc new     = 2023-07-31,
+    doc new     = 2024-07-31,
   ]{
     {
       doc name        = mrcAnimLatitude,
@@ -457,9 +499,8 @@ PDF with a sequence of maps (frames) following such an animation path.
 \end{docCommands}
 
 
-
 \begin{docCommands}[
-    doc new     = 2023-07-31,
+    doc new     = 2024-07-31,
   ]{
     {
       doc name        = mrcAnimLongitude,
@@ -470,6 +511,23 @@ PDF with a sequence of maps (frames) following such an animation path.
   }
   The longitude of the current position.
 \end{docCommands}
+
+
+\begin{docCommands}[
+    doc new     = 2024-08-05,
+  ]{
+    {
+      doc name        = mrcAnimAngle,
+    },
+    {
+      doc name        = l_mermap_anim_angle_fp,
+    },
+  }
+  Current angle between the tangent vector to the orthodrome and
+  the current parallel circle.
+\end{docCommands}
+
+
 
 
 \docValue{AnimNP}\tcbdocmarginnote{\tcbdocnew{2024-07-31}}:

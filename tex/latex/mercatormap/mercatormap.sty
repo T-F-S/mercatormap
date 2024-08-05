@@ -1,4 +1,4 @@
-%% The LaTeX package mercatormap - version 1.1.0 (2024/08/01)
+%% The LaTeX package mercatormap - version 1.2.0 (2024/08/05)
 %% mercatormap.sty: geographic coordinates (Mercator projection) and map tiles for TikZ pictures
 %%
 %% -------------------------------------------------------------------------------------------
@@ -18,7 +18,7 @@
 %% This work consists of all files listed in README
 %%
 \NeedsTeXFormat{LaTeX2e}[2023-11-01]
-\ProvidesExplPackage{mercatormap}{2024/08/01}{1.1.0}
+\ProvidesExplPackage{mercatormap}{2024/08/05}{1.2.0}
   {A Web Mercator projection package with map tile support}
 
 \RequirePackage{siunitx,graphicx,tikz}
@@ -330,7 +330,7 @@
   }
 
 
-\prg_new_conditional:Npnn \__mermap_if_in_map:nn #1#2 { p, TF }
+\prg_new_conditional:Npnn \__mermap_if_in_map:nn #1#2 { p, T, F, TF }
   {
     \fp_compare:nNnTF {#1} > \l__mermap_mapnorth_fp
     {
@@ -368,7 +368,7 @@
   }
 
 
-\prg_new_conditional:Npnn \__mermap_if_in_vicinity:nn #1#2 { p, TF }
+\prg_new_conditional:Npnn \__mermap_if_in_vicinity:nn #1#2 { p, T, F, TF }
   {
     \fp_compare:nNnTF {#1} > \l__mermap_vic_north_fp
     {
@@ -445,19 +445,13 @@
 
 \NewExpandableDocumentCommand \mrcNPlat { m }
   {
-    \cs_if_exist_use:cF{__mermap__lat__#1}
-    {
-      \msg_error:nnx{ mercatormap }{ np-undefined }{ #1 }
-    }
+    \cs_if_exist_use:cF{ __mermap__lat__#1 }{ 0 }
   }
 
 
 \NewExpandableDocumentCommand \mrcNPlon { m }
   {
-    \cs_if_exist_use:cF{__mermap__lon__#1}
-    {
-      \msg_error:nnx{ mercatormap }{ np-undefined }{ #1 }
-    }
+    \cs_if_exist_use:cF{ __mermap__lon__#1 }{ 0 }
   }
 
 
@@ -467,15 +461,75 @@
   }
 
 
+\prg_new_conditional:Npnn \__mermap_if_NP_exists:n #1 { p, TF }
+  {
+    \cs_if_exist:cTF{ __mermap__lat__#1 }
+      {
+        \cs_if_exist:cTF{ __mermap__lon__#1 }
+        {
+          \prg_return_true:
+        }
+        {
+          \prg_return_false:
+        }
+      }
+      {
+        \prg_return_false:
+      }
+  }
+
+
+\NewDocumentCommand{\ifmrcNPexists}{ m }
+  {
+    \__mermap_if_NP_exists:nTF{ #1 }
+  }
+
+
+\prg_new_conditional:Npnn \__mermap_if_NP_in_map:n #1 { p, TF }
+  {
+    \__mermap_if_NP_exists:nTF { #1 }
+    {
+      \__mermap_if_in_map:nnTF{ \mrcNPlat{#1} }{ \mrcNPlon{#1} }
+      {
+        \prg_return_true:
+      }
+      {
+      \prg_return_false:
+      }
+    }
+    {
+      \prg_return_false:
+    }
+  }
+
+
 \NewDocumentCommand{\ifmrcNPinmap}{ m }
   {
-    \__mermap_if_in_map:nnTF{\mrcNPlat{#1}}{\mrcNPlon{#1}}
+    \__mermap_if_NP_in_map:nTF { #1 }
+  }
+
+
+\prg_new_conditional:Npnn \__mermap_if_NP_in_vicinity:n #1 { p, TF }
+  {
+    \__mermap_if_NP_exists:nTF { #1 }
+    {
+      \__mermap_if_in_vicinity:nnTF{ \mrcNPlat{#1} }{ \mrcNPlon{#1} }
+      {
+        \prg_return_true:
+      }
+      {
+      \prg_return_false:
+      }
+    }
+    {
+      \prg_return_false:
+    }
   }
 
 
 \NewDocumentCommand{\ifmrcNPinvicinity}{ m }
   {
-    \__mermap_if_in_vicinity:nnTF{\mrcNPlat{#1}}{\mrcNPlon{#1}}
+    \__mermap_if_NP_in_vicinity:nTF{ #1 }
   }
 
 
@@ -2264,12 +2318,16 @@
 \fp_new:N \l__mermap_b_x_fp
 \fp_new:N \l__mermap_b_y_fp
 \fp_new:N \l__mermap_b_z_fp
+\fp_new:N \l__mermap_alpha_fp
 \fp_new:N \l__mermap_delta_lambda_fp
 \fp_new:N \l__mermap_delta_phi_fp
+\fp_new:N \l__mermap_n_x_fp
+\fp_new:N \l__mermap_n_y_fp
+\fp_new:N \l__mermap_n_z_fp
 \fp_new:N \l__mermap_psi_fp
 \fp_new:N \l__mermap_sin_psi_fp
-\fp_new:N \l__mermap_t_psi_fp
 \fp_new:N \l__mermap_t_fp
+\fp_new:N \l__mermap_t_psi_fp
 \fp_new:N \l__mermap_t_x_fp
 \fp_new:N \l__mermap_t_y_fp
 \fp_new:N \l__mermap_t_z_fp
@@ -2364,6 +2422,31 @@
   }
 
 
+\cs_new_protected:Npn \__mermap_angle_at_orthodrome:
+  {
+    \bool_if:NTF \l__mermap_linearization_bool
+    {
+      \fp_set:Nn \l__mermap_alpha_fp { 90 }
+    }
+    {
+      \fp_set:Nn \l__mermap_tmpa_fp { cosd( \l__mermap_psi_fp - \l__mermap_t_psi_fp ) }
+      \fp_set:Nn \l__mermap_tmpb_fp { cosd( \l__mermap_t_psi_fp ) }
+      \fp_set:Nn \l__mermap_n_x_fp { \l__mermap_tmpb_fp*\l__mermap_b_x_fp - \l__mermap_tmpa_fp*\l__mermap_a_x_fp }
+      \fp_set:Nn \l__mermap_n_y_fp { \l__mermap_tmpb_fp*\l__mermap_b_y_fp - \l__mermap_tmpa_fp*\l__mermap_a_y_fp }
+      \fp_set:Nn \l__mermap_n_z_fp { \l__mermap_tmpb_fp*\l__mermap_b_z_fp - \l__mermap_tmpa_fp*\l__mermap_a_z_fp }
+      \fp_set:Nn \l__mermap_tmpa_fp { sqrt( \l__mermap_n_x_fp^2 + \l__mermap_n_y_fp^2 + \l__mermap_n_z_fp^2 ) }
+      \fp_set:Nn \l__mermap_n_x_fp { \l__mermap_n_x_fp / \l__mermap_tmpa_fp }
+      \fp_set:Nn \l__mermap_n_y_fp { \l__mermap_n_y_fp / \l__mermap_tmpa_fp }
+      \fp_set:Nn \l__mermap_n_z_fp { \l__mermap_n_z_fp / \l__mermap_tmpa_fp }
+      \fp_set:Nn \l__mermap_alpha_fp { acosd( \l__mermap_n_y_fp*cosd(\l__mermap_cs_lon_fp) - \l__mermap_n_x_fp*sind(\l__mermap_cs_lon_fp) ) }
+      \fp_compare:nNnT \l__mermap_n_z_fp < 0
+        {
+          \fp_set:Nn \l__mermap_alpha_fp { 360 - \l__mermap_alpha_fp }
+        }
+    }
+  }
+
+
 \NewDocumentCommand \mrcdraworthodrome { O{} mmmm }
   {
     \__mermap_draw_orthodrome:nnnnn {#1}{#2}{#3}{#4}{#5}
@@ -2442,50 +2525,65 @@
 
 \NewDocumentCommand \mrcNPprettyloxodistance { mm }
   {
-    \__mermap_loxo_distance:nnnn {\mrcNPlat{#1}}{\mrcNPlon{#1}}{\mrcNPlat{#2}}{\mrcNPlon{#2}}
+    \__mermap_loxo_distance:nnnn { \mrcNPlat{#1} }{ \mrcNPlon{#1} }{ \mrcNPlat{#2} }{ \mrcNPlon{#2} }
     \__mermap_pretty_distance:n { \l__mermap_result_fp }
   }
 
 
-\NewDocumentCommand \mrcNPfromOrthoFraction { mmmmmm }
+\cs_new_protected:Npn \__mermap_orthodrome_point:nnn #1#2#3
   {
-    \__mermap_setup_orthodrome:nnnn { #2 }{ #3 }{ #4 }{ #5 }
-    \__mermap_point_on_orthodrome:n { #6 }
+    \__mermap_point_on_orthodrome:n { #3 }
     \__mermap_set_named_position { #1 }{ \l__mermap_cs_lat_fp }{ \l__mermap_cs_lon_fp }
+    \IfNoValueF { #2 }
+      {
+        \__mermap_angle_at_orthodrome:
+        \cs_set:Npe #2 { \fp_to_decimal:N \l__mermap_alpha_fp }
+      }
   }
 
-\NewDocumentCommand \mrcNPfromOrthoFractionNamed { mmmm }
+\NewDocumentCommand \mrcNPfromOrthoFraction { mo mm mm m }
   {
-    \__mermap_setup_orthodrome:nnnn { \mrcNPlat{#2} }{ \mrcNPlon{#2} }{ \mrcNPlat{#3} }{ \mrcNPlon{#3} }
-    \__mermap_point_on_orthodrome:n { #4 }
-    \__mermap_set_named_position { #1 }{ \l__mermap_cs_lat_fp }{ \l__mermap_cs_lon_fp }
+    \__mermap_setup_orthodrome:nnnn { #3 }{ #4 }{ #5 }{ #6 }
+    \__mermap_orthodrome_point:nnn { #1 }{ #2 }{ #7 }
   }
 
-\NewDocumentCommand \mrcNPfromOrthoDistance { mmmmmm }
+\NewDocumentCommand \mrcNPfromOrthoFractionNamed { mo m m m }
   {
-    \__mermap_ortho_distance:nnnn { #2 }{ #3 }{ #4 }{ #5 }
+    \__mermap_setup_orthodrome:nnnn { \mrcNPlat{#3} }{ \mrcNPlon{#3} }{ \mrcNPlat{#4} }{ \mrcNPlon{#4} }
+    \__mermap_orthodrome_point:nnn { #1 }{ #2 }{ #5 }
+  }
+
+\NewDocumentCommand \mrcNPfromOrthoDistance { mo mm mm m }
+  {
+    \__mermap_ortho_distance:nnnn { #3 }{ #4 }{ #5 }{ #6 }
     \fp_compare:nNnTF \l__mermap_result_fp > { 0.001 }
       {
-        \__mermap_setup_orthodrome:nnnn { #2 }{ #3 }{ #4 }{ #5 }
-        \__mermap_point_on_orthodrome:n { #6 / \l__mermap_result_fp }
-        \__mermap_set_named_position { #1 }{ \l__mermap_cs_lat_fp }{ \l__mermap_cs_lon_fp }
+        \__mermap_setup_orthodrome:nnnn { #3 }{ #4 }{ #5 }{ #6 }
+        \__mermap_orthodrome_point:nnn { #1 }{ #2 }{ #7 / \l__mermap_result_fp }
       }
       {
-        \__mermap_set_named_position { #1 }{ #2 }{ #3 }
+        \__mermap_set_named_position { #1 }{ #3 }{ #4 }
+        \IfNoValueF { #2 }
+          {
+            \cs_set:Npn #2 { 90 }
+          }
       }
   }
 
-\NewDocumentCommand \mrcNPfromOrthoDistanceNamed { mmmm }
+\NewDocumentCommand \mrcNPfromOrthoDistanceNamed { mo m m m }
   {
-    \__mermap_ortho_distance:nnnn { \mrcNPlat{#2} }{ \mrcNPlon{#2} }{ \mrcNPlat{#3} }{ \mrcNPlon{#3} }
+    \__mermap_ortho_distance:nnnn { \mrcNPlat{#3} }{ \mrcNPlon{#3} }{ \mrcNPlat{#4} }{ \mrcNPlon{#4} }
     \fp_compare:nNnTF \l__mermap_result_fp > { 0.001 }
       {
-        \__mermap_setup_orthodrome:nnnn { \mrcNPlat{#2} }{ \mrcNPlon{#2} }{ \mrcNPlat{#3} }{ \mrcNPlon{#3} }
-        \__mermap_point_on_orthodrome:n { #4 / \l__mermap_result_fp }
-        \__mermap_set_named_position { #1 }{ \l__mermap_cs_lat_fp }{ \l__mermap_cs_lon_fp }
+        \__mermap_setup_orthodrome:nnnn { \mrcNPlat{#3} }{ \mrcNPlon{#3} }{ \mrcNPlat{#4} }{ \mrcNPlon{#4} }
+        \__mermap_orthodrome_point:nnn { #1 }{ #2 }{ #5 / \l__mermap_result_fp }
       }
       {
-        \__mermap_set_named_position { #1 }{ \mrcNPlat{#2} }{ \mrcNPlon{#2} }
+        \__mermap_set_named_position { #1 }{ \mrcNPlat{#3} }{ \mrcNPlon{#3} }
+        \IfNoValueF { #2 }
+          {
+            \cs_set:Npn #2 { 90 }
+          }
       }
   }
 
@@ -2503,6 +2601,7 @@
 \fp_new:N \l__mermap_anim_b_lon_fp
 \fp_new:N \l__mermap_anim_b_scaledenom_fp
 \fp_new:N \l__mermap_anim_b_time_fp
+\fp_new:N \l_mermap_anim_angle_fp
 \fp_new:N \l_mermap_anim_lat_fp
 \fp_new:N \l_mermap_anim_lon_fp
 \fp_new:N \l_mermap_anim_scaledenom_fp
@@ -2579,10 +2678,12 @@
         \fp_set:Nn \l_mermap_anim_time_fp { \l__mermap_anim_timewarp_tl { \l_mermap_anim_time_fp } }
 
         \__mermap_point_on_orthodrome:n { \l_mermap_anim_time_fp }
-
         \fp_set_eq:NN \l_mermap_anim_lat_fp \l__mermap_cs_lat_fp
         \fp_set_eq:NN \l_mermap_anim_lon_fp \l__mermap_cs_lon_fp
         \__mermap_set_named_position{ AnimNP }{ \l_mermap_anim_lat_fp }{ \l_mermap_anim_lon_fp }
+
+        \__mermap_angle_at_orthodrome:
+        \fp_set_eq:NN \l_mermap_anim_angle_fp \l__mermap_alpha_fp
 
         \fp_while_do:nNnn \l_mermap_anim_time_fp > \l__mermap_anim_b_time_fp
           {
@@ -2730,6 +2831,7 @@
 \NewExpandableDocumentCommand\mrcAnimScaleDenom{}{\fp_to_decimal:N \l_mermap_anim_scaledenom_fp}
 \NewExpandableDocumentCommand\mrcAnimLatitude{}{\fp_to_decimal:N \l_mermap_anim_lat_fp}
 \NewExpandableDocumentCommand\mrcAnimLongitude{}{\fp_to_decimal:N \l_mermap_anim_lon_fp}
+\NewExpandableDocumentCommand\mrcAnimAngle{}{\fp_to_decimal:N \l_mermap_anim_angle_fp}
 
 
 %---- supplier -----------------------------------------------------------------

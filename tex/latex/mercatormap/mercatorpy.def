@@ -1,6 +1,6 @@
 \begin{filecontents}[force,noheader,nowarn]{maptiles.texpy}
 """
-The LaTeX package mercatormap - version 1.1.0 (2024/08/01)
+The LaTeX package mercatormap - version 1.2.0 (2024/08/05)
 maptiles.texpy: Python script for map tile download
 
 -------------------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ from pathlib import Path
 from PIL import Image
 
 
-packageversion = '1.1.0 (2024/08/01)'
+packageversion = '1.2.0 (2024/08/05)'
 
 
 def gd(x):

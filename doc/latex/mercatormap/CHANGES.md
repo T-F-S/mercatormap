@@ -16,6 +16,29 @@ and this project adheres to
 ### Security
 
 
+
+## [1.2.0] - 2024-08-05
+
+### Added
+- Command `\ifmrcNPexists` to test existence of a named position
+- Macros `\mrcAnimAngle` and `\l_mermap_anim_angle_fp` to measure
+    the current orthodrome angle
+- Animation example for static maps    
+
+### Changed
+- `\mrcNPlat` and `\mrcNPlon` result to 0 now, if named position does not exist
+- `\ifmrcNPinmap` and `\ifmrcNPinvicinity` result to `false` now, if named position does not exist
+- Point definitions on an orthodrome now take an optional angle as result:
+    - Command `mrcNPfromOrthoFraction`
+    - Command `mrcNPfromOrthoFractionNamed`
+    - Command `mrcNPfromOrthoDistance`
+    - Command `mrcNPfromOrthoDistanceNamed`
+
+### Fixed
+- Documentation contained dates from `2023` instead of `2024`
+
+
+
 ## [1.1.0] - 2024-08-01
 
 ### Added

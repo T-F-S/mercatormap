@@ -298,9 +298,10 @@ A map point can be defined even quicker by
 \end{docCommand}
 
 
-\begin{docCommand}{mrcNPlat}{\marg{name}}
+\begin{docCommand}[doc updated=2024-08-02]{mrcNPlat}{\marg{name}}
   Inserts the \emph{latitude} of a \emph{named position} with given \meta{name}.
   \refCom{mrcNPlat} is expandable and may be used in floating point expressions.
+  If the \meta{name} does not exist, the macro expands to |0|.
   \begin{dispExample}
     \mrcNPdef{nuremberg}{49.45522}{11.07631}
     Latitude: \mrcNPlat{nuremberg}\\
@@ -309,9 +310,16 @@ A map point can be defined even quicker by
 \end{docCommand}
 
 
-\begin{docCommand}{mrcNPlon}{\marg{name}}
+\begin{docCommand}[doc updated=2024-08-02]{mrcNPlon}{\marg{name}}
   Inserts the \emph{longitude} of a \emph{named position} with given \meta{name}.
   \refCom{mrcNPlon} is expandable and may be used in floating point expressions.
+  If the \meta{name} does not exist, the macro expands to |0|.
+\end{docCommand}
+
+
+\begin{docCommand}[doc new=2024-08-02]{ifmrcNPexists}{\marg{name}\marg{true}\marg{false}}
+  If the given \emph{named position} with given \meta{name} exists, the \meta{true} code is executed, otherwise
+  the \meta{false} code.
 \end{docCommand}
 
 

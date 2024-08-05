@@ -1,4 +1,4 @@
-# The LaTeX package mercatormap - version 1.1.0 (2024/08/01)
+# The LaTeX package mercatormap - version 1.2.0 (2024/08/05)
 
 
 > Copyright (c) 2020-2024 by Prof. Dr. Dr. Thomas F. Sturm <thomas dot sturm at unibw dot de>
