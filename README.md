@@ -1,8 +1,8 @@
-# The LaTeX package mercatormap - version 1.2.0 (2024/08/05)
+# The LaTeX package mercatormap - version 1.3.0 (2026/02/19)
 
 [![CTAN](https://img.shields.io/ctan/v/mercatormap.svg)](https://www.ctan.org/pkg/mercatormap)
 
-> Copyright (c) 2020-2024 by Prof. Dr. Dr. Thomas F. Sturm <thomas dot sturm at unibw dot de>
+> Copyright (c) 2020-2026 by Prof. Dr. Dr. Thomas F. Sturm <thomas dot sturm at unibw dot de>
 
 > This work may be distributed and/or modified under the
 > conditions of the LaTeX Project Public License, either version 1.3
@@ -29,7 +29,7 @@ pieces, and more are part of the package.
 ## Contents of the package
 
 - `README.md`                this file
-- `CHANGES.md`               log of changes (history)
+- `CHANGELOG.md`             log of changes (history)
 - `mercatormap.sty`          LaTeX package file (style file)
 - `mercatorsupplier.def`     LaTeX package file (include file for style)
 - `mercatorpy.def`           LaTeX package file (Python generator)

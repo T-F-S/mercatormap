@@ -23,7 +23,7 @@
     \begin{tikzpicture}
       \mrcmap[type=reference,latitude=-85.0511,longitude=0,zoom=3,
         source=opentopomap,
-        tex width=\linewidth, tex height=8cm]{}
+        tex width=\linewidth, tex height=8cm]{limit_polar}
       \mrcdrawmap
       \node[above=4mm,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
           {\mrcmapattribution};
@@ -54,7 +54,7 @@
     \begin{tikzpicture}
       \mrcmap[type=areafit,tex width=\linewidth,tex height=8cm,
         source=topplusopen web,
-        south=42,north=62,west=130,east=-149+360]{}
+        south=42,north=62,west=130,east=-149+360]{limit_dateline}
         \mrcdrawmap
         \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
           {\mrcmapattribution};
@@ -81,7 +81,7 @@
     \begin{tikzpicture}
       \mrcmap[type=reference,latitude=48.14,longitude=11.57,
         source=opentopomap,
-        tex width=\linewidth,tex height=4cm,zoom=1]{}
+        tex width=\linewidth,tex height=4cm,zoom=1]{limit_small_scale_1}
       \mrcdrawmap
       \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
         {\mrcmapattribution};   \mrcclipmap
@@ -104,7 +104,7 @@
     \mermapset{supply/source=opentopomap}
     \begin{tikzpicture}
       \mrcmap[type=reference,latitude=48.14,longitude=11.57,
-        tex width=\linewidth,tex height=6cm,zoom=2]{}
+        tex width=\linewidth,tex height=6cm,zoom=2]{limit_small_scale_2}
       \mrcdrawmap
       \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
         {\mrcmapattribution};   \mrcclipmap  \mrcdrawinfo
@@ -181,7 +181,7 @@ are expected to be quite identical for large scale maps, but not for
   \mrcmap[type=reference, named position=munich,
     flex reference scale=1000000,
     source=topplusopen web,
-    tex width=\linewidth, tex height=10cm]{}
+    tex width=\linewidth, tex height=10cm]{limit_distance1}
   \mrcdrawmap
   \node[below left,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south east)
         {\mrcmapattribution};
@@ -216,7 +216,7 @@ dependent from the center angle.
   \mrcmap[type=reference, named position=munich,
     flex reference scale=25000000,
     source=topplusopen web,
-    tex width=\linewidth, tex height=10cm]{}
+    tex width=\linewidth, tex height=10cm]{limit_distance2}
   \mrcdrawmap
   \node[below left,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south east)
         {\mrcmapattribution};
@@ -257,7 +257,7 @@ displaying a distance circle should be avoided.
   \mrcmap[type=reference, named position=munich,
     flex reference scale=75000000,
     source=topplusopen web,
-    tex width=\linewidth, tex height=10cm]{}
+    tex width=\linewidth, tex height=10cm]{limit_distance3}
   \mrcdrawmap
   \node[below left,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south east)
         {\mrcmapattribution};

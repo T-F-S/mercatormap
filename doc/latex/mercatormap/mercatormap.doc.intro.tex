@@ -18,7 +18,7 @@ and the algorithms of this packages, you are invited to read
 \enquote{\fullcite{Sturm:2020}}.
 
 With very few exceptions, the package is programmed with the
-|expl3| programming interface for \LaTeX3 \cite{l3kernel:interfaces}.
+L3 programming layer for \LaTeX3 \cite{package:interface3}.
 
 \medskip
 
@@ -73,12 +73,13 @@ The package can be used in three ways:
   access (some require registration of an API key).
 \end{itemize}
 
-After Python is prepared, you may try to compile
-|mercatormap-example.tex| (found in the documentation directory)
-which contains a map of Bavaria with map tile download.
-\Fullref{sec:examples} exhibits further examples which may serve as
-tutorials what can be done. After the examples you find the reference
-manual for the package.
+Once Python has been set up, you can try compiling |mercatormap-example.tex|
+(located in the documentation directory), which contains a map of Bavaria
+including map tile downloads.
+
+\Fullref{sec:examples} presents additional examples that may serve as tutorials
+illustrating what can be achieved.
+Following the examples, the package reference manual is provided.
 
 \clearpage
 %-------------------------------------------------------------------------------
@@ -104,29 +105,37 @@ This should give a version number starting with 3. Otherwise, try
 If this is successful, \refKey{mermap/python} has to be adapted to |python3|
 
 \subsubsection{Python Packages}
-The Python packages |Pillow| (\url{https://pypi.org/project/Pillow/})
-and |requests| (\url{https://pypi.org/project/requests/}) have to be present.
+The Python packages |Pillow| (\url{https://pypi.org/project/pillow/})
+and |Requests| (\url{https://pypi.org/project/requests/}) have to be present.
 With some luck, they are already installed. With
 \begin{dispListing}
-  pip3 list
+  pip list
 \end{dispListing}
-and/or
-\begin{dispListing}
-  pip3 list --user
-\end{dispListing}
-the installed packages are listed. If |Pillow| and |requests| are not
+the installed packages are listed. If |Pillow| and |Requests| are not
 among these package, they have to be added by
 \begin{dispListing}
-  pip3 install --user Pillow
-  pip3 install --user requests
+  pip install pillow requests
 \end{dispListing}
-or
+
+As an alternative to a system-wide or user-level installation, a virtual environment
+can be created and used within the document directory, for example:
 \begin{dispListing}
-  pip3 install Pillow
-  pip3 install requests
+  python -m venv .venv
+  .venv\Scripts\python -m pip install pillow requests    # Windows
+  .venv/bin/python -m pip install pillow requests        # Linux
 \end{dispListing}
-The second choice needs administrative rights and may give conflicts
-with package managers. Pythonians know furthers installation methods.
+\refKey{mermap/python} has to be adapted for this virtual environment.
+For Windows this is done by
+\begin{dispListing}
+\ExplSyntaxOn
+\mermapset{python=.venv \c_backslash_str Scripts \c_backslash_str python}
+\ExplSyntaxOff
+\end{dispListing}
+and for Linux by
+\begin{dispListing}
+\mermapset{python=.venv/bin/python}
+\end{dispListing}
+Pythonians know further installation methods.
 
 \subsubsection{Document Setup}
 For your map document you need the following:

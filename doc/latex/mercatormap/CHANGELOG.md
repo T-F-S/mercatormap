@@ -17,6 +17,26 @@ and this project adheres to
 
 
 
+## [1.3.0] - 2026-02-19
+
+### Added
+- Option `attribution print topplusopen` for TopPlusOpen maps.
+
+### Changed
+- `CHANGES.md` renamed to `CHANGELOG.md` following https://keepachangelog.com/en/1.1.0/
+- Attribution for TopPlusOpen maps adapted to the new required format
+- References updated
+- Documentation:
+    - All example maps named uniquely to reduce tile downloads
+    - Python description updated
+- Some minor code changes
+
+### Fixed
+- Documentation produced with `minted2` instead of `minted` (currently not compatible to Python>=3.14)
+- Python script corrections
+
+
+
 ## [1.2.0] - 2024-08-05
 
 ### Added

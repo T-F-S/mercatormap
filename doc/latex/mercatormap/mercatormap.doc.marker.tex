@@ -25,7 +25,7 @@ may be helpful which provides some predefined marker types.
   \mrcmap[type=reference, position=48.15:11.6,
     flex reference scale=500 000,
     source=thunderforest neighbourhood,
-    tex width=\linewidth,tex height=4cm]{}
+    tex width=\linewidth,tex height=4cm]{marker_mrcmarker}
   \mrcdrawmap
   \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
     {\mrcmapattribution};
@@ -191,7 +191,7 @@ may be helpful which provides some predefined marker types.
   \begin{dispExample}
   \begin{tikzpicture}
     \mrcmap[tex width=4cm, tex height=4cm,
-      latitude=48.14, longitude=11.57, target=none]{}
+      latitude=48.14, longitude=11.57, target=none]{marker_hide}
     \mrcdrawmap[draw=path]
     \mermapsetmarker{last options={hide all but category=A}}
     \mrcmarker{type=knob,position=48.00:11.43,fill=blue,category=A}
@@ -230,7 +230,7 @@ are applied concurrently, then \refKey{mermap/marker/link} will win.
   \mrcmap[type=reference, named position=unibwm,
     flex reference scale=100000,
     source=topplusopen web grau,
-    tex width=\linewidth,tex height=4cm]{}
+    tex width=\linewidth,tex height=4cm]{marker_url}
   \mrcdrawmap
   \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
     {\mrcmapattribution};
@@ -321,7 +321,7 @@ are applied concurrently, then \refKey{mermap/marker/link} will win.
     \begin{dispExample}
     \begin{tikzpicture}
     \mrcmap[tex width=8cm, tex height=4cm, zoom=10,
-      latitude=48.14, longitude=11.48, target=none]{}
+      latitude=48.14, longitude=11.48, target=none]{marker_classic}
     \mrcdrawmap[draw=path]
     \mermapsetmarker{type=classic}
     \mrcmarker{position=48.14:11.36, contents={Germering}}
@@ -335,7 +335,7 @@ are applied concurrently, then \refKey{mermap/marker/link} will win.
     \begin{dispExample}
     \begin{tikzpicture}
     \mrcmap[tex width=8cm, tex height=4cm, zoom=10,
-      latitude=48.14, longitude=11.48, target=none]{}
+      latitude=48.14, longitude=11.48, target=none]{marker_pin}
     \mrcdrawmap[draw=path]
     \mermapsetmarker{type=pin}
     \mrcmarker{position=48.14:11.36, contents={Germering}}
@@ -351,7 +351,7 @@ are applied concurrently, then \refKey{mermap/marker/link} will win.
     \begin{dispExample}
     \begin{tikzpicture}
     \mrcmap[tex width=8cm, tex height=4cm, zoom=10,
-      latitude=48.14, longitude=11.48, target=none]{}
+      latitude=48.14, longitude=11.48, target=none]{marker_pinflip}
     \mrcdrawmap[draw=path]
     \mermapsetmarker{type=pinflip}
     \mrcmarker{position=48.14:11.36, contents={Germering}}
@@ -366,7 +366,7 @@ are applied concurrently, then \refKey{mermap/marker/link} will win.
     \begin{dispExample}
     \begin{tikzpicture}
     \mrcmap[tex width=8cm, tex height=4cm, zoom=10,
-      latitude=48.14, longitude=11.48, target=none]{}
+      latitude=48.14, longitude=11.48, target=none]{marker_drop}
     \mrcdrawmap[draw=path]
     \mermapsetmarker{type=drop}
     \mrcmarker{position=48.14:11.36, contents={Germering}}
@@ -384,7 +384,7 @@ are applied concurrently, then \refKey{mermap/marker/link} will win.
     \begin{dispExample}
     \begin{tikzpicture}
     \mrcmap[tex width=8cm, tex height=4cm, zoom=10,
-      latitude=48.14, longitude=11.48, target=none]{}
+      latitude=48.14, longitude=11.48, target=none]{marker_pictodrop}
     \mrcdrawmap[draw=path]
     \mermapsetmarker{type=pictodrop, pictocontents={
       \draw[fill=red!70!gray,draw=white]
@@ -406,7 +406,7 @@ are applied concurrently, then \refKey{mermap/marker/link} will win.
     \begin{dispExample}
     \begin{tikzpicture}
     \mrcmap[tex width=8cm, tex height=4cm, zoom=10,
-      latitude=48.14, longitude=11.48, target=none]{}
+      latitude=48.14, longitude=11.48, target=none]{marker_pictodropring}
     \mrcdrawmap[draw=path]
     \mermapsetmarker{type=pictodropring}
     \mrcmarker{position=48.14:11.36, contents={Germering}}
@@ -423,7 +423,7 @@ are applied concurrently, then \refKey{mermap/marker/link} will win.
     \begin{dispExample}
     \begin{tikzpicture}
     \mrcmap[tex width=8cm, tex height=4cm, zoom=10,
-      latitude=48.14, longitude=11.48, target=none]{}
+      latitude=48.14, longitude=11.48, target=none]{marker_knob}
     \mrcdrawmap[draw=path]
     \mermapsetmarker{type=knob}
     \mrcmarker{position=48.14:11.36, contents={Germering}}
@@ -440,7 +440,7 @@ are applied concurrently, then \refKey{mermap/marker/link} will win.
     \begin{dispExample}
     \begin{tikzpicture}
     \mrcmap[tex width=8cm, tex height=4cm, zoom=10,
-      latitude=48.14, longitude=11.48, target=none]{}
+      latitude=48.14, longitude=11.48, target=none]{marker_pictoknob}
     \mrcdrawmap[draw=path]
     \mermapsetmarker{type=pictoknob}
     \mrcmarker{position=48.14:11.36, contents={Germering}}
@@ -458,7 +458,7 @@ are applied concurrently, then \refKey{mermap/marker/link} will win.
     \begin{dispExample}
     \begin{tikzpicture}
     \mrcmap[tex width=8cm, tex height=4cm, zoom=10,
-      latitude=48.14, longitude=11.48, target=none]{}
+      latitude=48.14, longitude=11.48, target=none]{marker_pictoknobring}
     \mrcdrawmap[draw=path]
     \mermapsetmarker{type=pictoknobring}
     \mrcmarker{position=48.14:11.36, contents={Germering}}
@@ -476,7 +476,7 @@ are applied concurrently, then \refKey{mermap/marker/link} will win.
     \begin{dispExample}
     \begin{tikzpicture}
     \mrcmap[tex width=8cm, tex height=4cm, zoom=10,
-      latitude=48.14, longitude=11.48, target=none]{}
+      latitude=48.14, longitude=11.48, target=none]{marker_ringx}
     \mrcdrawmap[draw=path]
     \mermapsetmarker{type=ringx}
     \mrcmarker{position=48.14:11.36, contents={Germering}}
@@ -495,7 +495,7 @@ are applied concurrently, then \refKey{mermap/marker/link} will win.
     \begin{dispExample}
     \begin{tikzpicture}
     \mrcmap[tex width=8cm, tex height=4cm, zoom=10,
-      latitude=48.14, longitude=11.48, target=none]{}
+      latitude=48.14, longitude=11.48, target=none]{marker_markx}
     \mrcdrawmap[draw=path]
     \mermapsetmarker{type=markx}
     \mrcmarker{position=48.14:11.36, contents={Germering}}
@@ -614,7 +614,7 @@ The different marker types can be customized by some additional options:
   }
   \begin{tikzpicture}
   \mrcmap[tex width=4cm, tex height=4cm,
-    latitude=48.14, longitude=11.57, target=none]{}
+    latitude=48.14, longitude=11.57, target=none]{marker_xmark}
   \mrcdrawmap[draw=path]
   \mrcmarker{type=xmark,
     position=48.14:11.57,alias={munich},
@@ -639,7 +639,7 @@ The different marker types can be customized by some additional options:
   \begin{dispExample}
   \begin{tikzpicture}
   \mrcmap[tex width=8cm, tex height=4cm, zoom=10,
-    latitude=48.14, longitude=11.48, target=none]{}
+    latitude=48.14, longitude=11.48, target=none]{marker_markerstyle}
   \mrcdrawmap[draw=path]
   \mrcnewmarkerstyle{one}{type=pin, draw=blue, fill=blue!20!white,
     font=\sffamily\footnotesize}
@@ -657,7 +657,7 @@ The different marker types can be customized by some additional options:
   \begin{dispExample}
   \begin{tikzpicture}
   \mrcmap[tex width=8cm, tex height=4cm, zoom=10,
-    latitude=48.14, longitude=11.48, target=none]{}
+    latitude=48.14, longitude=11.48, target=none]{marker_markerstyle2}
   \mrcdrawmap[draw=path]
   \mrcnewmarkerstyle{color}{type=pin, draw=#1, fill=#1!20!white,
     font=\sffamily\footnotesize}

@@ -1,8 +1,8 @@
-%% The LaTeX package mercatormap - version 1.2.0 (2024/08/05)
+%% The LaTeX package mercatormap - version 1.3.0 (2026/02/19)
 %% mercatorsupplier.def: predefined map supplier list
 %%
 %% -------------------------------------------------------------------------------------------
-%% Copyright (c) 2020-2024 by Prof. Dr. Dr. Thomas F. Sturm <thomas dot sturm at unibw dot de>
+%% Copyright (c) 2020-2026 by Prof. Dr. Dr. Thomas F. Sturm <thomas dot sturm at unibw dot de>
 %% -------------------------------------------------------------------------------------------
 %%
 %% This work may be distributed and/or modified under the
@@ -57,17 +57,35 @@
     basename = tiles/opentopomap,
   }
 
+
+\cs_new:Npn \__mermap_supply_attribution_print_topplus:nn #1#2
+  {
+    \keys_set:nn { mermap/supply }
+    {
+      attribution~print = {
+        \textcopyright\nobreakspace BKG\nobreakspace(#1)
+        \space dl-de/by-2-0,
+        \space Datenquellen:~\nolinkurl{https://sgx.geodatenzentrum.de/web_public/gdz/datenquellen/datenquellen_topplusopen_#2.pdf}
+        }
+    }
+  }
+
+
 \keys_define:nn { mermap/supply }
   {
+    attribution~print~topplusopen .code:n =
+    {
+      \tl_set:Nn  \l__mermap_tmpa_tl { #1 }
+      \regex_replace_once:nnN { .* \. } { } \l__mermap_tmpa_tl
+      \exp_args:NV \__mermap_supply_attribution_print_topplus:nn \l__mermap_tmpa_tl { #1 }
+    },
     __attribution_topplusopen .meta:nn = {mermap/supply} {
     attribution = {
-      Kartendarstellung:\nobreakspace\textcopyright\nobreakspace\href{https://www.bkg.bund.de}{BKG\nobreakspace(\the\year)},
-      \ \href{https://sgx.geodatenzentrum.de/web_public/Datenquellen_TopPlus_Open.pdf}{Datenquellen}
+      Kartendarstellung:\nobreakspace\textcopyright\nobreakspace\href{https://www.bkg.bund.de}{BKG\nobreakspace(\the\year)}
+      \space\href{https://www.govdata.de/dl-de/by-2-0}{dl-de/by-2-0},
+      \space\href{https://sgx.geodatenzentrum.de/web_public/gdz/datenquellen/datenquellen_topplusopen.html}{Datenquellen}
       },
-    attribution~print = {
-      \textcopyright\nobreakspace BKG\nobreakspace(\the\year),
-      \ Datenquellen:~\detokenize{https://sgx.geodatenzentrum.de/web_public/Datenquellen_TopPlus_Open.pdf}
-      }
+    attribution~print~topplusopen = TT.MM.JJJJ,
     }
   }
 

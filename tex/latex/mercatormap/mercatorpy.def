@@ -1,10 +1,10 @@
 \begin{filecontents}[force,noheader,nowarn]{maptiles.texpy}
 """
-The LaTeX package mercatormap - version 1.2.0 (2024/08/05)
+The LaTeX package mercatormap - version 1.3.0 (2026/02/19)
 maptiles.texpy: Python script for map tile download
 
 -------------------------------------------------------------------------------------------
-Copyright (c) 2020-2024 by Prof. Dr. Dr. Thomas F. Sturm <thomas dot sturm at unibw dot de>
+Copyright (c) 2020-2026 by Prof. Dr. Dr. Thomas F. Sturm <thomas dot sturm at unibw dot de>
 -------------------------------------------------------------------------------------------
 
 This work may be distributed and/or modified under the
@@ -28,7 +28,7 @@ from pathlib import Path
 from PIL import Image
 
 
-packageversion = '1.2.0 (2024/08/05)'
+packageversion = '1.3.0 (2026/02/19)'
 
 
 def gd(x):
@@ -42,7 +42,7 @@ def arggd(x):
 def rad2planar(lon_rad, lat_rad):
     x = 0.5*lon_rad/math.pi + 0.5
     y = 0.5*arggd(lat_rad)/math.pi + 0.5
-    return (x, y)
+    return x, y
 
 
 def deg2planar(lon_deg, lat_deg):
@@ -52,12 +52,12 @@ def deg2planar(lon_deg, lat_deg):
 def planar2rad(x, y):
     lon_rad = math.pi*(2*x-1)
     lat_rad = gd(math.pi*(2*y-1))
-    return (lon_rad, lat_rad)
+    return lon_rad, lat_rad
 
 
 def planar2deg(x, y):
     (lon_rad, lat_rad) = planar2rad(x, y)
-    return (math.degrees(lon_rad), math.degrees(lat_rad))
+    return math.degrees(lon_rad), math.degrees(lat_rad)
 
 
 def download(session, url, filename, overwrite=False):
@@ -79,8 +79,8 @@ def makeparentdirs(afile):
 
 
 class MapDefinition(object):
-    def __init__(self, args, west, east, north, south, zoom, x_1, y_1, x_2, y_2,
-                    width, height, west_offset, north_offset, south_offset):
+    def __init__(self, pargs, west, east, north, south, zoom, x_1, y_1, x_2, y_2,
+                 width, height, west_offset, north_offset, south_offset):
         self.west  = west
         self.east  = east
         self.north = north
@@ -97,16 +97,16 @@ class MapDefinition(object):
         self.south_offset = south_offset
         self.n = 2 ** self.zoom
         self.local_file_prefix = 'tiles/tile_'
-        self.attribution = args.attribution
-        self.attributionprint = args.attributionprint
-        self.pixel = args.pixel
+        self.attribution = pargs.attribution
+        self.attributionprint = pargs.attributionprint
+        self.pixel = pargs.pixel
         self.pixel_width  = round(self.width*self.pixel)
         self.pixel_height = round(self.height*self.pixel)
-        self.tilesize = args.tilesize
+        self.tilesize = pargs.tilesize
 
 
     @classmethod
-    def construct_from_boundaries_rad(cls, args, zoom, west_rad, east_rad, north_rad, south_rad):
+    def construct_from_boundaries_rad(cls, pargs, zoom, west_rad, east_rad, north_rad, south_rad):
         if zoom<0:
             zoom = 0
         if west_rad>=east_rad:
@@ -132,25 +132,25 @@ class MapDefinition(object):
         west_offset  = a1-x1
         north_offset = b1-y1
         south_offset = y2-b2+1
-        return cls(args, west_rad, east_rad, north_rad, south_rad, zoom, x1, y1, x2, y2,
-            width, height, west_offset, north_offset, south_offset )
+        return cls(pargs, west_rad, east_rad, north_rad, south_rad, zoom, x1, y1, x2, y2,
+                   width, height, west_offset, north_offset, south_offset)
 
 
     @classmethod
-    def construct_from_boundaries_deg(cls, args, zoom, west_deg, east_deg, north_deg, south_deg):
-        return cls.construct_from_boundaries_rad(args,
-                zoom,math.radians(west_deg),math.radians(east_deg),
-                math.radians(north_deg),math.radians(south_deg))
+    def construct_from_boundaries_deg(cls, pargs, zoom, west_deg, east_deg, north_deg, south_deg):
+        return cls.construct_from_boundaries_rad(pargs,
+                                                 zoom, math.radians(west_deg), math.radians(east_deg),
+                                                 math.radians(north_deg), math.radians(south_deg))
 
 
     @classmethod
-    def construct_from_boundaries_args(cls, args):
-        return cls.construct_from_boundaries_rad(args,
-                args.zoom,math.radians(args.west),math.radians(args.east),math.radians(args.north),math.radians(args.south))
+    def construct_from_boundaries_args(cls, pargs):
+        return cls.construct_from_boundaries_rad(pargs,
+                                                 pargs.zoom, math.radians(pargs.west), math.radians(pargs.east), math.radians(pargs.north), math.radians(pargs.south))
 
 
     @classmethod
-    def construct_from_reference_rad(cls, args, zoom, width, height,
+    def construct_from_reference_rad(cls, pargs, zoom, width, height,
                                      ref_lon_rad, ref_lat_rad, xalign, yalign):
         if zoom<0:
             zoom = 0
@@ -172,25 +172,25 @@ class MapDefinition(object):
         west_offset  = a1-x1
         north_offset = b1-y1
         south_offset = y2-b2+1
-        return cls(args, west_rad, east_rad, north_rad, south_rad, zoom, x1, y1, x2, y2,
-                    width, height, west_offset, north_offset, south_offset )
+        return cls(pargs, west_rad, east_rad, north_rad, south_rad, zoom, x1, y1, x2, y2,
+                   width, height, west_offset, north_offset, south_offset)
 
 
     @classmethod
-    def construct_from_reference_deg(cls, args, zoom, width, height,
+    def construct_from_reference_deg(cls, pargs, zoom, width, height,
                                      ref_lon_deg, ref_lat_deg, xalign, yalign):
-        return cls.construct_from_center_rad(args, zoom, width, height,
-           math.radians(ref_lon_deg), math.radians(ref_lat_deg), xalign, yalign)
+        return cls.construct_from_reference_rad(pargs, zoom, width, height,
+                                                math.radians(ref_lon_deg), math.radians(ref_lat_deg), xalign, yalign)
 
 
     @classmethod
-    def construct_from_reference_args(cls, args):
-        return cls.construct_from_reference_rad(args, args.zoom, args.width, args.height,
-           math.radians(args.longitude), math.radians(args.latitude), args.xalign, args.yalign)
+    def construct_from_reference_args(cls, pargs):
+        return cls.construct_from_reference_rad(pargs, pargs.zoom, pargs.width, pargs.height,
+                                                math.radians(pargs.longitude), math.radians(pargs.latitude), pargs.xalign, pargs.yalign)
 
 
     @classmethod
-    def construct_to_fit_region_rad(cls, args, width, height, reg_west_rad, reg_east_rad,
+    def construct_to_fit_region_rad(cls, pargs, width, height, reg_west_rad, reg_east_rad,
                                     reg_north_rad, reg_south_rad, xalign, yalign):
         if reg_west_rad>=reg_east_rad:
             reg_east_rad += 2*math.pi*math.ceil(0.5*(reg_west_rad-reg_east_rad)/math.pi+1e-10)
@@ -236,26 +236,26 @@ class MapDefinition(object):
         west_offset  = a1-x1
         north_offset = b1-y1
         south_offset = y2-b2+1
-        return cls(args, west_rad, east_rad, north_rad, south_rad, zoom, x1, y1, x2, y2,
-                    width, height, west_offset, north_offset, south_offset )
+        return cls(pargs, west_rad, east_rad, north_rad, south_rad, zoom, x1, y1, x2, y2,
+                   width, height, west_offset, north_offset, south_offset)
 
 
     @classmethod
-    def construct_to_fit_region_deg(cls, args, width, height,
+    def construct_to_fit_region_deg(cls, pargs, width, height,
                                     reg_west_deg, reg_east_deg, reg_north_deg, reg_south_deg,
                                     xalign, yalign):
-        return cls.construct_to_fit_region_rad(args, width, height,
-                math.radians(reg_west_deg),math.radians(reg_east_deg),
-                math.radians(reg_north_deg),math.radians(reg_south_deg),
-                xalign, yalign)
+        return cls.construct_to_fit_region_rad(pargs, width, height,
+                                               math.radians(reg_west_deg), math.radians(reg_east_deg),
+                                               math.radians(reg_north_deg), math.radians(reg_south_deg),
+                                               xalign, yalign)
 
 
     @classmethod
-    def construct_to_fit_region_args(cls, args):
-        return cls.construct_to_fit_region_rad(args, args.width, args.height,
-                math.radians(args.west),math.radians(args.east),
-                math.radians(args.north),math.radians(args.south),
-                args.xalign, args.yalign)
+    def construct_to_fit_region_args(cls, pargs):
+        return cls.construct_to_fit_region_rad(pargs, pargs.width, pargs.height,
+                                               math.radians(pargs.west), math.radians(pargs.east),
+                                               math.radians(pargs.north), math.radians(pargs.south),
+                                               pargs.xalign, pargs.yalign)
 
 
     def get_tile_quantity(self):
@@ -351,11 +351,11 @@ class MapDefinition(object):
             desc.write(f'  northoffset={self.north_offset},\n')
             desc.write(f'  southoffset={self.south_offset},\n')
             desc.write(f'  basename={self.local_file_prefix},\n')
-            if self.attribution!=None:
+            if self.attribution is not None:
                 desc.write('  attribution={'+self.attribution+'},\n')
-            if self.attributionprint!=None:
+            if self.attributionprint is not None:
                 desc.write('  attribution print={'+self.attributionprint+'},\n')
-            if self.tilesize!=None:
+            if self.tilesize is not None:
                 desc.write(f'  tile size={self.tilesize},\n')
             if wms:
                 desc.write(f'  resource=wmsmap,\n')
@@ -500,13 +500,13 @@ if __name__ == '__main__':
     wms_success = False
 
     if target>0:
-        if args.url!=None:
+        if args.url is not None:
             if target<3:
                 if mapdef.get_tile_quantity()>400:
                     if args.confirm:
                         tiles_success = mapdef.download_tiles(args.url, args.fileprefix)
                     else:
-                        print(f'Too many tiles ({mapdef.get_tile_quantity()}). Add confirm option to proceed anyway.');
+                        print(f'Too many tiles ({mapdef.get_tile_quantity()}). Add confirm option to proceed anyway.')
                 else:
                     tiles_success = mapdef.download_tiles(args.url, args.fileprefix)
                 if tiles_success:
@@ -524,7 +524,7 @@ if __name__ == '__main__':
                     if args.confirm:
                         wms_success = mapdef.download_wms_map(args.url, args.definition)
                     else:
-                        print(f'Too many pixels ({mapdef.get_pixel_quantity()}). Add confirm option to proceed anyway.');
+                        print(f'Too many pixels ({mapdef.get_pixel_quantity()}). Add confirm option to proceed anyway.')
                 else:
                     wms_success = mapdef.download_wms_map(args.url, args.definition)
         else:
@@ -532,4 +532,3 @@ if __name__ == '__main__':
 
     mapdef.save_map(args.definition, tiles_success, merge_success, wms_success)
 \end{filecontents}
-

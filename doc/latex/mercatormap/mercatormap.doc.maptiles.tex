@@ -469,6 +469,19 @@ accompanying Python script. The technical background is documented in
   and it is accessible as \docAuxCommand{mrcmapattributionprint} (use read-only).
 \end{docMrcKey}
 
+\begin{docMrcKey}[supply][doc new=2026-02-17]{attribution print topplusopen}{=\meta{TT}.\meta{MM}.\meta{JJJJ}}{style}
+  Specialized version of \refKey{mermap/supply/attribution print}
+  as required for maps from
+  \href{https://www.bkg.bund.de}{Bundesamt f\"{u}r Kartographie und Geod\"{a}sie},
+  see Section~\ref{sec:maptileserver}.
+  \meta{TT}, \meta{MM}, and \meta{JJJJ} have to take the values of day, month, and year
+  of the download.
+\begin{dispExample}
+\mermapsetsupply{attribution print topplusopen=17.02.2026}
+\mrcmapattributionprint
+\end{dispExample}
+\end{docMrcKey}
+
 
 \begin{docMrcKey}[supply]{basename}{=\meta{setup tile base name}}{no default, initially \texttt{tiles/tile}}
   Prefix for local tile files, e.g. '|tiles/map|' for '|tiles/map_10_10_10.png|'.
@@ -505,7 +518,7 @@ accompanying Python script. The technical background is documented in
   \mrcmap[type=reference,latitude=48.14,longitude=11.57,
     flex reference scale=250000,
     source=opentopomap,
-    tex width=\linewidth,tex height=5cm]{}
+    tex width=\linewidth,tex height=5cm]{flex_reference_scale}
   \mrcdrawmap
   \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
         {\mrcmapattribution};
@@ -555,7 +568,7 @@ accompanying Python script. The technical background is documented in
   \mrcmap[  type = areafit, area = {munich,rio,newyork},
     source=topplusopen web grau,
     tex width=\linewidth, tex height=7cm,
-    flex area fit=1cm ]{}
+    flex area fit=1cm ]{flex_area_fit}
   \mrcdrawmap
   \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
         {\mrcmapattribution};
@@ -707,6 +720,30 @@ want to add more to avoid any legal uncertainties.
         {\mrcmapattribution};
     \end{tikzpicture}\par%
   }%
+  \newcommand{\mapexampletop}[3][]{%
+    \begingroup
+    \mermapset{supply/source=#2}%
+    \begin{itemize}
+    \item Required attribution (\docAuxCommand{mrcmapattribution}):
+      \begin{tcolorbox}[sharp corners,size=fbox,colback=yellow!8,colframe=yellow!80!gray,halign=flush left,before skip=2pt]
+        \mrcmapattribution\end{tcolorbox}
+    \item Required attribution for media without hyperlinks (\docAuxCommand{mrcmapattributionprint}):
+      \begin{tcolorbox}[sharp corners,size=fbox,colback=yellow!8,colframe=yellow!80!gray,halign=flush left,before skip=2pt,after skip=3pt]
+        \mrcmapattributionprint\end{tcolorbox}
+      Replace JJJJ by year, MM by month, TT by day of the download.\\
+      Also see \refKey{mermap/supply/attribution print topplusopen}
+    %\par\smallskip\
+    \end{itemize}
+    \endgroup\par\smallskip\tikzsetnextfilename{maptiles_#3}%
+    \begin{tikzpicture}
+    \mrcmap[source=#2,
+      type=reference,latitude=48.14,longitude=11.58,zoom=7,
+      tex width=\linewidth,tex height=2cm,#1]{#3}
+      \mrcdrawmap
+      \node[below,font=\fontsize{7pt}{7pt}\sffamily] at (mrcmap.south)
+        {\mrcmapattribution};
+    \end{tikzpicture}\par%
+  }%
   \begin{itemize}
 
   \item\docValue{dummy}:\\
@@ -833,63 +870,67 @@ want to add more to avoid any legal uncertainties.
     \end{itemize}
     \mapexample{thunderforest neighbourhood}{thunderforest_neighbourhood}
 
-  \item\docValue{topplusopen web}:\\
+  \item\docValue{topplusopen web}:\tcbdocmarginnote{\tcbdocupdated{2026-02-17}}\\
     Tile server (TMS) of \href{https://www.bkg.bund.de}{Bundesamt f\"{u}r Kartographie und Geod\"{a}sie}.
     \begin{itemize}
     \item Covers world / Europe / Germany depending on zoom level
     \item Usage (German language): \url{https://gdz.bkg.bund.de/index.php/default/digitale-geodaten/topplusopen-produkte.html}
     \end{itemize}
-    \mapexample{topplusopen web}{topplusopen_web}
-
-  \item\docValue{topplusopen web grau}:\\
-    Tile server (TMS) of \href{https://www.bkg.bund.de}{Bundesamt f\"{u}r Kartographie und Geod\"{a}sie}.
-    \begin{itemize}
-    \item Covers world / Europe / Germany depending on zoom level
-    \item Usage (German language): \url{https://gdz.bkg.bund.de/index.php/default/digitale-geodaten/topplusopen-produkte.html}
-    \end{itemize}
-    \mapexample{topplusopen web grau}{topplusopen_web_grau}
+    \mapexampletop{topplusopen web}{topplusopen_web}
 
 \clearpage
-  \item\docValue{topplusopen web light}:\tcbdocmarginnote{\tcbdocnew{2024-07-29}}\\
+  \item\docValue{topplusopen web grau}:\tcbdocmarginnote{\tcbdocupdated{2026-02-17}}\\
     Tile server (TMS) of \href{https://www.bkg.bund.de}{Bundesamt f\"{u}r Kartographie und Geod\"{a}sie}.
     \begin{itemize}
     \item Covers world / Europe / Germany depending on zoom level
     \item Usage (German language): \url{https://gdz.bkg.bund.de/index.php/default/digitale-geodaten/topplusopen-produkte.html}
     \end{itemize}
-    \mapexample{topplusopen web light}{topplusopen_web_light}
+    \mapexampletop{topplusopen web grau}{topplusopen_web_grau}
 
-  \item\docValue{topplusopen web light grau}\tcbdocmarginnote{\tcbdocnew{2024-07-29}}:\\
+  \item\docValue{topplusopen web light}:\tcbdocmarginnote{\tcbdocnew{2024-07-29}\\\tcbdocupdated{2026-02-17}}\\
     Tile server (TMS) of \href{https://www.bkg.bund.de}{Bundesamt f\"{u}r Kartographie und Geod\"{a}sie}.
     \begin{itemize}
     \item Covers world / Europe / Germany depending on zoom level
     \item Usage (German language): \url{https://gdz.bkg.bund.de/index.php/default/digitale-geodaten/topplusopen-produkte.html}
     \end{itemize}
-    \mapexample{topplusopen web light grau}{topplusopen_web_light_grau}
+    \mapexampletop{topplusopen web light}{topplusopen_web_light}
+
+\clearpage
+  \item\docValue{topplusopen web light grau}\tcbdocmarginnote{\tcbdocnew{2024-07-29}\\\tcbdocupdated{2026-02-17}}:\\
+    Tile server (TMS) of \href{https://www.bkg.bund.de}{Bundesamt f\"{u}r Kartographie und Geod\"{a}sie}.
+    \begin{itemize}
+    \item Covers world / Europe / Germany depending on zoom level
+    \item Usage (German language): \url{https://gdz.bkg.bund.de/index.php/default/digitale-geodaten/topplusopen-produkte.html}
+    \end{itemize}
+    \mapexampletop{topplusopen web light grau}{topplusopen_web_light_grau}
 
 \end{itemize}
 
 
-\vfill
+\clearpage
 \begin{tcolorbox}[spartan,colback=white]
 The following sources are Web map server (WMS). Therefore,
 \refKey{mermap/supply/target} can only be set to \docValue{wmsmap}
 or \docValue{none}.
 \end{tcolorbox}
-\clearpage
+
 
 \begingroup
 \ExplSyntaxOn
-\int_gzero:N \g_tmpa_int
+\int_gzero_new:N \l__mermap_doc_tmpa_int
 \NewDocumentCommand \cleanstep {}
 {
-  \fp_compare:nNnT { \g_tmpa_int-trunc(\g_tmpa_int/3)*3 } = 0
+  \bool_lazy_and:nnT
     {
-      \int_compare:nNnT \g_tmpa_int > 0
-        {
-          \clearpage
-        }
+      \int_compare_p:nNn \l__mermap_doc_tmpa_int > 0
     }
-  \int_gincr:N \g_tmpa_int
+    {
+      \int_compare_p:nNn { \int_mod:nn { \l__mermap_doc_tmpa_int }{ 2 } } = 0
+    }
+    {
+      \clearpage
+    }
+  \int_gincr:N \l__mermap_doc_tmpa_int
 }
 \ExplSyntaxOff
 
@@ -898,23 +939,23 @@ or \docValue{none}.
 \foreach \name / \scdenom / \xtra in {p5/5000,p10/10000,p17.5/17500,p25/25000,p50/50000,p100/100000,p250/250000}
 {
 \cleanstep
-  \item\docValue{topplusopen \name}:\\
+  \item\docValue{topplusopen \name}:\tcbdocmarginnote{\tcbdocupdated{2026-02-17}}\\
     Web map server (WMS) of \href{https://www.bkg.bund.de}{Bundesamt f\"{u}r Kartographie und Geod\"{a}sie}.
     \begin{itemize}
     \item 1:\scdenom, covers Europe / Germany depending on zoom level
     \item Usage (German language): \url{https://gdz.bkg.bund.de/index.php/default/digitale-geodaten/topplusopen-produkte.html}
     \end{itemize}
-    \mapexample[target=wmsmap]{topplusopen \name}{topplusopen_\name}
+    \mapexampletop[target=wmsmap]{topplusopen \name}{topplusopen_\name}
 
 \cleanstep
-  \item\docValue{topplusopen \name\ grau}:\\
+  \item\docValue{topplusopen \name\ grau}:\tcbdocmarginnote{\tcbdocupdated{2026-02-17}}\\
     Web map server (WMS) of \href{https://www.bkg.bund.de}{Bundesamt f\"{u}r Kartographie und Geod\"{a}sie}.
     \begin{itemize}
     \item 1:\scdenom, covers Europe / Germany depending on zoom level
     \item Usage (German language): \url{https://gdz.bkg.bund.de/index.php/default/digitale-geodaten/topplusopen-produkte.html}
     \end{itemize}
     \def\grau{ grau}%
-    \mapexample[target=wmsmap]{topplusopen \name\grau}{topplusopen_\name_grau}
+    \mapexampletop[target=wmsmap]{topplusopen \name\grau}{topplusopen_\name_grau}
 }
 
   \end{itemize}

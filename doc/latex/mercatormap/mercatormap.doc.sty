@@ -6,6 +6,8 @@
 \RequirePackage[T1]{fontenc}
 \RequirePackage[english]{babel}
 \RequirePackage{lmodern,parskip,array}
+\RequirePackage{microtype}
+\microtypesetup{nopatch=footnote}
 \RequirePackage[svgnames,table]{xcolor}
 \RequirePackage{tikz}
 \RequirePackage{varioref}
@@ -32,6 +34,7 @@
 \RequirePackage[extendedchars,encoding,filenameencoding=utf-8]{grffile}
 \RequirePackage{xfp}
 
+\RequirePackage{minted2}% minted currently broken with Python 3.14
 \RequirePackage{tcolorbox}
 \tcbuselibrary{skins,minted,breakable,documentation,raster}
 
@@ -39,7 +42,7 @@
 \RequirePackage{\mrcpkgprefix mercatormap}
 \IfFileExists{../private/privatekeys.tex}{\input{../private/privatekeys.tex}}{}
 
-\RequirePackage{fontawesome5}
+\RequirePackage{fontawesome7}
 
 \RequirePackage{csquotes}
 \RequirePackage[%style=authoryear,
