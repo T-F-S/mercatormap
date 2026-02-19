@@ -1,5 +1,6 @@
 # The LaTeX package mercatormap - version 1.2.0 (2024/08/05)
 
+[![CTAN](https://img.shields.io/ctan/v/mercatormap.svg)](https://www.ctan.org/pkg/mercatormap)
 
 > Copyright (c) 2020-2024 by Prof. Dr. Dr. Thomas F. Sturm <thomas dot sturm at unibw dot de>
 
