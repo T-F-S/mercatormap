@@ -28,24 +28,23 @@ pieces, and more are part of the package.
 
 ## Contents of the package
 
-- `README.md`                this file
-- `CHANGELOG.md`             log of changes (history)
-- `mercatormap.sty`          LaTeX package file (style file)
-- `mercatorsupplier.def`     LaTeX package file (include file for style)
-- `mercatorpy.def`           LaTeX package file (Python generator)
-- `mercatormap.pdf`          Documentation
-- `mercatormap.tex`          Source code of the documentation (main file)
-- `*.doc.*`                  Source code of the documentation (include files)
-- `mercatormap-example.tex`  Source code of an example
-- `mercatormap.bib`          Bibliography of the documentation
+- `README.md`                    this file
+- `CHANGELOG.md`                 log of changes (history)
+- `tex/mercatormap.sty`          LaTeX package file (style file)
+- `tex/mercatorsupplier.def`     LaTeX package file (include file for style)
+- `tex/mercatorpy.def`           LaTeX package file (Python generator)
+- `doc/mercatormap.pdf`          Documentation
+- `doc/mercatormap.tex`          Source code of the documentation (main file)
+- `doc/*.doc.*`                  Source code of the documentation (include files)
+- `doc/mercatormap-example.tex`  Source code of an example
+- `doc/mercatormap.bib`          Bibliography of the documentation
 
 
 ## Installation
 
-Copy the contents of the `mercatormap.tds.zip` from CTAN to your local TeX file tree.
+Install the files in the appropriate locations within your local TeX file tree.
 
-Alternatively, put the files to their respective locations within the TeX installation:
-- `mercatormap.sty`       ->  /tex/latex/mercatormap
-- `mercatorpy.def`        ->  /tex/latex/mercatormap
-- `mercatorsupplier.def`  ->  /tex/latex/mercatormap
-- all other files         ->  /doc/latex/mercatormap
+- `tex/mercatormap.sty`       ->  /tex/latex/mercatormap
+- `tex/mercatorpy.def`        ->  /tex/latex/mercatormap
+- `tex/mercatorsupplier.def`  ->  /tex/latex/mercatormap
+- all other files             ->  /doc/latex/mercatormap

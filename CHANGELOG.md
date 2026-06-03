@@ -16,6 +16,19 @@ and this project adheres to
 ### Security
 
 
+## [1.3.2] - xxxx-xx-xx
+
+### Added
+
+### Changed
+- Package file structure reordered following CTAN advice
+
+### Deprecated
+### Removed
+### Fixed
+### Security
+
+
 
 ## [1.3.1] - 2026-06-03
 
