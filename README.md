@@ -1,4 +1,4 @@
-# The LaTeX package mercatormap - version 1.3.0 (2026/02/19)
+# The LaTeX package mercatormap - version 1.3.1 (2026/06/03)
 
 [![CTAN](https://img.shields.io/ctan/v/mercatormap.svg)](https://www.ctan.org/pkg/mercatormap)
 

@@ -17,6 +17,20 @@ and this project adheres to
 
 
 
+## [1.3.1] - 2026-06-03
+
+### Changed
+- `x` type expansions replaced by `e` or other code
+- References updated
+- Needed LaTeX release 2026-06-01
+- Documentation produced with `minted` instead of `minted2` (after Python fix)
+
+### Fixed
+- Code style improved with help of explcheck (2004 warnings removed)
+- Leading and trailing spaces removed from Python call
+
+
+
 ## [1.3.0] - 2026-02-19
 
 ### Added
